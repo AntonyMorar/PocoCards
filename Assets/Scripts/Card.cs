@@ -4,27 +4,40 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Card : MonoBehaviour
+public abstract class Card : MonoBehaviour
 {
     // Serialized **********
     [SerializeField] private LayerMask layer;
+    [SerializeField] protected CardData cardData;
+    [Header("References")] 
+    [SerializeField] private SpriteRenderer icon;
     // Private **********
-    private CardData _cardData;
-
     private Camera _camera;
     private bool _isSelectable = true;
-    private Player _owner;
-    private bool _isMine;
+    protected Player _owner;
+    protected bool _isActive; // Making on reveal changes
     private bool _inBoard;
+    private bool _isMine;
 
+    private Action _onRevealComplete;
+    protected enum State
+    {
+        Flipping,
+        Action,
+        Attacking,
+        CoolOff
+    }
 
     // MonoBehaviour Callbacks **********
     private void Start()
     {
         _camera = Camera.main;
+
+        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
+        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -32,40 +45,42 @@ public class Card : MonoBehaviour
 
             if (hit.collider != null && hit.collider.transform == transform)
             {
-                Debug.Log("Down: " + _cardData.cardName);
                 if (!_isMine || !_isSelectable) return;
 
                 if (_inBoard) AddToHand();
                 else AddToBoard();
             }
-            
-
         }
     }
+    
 
     // Public Methods **********
-    public void SetCard(CardData cardData, Player owner)
+    public abstract void TakeAction(Action onRevealComplete);
+    public void SetCard(Player owner)
     {
-        _cardData = cardData;
         _owner = owner;
         _isMine = GameManager.Instance.GetMyPlayer() == owner;
+
+        icon.sprite = cardData.cardIcon;
     }
     
-    // Private Methods **********
-    private void OnMouseDown()
+    public void AddToBoard()
     {
-
-    }
-
-    private void AddToBoard()
-    {
-        transform.position += Vector3.up * 2.5f;
+        transform.position += ImOwner() ? Vector3.up * 2.5f : Vector3.up * -2.5f;
         _inBoard = true;
         
         _owner.RemoveFromHand(this);
-        Board.Instance.AddToBoardHand(this);
+        Board.Instance.AddToBoardHand(this, _owner);
     }
+    
+    public bool ImOwner() => _owner == GameManager.Instance.GetMyPlayer();
 
+    public void Remove()
+    {
+        LeanTween.scale(gameObject, Vector3.zero, 0.75f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
+    }
+    
+    // Private Methods **********
     private void AddToHand()
     {
         transform.position += Vector3.down * 2.5f;
@@ -73,5 +88,37 @@ public class Card : MonoBehaviour
         
         _owner.AddToHand(this);
         Board.Instance.RemoveFromBoardHand(this);
+    }
+
+    private void GameManager_OnMainStart(object sender, EventArgs e)
+    {
+        _isSelectable = true;
+    }
+    
+    private void GameManager_OnBattleStart(object sender, EventArgs e)
+    {
+        _isSelectable = false;
+    }
+
+    protected void MakeAttack()
+    {
+        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.25f: transform.position.y -0.25f, 0.25f).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
+            () =>
+            {
+                GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), cardData.attackPoints);
+            });
+    }
+
+    protected void ActionStart(Action onRevealComplete)
+    {
+        _isActive = true;
+        _onRevealComplete = onRevealComplete;
+    }
+
+    protected void ActionComplete()
+    {
+        Debug.Log((ImOwner() ? "Player " : "Enemy ") + "complete: " + cardData.cardName);
+        _isActive = false;
+        _onRevealComplete();
     }
 }

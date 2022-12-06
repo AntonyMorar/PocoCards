@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -13,10 +11,13 @@ public class GameManager : MonoBehaviour
     public enum GamePhase
     {
         Idle,
-        Selecting,
-        Battle
+        Main,
+        Battle,
+        GameOver
     }
-    public event EventHandler<GamePhase> OnGamePhaseChange;
+    public event EventHandler OnMainStart;
+    public event EventHandler OnBattleStart;
+    public event EventHandler OnGameOver;
     
     // Serialized *****
     [Header("Players")]
@@ -24,9 +25,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player enemyPlayer;
     [Header("Hand")]
     [SerializeField] private int initialCards = 3;
-    [Header("UI")]
-    [SerializeField]private TMP_Text deckSizeText;
-    [SerializeField]private TMP_Text enemyDeckSizeText;
     // Private *****
     private GamePhase _gamePhase;
     
@@ -44,28 +42,41 @@ public class GameManager : MonoBehaviour
             player.DrawCard();
             enemyPlayer.DrawCard();
         }
+        
+        StartPhase(GamePhase.Main);
     }
 
-    private void Update()
-    {
-        deckSizeText.text = player.GetDeckSize().ToString();
-        enemyDeckSizeText.text = enemyPlayer.GetDeckSize().ToString();
-    }
-    
-    // Public Methods
-    public void SetSlotAvailable(bool[] availableCardSlots, int index)
-    {
-        availableCardSlots[index] = true;
-    }
-
+    // Public Methods *****
     public void StartPhase(GamePhase gamePhase)
     {
         if (_gamePhase == gamePhase) return;
         
         _gamePhase = gamePhase;
-        OnGamePhaseChange?.Invoke(this, gamePhase);
+        switch (gamePhase)
+        {
+            case GamePhase.Main:
+                player.DrawCard();
+                enemyPlayer.DrawCard();
+                OnMainStart?.Invoke(this,EventArgs.Empty);
+                break;
+            case GamePhase.Battle:
+                OnBattleStart?.Invoke(this,EventArgs.Empty);
+                break;
+            case GamePhase.GameOver:
+                OnGameOver?.Invoke(this,EventArgs.Empty);
+                break;
+        }
     }
-    
-
     public Player GetMyPlayer() => player;
+    /// <summary>
+    /// Return the contrary player
+    /// </summary>
+    /// <param name="owner">Put your owner to get your enemy</param>
+    /// <returns></returns>
+    public Player GetEnemy(Player owner) => owner == player ? enemyPlayer : player;
+
+    public void TakeDamage(Player target, int damage)
+    {
+        target.TakeDamage(damage);
+    }
 }

@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardIcon: {fileID: 21300000, guid: f5963d10d032b864484ab2c922f3df35, type: 3}
-  attackPoints: 0
-  cost: 1
+  attackPoints: 2
+  cost: 2
+  hasSpecialEffect: 0
   addRandomCardHand: 0
   addRandomCardBoard: 0
   addShield: 0
-  addEnemyPoison: 0
+  addEnemyPoison: 1
   stealCoin: 0
   reduceCardCost: 0
   reduceAllDamage: 0
-  enemyCards: 0
-  allyCards: 0
+  enemyCardsInBoard: 0
+  allyCardsInBoard: 0

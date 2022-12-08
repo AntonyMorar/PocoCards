@@ -9,6 +9,7 @@ public class GamePhaseUI : MonoBehaviour
 {
     // Serialized *****
     [SerializeField] private TMP_Text gamePhaseText;
+    [SerializeField] private TMP_Text turnText;
     [SerializeField] private Button gamePhaseButton;
 
     // MonoBehavior Callbacks *****
@@ -16,6 +17,7 @@ public class GamePhaseUI : MonoBehaviour
     {
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
         gamePhaseButton.onClick.AddListener(() => GameManager.Instance.StartPhase(GameManager.GamePhase.Battle));
     }
 
@@ -31,6 +33,11 @@ public class GamePhaseUI : MonoBehaviour
         gamePhaseText.text = "In Battle";
         gamePhaseButton.enabled = false;
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
+    }
+
+    private void GameManager_OnTurnChange(object sender, int newTurn)
+    {
+        turnText.text = "Turn: " + newTurn;
     }
     private void ChangeState()
     {

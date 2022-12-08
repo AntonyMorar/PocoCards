@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnMainStart;
     public event EventHandler OnBattleStart;
     public event EventHandler OnGameOver;
-    
+    public event EventHandler<int> OnTurnChange;
+
     // Serialized *****
     [Header("Players")]
     [SerializeField] private Player player;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int initialCards = 3;
     // Private *****
     private GamePhase _gamePhase;
+    private int _turn;
     
     // MonoBehavior Callbacks *****
     private void Awake()
@@ -34,7 +36,6 @@ public class GameManager : MonoBehaviour
         if (Instance != null && Instance != this) Destroy(this);
         else Instance = this;
     }
-
     private void Start()
     {
         for (int i = 0; i < initialCards; i++)
@@ -55,11 +56,16 @@ public class GameManager : MonoBehaviour
         switch (gamePhase)
         {
             case GamePhase.Main:
+                _turn++;
+                
                 player.DrawCard();
                 enemyPlayer.DrawCard();
+                
+                OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.Battle:
+   
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.GameOver:

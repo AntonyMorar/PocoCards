@@ -16,13 +16,13 @@ public class PlayerUI : MonoBehaviour
     private void OnEnable()
     {
         player.OnHealthChange += Player_OnHealthChange;
-        player.OnCoinsChange += Player_OnCoinsChange;
+        player.OnBalanceChange += Player_OnBalanceChange;
     }
 
     private void OnDisable()
     {
         player.OnHealthChange += Player_OnHealthChange;
-        player.OnCoinsChange -= Player_OnCoinsChange;
+        player.OnBalanceChange -= Player_OnBalanceChange;
     }
     
     // Private Methods *****
@@ -31,8 +31,8 @@ public class PlayerUI : MonoBehaviour
         healthText.text = "Health: " + health.ToString();
     }
     
-    private void Player_OnCoinsChange(object sender, int coins)
+    private void Player_OnBalanceChange(object sender, int coins)
     {
-        coinsText.text = "Health: " + coins.ToString();
+        coinsText.text = "Coins: " + coins.ToString();
     }
 }

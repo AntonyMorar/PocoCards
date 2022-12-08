@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 public class Card : MonoBehaviour
 {
@@ -10,31 +10,43 @@ public class Card : MonoBehaviour
     [SerializeField] private LayerMask layer;
     [Header("References")]
     [SerializeField] private SpriteRenderer artAnchor;
+    [SerializeField] private TMP_Text attackPointsText;
+    [SerializeField] private TMP_Text costText;
+    [SerializeField] private GameObject blockedCard;
     // Private **********
     private CardData _cardData;
     private Camera _camera;
-    private bool _isSelectable = true;
     private Player _owner;
+    private bool _isSelectable = true;
     private bool _isActive; // Making on reveal changes
-    private bool _inBoard;
-    private bool _isMine;
-    
+    private bool _isInBoard;
+
     // Actions & State
     private State _state;
     private float _stateTimer;
-    private bool _canMakeAction;
+    private bool _canDoSpecialEffect;
     private bool _canAttack;
 
     private Action _onRevealComplete;
     private enum State
     {
         Flipping,
-        Action,
+        SpecialEffect,
         Attacking,
         CoolOff
     }
 
     // MonoBehaviour Callbacks **********
+    private void OnEnable()
+    {
+        if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
+    }
+
+    private void OnDisable()
+    {
+        if(_owner) _owner.OnBalanceChange -= Owner_OnBalanceChange;
+    }
+
     private void Start()
     {
         _camera = Camera.main;
@@ -43,7 +55,7 @@ public class Card : MonoBehaviour
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
     }
 
-    protected virtual void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -51,9 +63,9 @@ public class Card : MonoBehaviour
 
             if (hit.collider != null && hit.collider.transform == transform)
             {
-                if (!_isMine || !_isSelectable) return;
+                if (!_owner.ImOwner() || !_isSelectable) return;
 
-                if (_inBoard) AddToHand();
+                if (_isInBoard) AddToHand();
                 else AddToBoard();
             }
         }
@@ -70,11 +82,11 @@ public class Card : MonoBehaviour
         {
             case State.Flipping:
                 break;
-            case State.Action:
-                if (_canMakeAction)
+            case State.SpecialEffect:
+                if (_canDoSpecialEffect)
                 {
-                    Debug.Log("Ant action: add shield");
-                    _canMakeAction = false;
+                    SpecialEffect();
+                    _canDoSpecialEffect = false;
                 }
                 break;
             case State.Attacking:
@@ -93,10 +105,10 @@ public class Card : MonoBehaviour
             switch (_state)
             {
                 case State.Flipping:
-                    _state = State.Action;
-                    _stateTimer = 2f;
+                    _state = State.SpecialEffect;
+                    _stateTimer = _cardData.hasSpecialEffect ? 2f : 0f;
                     break;
-                case State.Action:
+                case State.SpecialEffect:
                     _state = State.Attacking;
                     _stateTimer = 0.5f;
                     break;
@@ -111,16 +123,20 @@ public class Card : MonoBehaviour
         }
     }
 
-
     // Public Methods **********
     public void SetCard(Player owner, CardData cardData)
     {
         _owner = owner;
         _cardData = cardData;
-        _isMine = GameManager.Instance.GetMyPlayer() == owner;
 
         artAnchor.sprite = _cardData.cardIcon;
+        attackPointsText.text = cardData.attackPoints.ToString();
+        costText.text = cardData.cost.ToString();
+        
+        _owner.OnBalanceChange += Owner_OnBalanceChange;
+        CheckBalanceAvailability(_owner.GetCoins());
     }
+    
     public void TakeAction(Action onRevealComplete)
     {
         ActionStart(onRevealComplete);
@@ -128,35 +144,38 @@ public class Card : MonoBehaviour
         _state = State.Flipping;
         _stateTimer = 1f;
 
-        _canMakeAction = true;
+        _canDoSpecialEffect = true;
         _canAttack = true;
     }
-
     
     public void AddToBoard()
     {
-        transform.position += ImOwner() ? Vector3.up * 2.5f : Vector3.up * -2.5f;
-        _inBoard = true;
+        if (_owner.GetCoins() < _cardData.cost) return;
+        
+        transform.position += _owner.ImOwner() ? Vector3.up * 2.5f : Vector3.up * -2.5f;
+        _isInBoard = true;
         
         _owner.RemoveFromHand(this);
         Board.Instance.AddToBoardHand(this, _owner);
+        // Change player currency
+        _owner.SpendCoins(_cardData.cost);
     }
-    
-    public bool ImOwner() => _owner == GameManager.Instance.GetMyPlayer();
 
     public void Remove()
     {
-        LeanTween.scale(gameObject, Vector3.zero, 0.75f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
+        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
     }
     
     // Private Methods **********
     private void AddToHand()
     {
         transform.position += Vector3.down * 2.5f;
-        _inBoard = false;
+        _isInBoard = false;
         
         _owner.AddToHand(this);
         Board.Instance.RemoveFromBoardHand(this);
+        // Change player currency
+        _owner.AddCoins(_cardData.cost);
     }
 
     private void GameManager_OnMainStart(object sender, EventArgs e)
@@ -169,25 +188,72 @@ public class Card : MonoBehaviour
         _isSelectable = false;
     }
 
-    protected void MakeAttack()
+    private void MakeAttack()
     {
-        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.25f: transform.position.y -0.25f, 0.25f).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
+        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, 0.25f).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
             () =>
             {
                 GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
     }
 
-    protected void ActionStart(Action onRevealComplete)
+    private void SpecialEffect()
+    {
+        // Add Random card to hand
+        if (_cardData.addRandomCardHand > 0)
+        {
+            Debug.Log("Add Random card to hand");
+            _owner.DrawCard();
+        }
+        
+        // Add random card from deck to the board
+        if (_cardData.addRandomCardBoard > 0)
+        {
+            Debug.Log("NOT WORKING");
+        }
+        
+        // Add Shield
+        if (_cardData.addShield > 0)
+        {
+            Debug.Log("Adding shield");
+            _owner.AddShield(_cardData.addShield);
+        }
+
+        if (_cardData.addEnemyPoison > 0)
+        {
+            Debug.Log("addEnemyPoison");
+            _owner.PoisonEnemy(_cardData.addEnemyPoison);
+        }
+        
+    }
+
+    private void ActionStart(Action onRevealComplete)
     {
         _isActive = true;
         _onRevealComplete = onRevealComplete;
     }
-
-    protected void ActionComplete()
+    private void ActionComplete()
     {
-        Debug.Log((ImOwner() ? "Player " : "Enemy ") + "complete: " + _cardData.cardName);
+        Debug.Log((_owner.ImOwner() ? "Player " : "Enemy ") + "complete: " + _cardData.cardName);
         _isActive = false;
         _onRevealComplete();
+    }
+
+    private void Owner_OnBalanceChange(object sender, int newBalance)
+    {
+        CheckBalanceAvailability(newBalance);
+    }
+    private void CheckBalanceAvailability(int newBalance)
+    {
+        if (!_owner.ImOwner() || _isInBoard) return;
+        
+        if (newBalance < _cardData.cost)
+        {
+            blockedCard.SetActive(true);
+        }
+        else
+        {
+            blockedCard.SetActive(false);
+        }
     }
 }

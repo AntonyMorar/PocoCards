@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public event EventHandler<int> OnHealthChange;
     public event EventHandler OnDead;
     public event EventHandler<int> OnShieldChange;
-    public event EventHandler<int> OnCoinsChange;
+    public event EventHandler<int> OnBalanceChange;
     
     // Serialized *****
     [SerializeField] private int baseHealth = 300;
@@ -22,19 +22,28 @@ public class Player : MonoBehaviour
     // Private *****
     private int _health;
     private int _shield;
-    private int _coin;
+    private int _coins;
     //Hand
     private List<Card> _hand = new List<Card>();
 
     
     // MonoBehaviour Callbacks *****
+    private void OnEnable()
+    {
+        GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+    }
+    
+    private void OnDisable()
+    {
+        GameManager.Instance.OnTurnChange -= GameManager_OnTurnChange;
+    }
+
     private void Start()
     {
         SetInitialValues();
     }
     
     // Private Methods *****
-
     private void SetInitialValues()
     {
         _health = baseHealth;
@@ -54,10 +63,15 @@ public class Player : MonoBehaviour
         }
     }
     
-    // Public Methods
+    private void GameManager_OnTurnChange(object sender, int newTurn)
+    {
+        AddCoins(newTurn);
+    }
+    
+    // Public Methods *****
     public void DrawCard()
     {
-        if (deck.Count <= 0)return;
+        if (deck.Count <= 0 || _hand.Count > 30) return;
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
         
@@ -83,7 +97,21 @@ public class Player : MonoBehaviour
         _hand.Remove(card);
         ReorderCards();
     }
-    
+    public int GetCoins() => _coins;
+    public void SpendCoins(int amount)
+    {
+        _coins -= amount;
+        _coins = Mathf.Clamp(_coins, 0, 999);
+        OnBalanceChange?.Invoke(this,_coins);
+    }
+    public void AddCoins(int amount)
+    {
+        _coins += amount;
+        _coins = Mathf.Clamp(_coins, 0, 999);
+        OnBalanceChange?.Invoke(this,_coins);
+    }
+    public bool ImOwner() => this == GameManager.Instance.GetMyPlayer();
+
     // Health
     public void TakeDamage(int damageAmount)
     {
@@ -111,5 +139,16 @@ public class Player : MonoBehaviour
     public void Died()
     {
         OnDead?.Invoke(this,EventArgs.Empty);
+    }
+    
+    // Spells
+    public void PoisonEnemy(int amount)
+    {
+        GameManager.Instance.GetEnemy(this).AddPoison(amount);
+    }
+
+    public void AddPoison(int amount)
+    {
+        Debug.Log("Poison not working");
     }
 }

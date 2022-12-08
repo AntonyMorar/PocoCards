@@ -180,12 +180,12 @@ public class Card : MonoBehaviour
 
     private void GameManager_OnMainStart(object sender, EventArgs e)
     {
-        _isSelectable = true;
+        SetLock(false);
     }
     
     private void GameManager_OnBattleStart(object sender, EventArgs e)
     {
-        _isSelectable = false;
+        SetLock(true);
     }
 
     private void MakeAttack()
@@ -245,15 +245,15 @@ public class Card : MonoBehaviour
     }
     private void CheckBalanceAvailability(int newBalance)
     {
-        if (!_owner.ImOwner() || _isInBoard) return;
-        
-        if (newBalance < _cardData.cost)
-        {
-            blockedCard.SetActive(true);
-        }
-        else
-        {
-            blockedCard.SetActive(false);
-        }
+        if (_isInBoard) return;
+        SetLock(newBalance < _cardData.cost);
+    }
+    private void SetLock(bool setLock)
+    {
+        if (!_owner.ImOwner()) return;
+        _isSelectable = !setLock;
+
+        if (_isInBoard) return;
+        blockedCard.SetActive(setLock);
     }
 }

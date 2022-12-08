@@ -15,7 +15,9 @@ public class Player : MonoBehaviour
     // Serialized *****
     [SerializeField] private int baseHealth = 300;
     [SerializeField] private Transform handTransform;
-    [SerializeField] private List<Card> deck = new List<Card>();
+    [Header("Card")] 
+    [SerializeField] private Card cardPrefab;
+    [SerializeField] private List<CardData> deck = new List<CardData>();
 
     // Private *****
     private int _health;
@@ -55,16 +57,12 @@ public class Player : MonoBehaviour
     // Public Methods
     public void DrawCard()
     {
-        if (deck.Count <= 0)
-        {
-            Debug.LogError("No cards in the Deck");
-            return;
-        }
+        if (deck.Count <= 0)return;
         
-        Card randCard = deck[Random.Range(0, deck.Count)];
+        CardData randCard = deck[Random.Range(0, deck.Count)];
         
-        Card newCard = Instantiate(randCard, handTransform);
-        newCard.SetCard(this);
+        Card newCard = Instantiate(cardPrefab, handTransform);
+        newCard.SetCard(this, randCard);
         AddToHand(newCard);
     }
 

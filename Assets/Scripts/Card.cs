@@ -4,23 +4,29 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Card : MonoBehaviour
+public class Card : MonoBehaviour
 {
     // Serialized **********
     [SerializeField] private LayerMask layer;
-    [SerializeField] protected CardData cardData;
-    [Header("References")] 
-    [SerializeField] private SpriteRenderer icon;
+    [Header("References")]
+    [SerializeField] private SpriteRenderer artAnchor;
     // Private **********
+    private CardData _cardData;
     private Camera _camera;
     private bool _isSelectable = true;
-    protected Player _owner;
-    protected bool _isActive; // Making on reveal changes
+    private Player _owner;
+    private bool _isActive; // Making on reveal changes
     private bool _inBoard;
     private bool _isMine;
+    
+    // Actions & State
+    private State _state;
+    private float _stateTimer;
+    private bool _canMakeAction;
+    private bool _canAttack;
 
     private Action _onRevealComplete;
-    protected enum State
+    private enum State
     {
         Flipping,
         Action,
@@ -51,18 +57,81 @@ public abstract class Card : MonoBehaviour
                 else AddToBoard();
             }
         }
+
+        UpdateState();
     }
-    
+
+    private void UpdateState()
+    {
+        if (!_isActive) return;
+        
+        _stateTimer -= Time.deltaTime;
+        switch (_state)
+        {
+            case State.Flipping:
+                break;
+            case State.Action:
+                if (_canMakeAction)
+                {
+                    Debug.Log("Ant action: add shield");
+                    _canMakeAction = false;
+                }
+                break;
+            case State.Attacking:
+                if (_canAttack)
+                {
+                    MakeAttack();
+                    _canAttack = false;
+                }
+                break;
+            case State.CoolOff:
+                break;
+        }
+        
+        if (_stateTimer <= 0)
+        {
+            switch (_state)
+            {
+                case State.Flipping:
+                    _state = State.Action;
+                    _stateTimer = 2f;
+                    break;
+                case State.Action:
+                    _state = State.Attacking;
+                    _stateTimer = 0.5f;
+                    break;
+                case State.Attacking:
+                    _state = State.CoolOff;
+                    _stateTimer = 0.5f;
+                    break;
+                case State.CoolOff:
+                    ActionComplete();
+                    break;
+            }
+        }
+    }
+
 
     // Public Methods **********
-    public abstract void TakeAction(Action onRevealComplete);
-    public void SetCard(Player owner)
+    public void SetCard(Player owner, CardData cardData)
     {
         _owner = owner;
+        _cardData = cardData;
         _isMine = GameManager.Instance.GetMyPlayer() == owner;
 
-        icon.sprite = cardData.cardIcon;
+        artAnchor.sprite = _cardData.cardIcon;
     }
+    public void TakeAction(Action onRevealComplete)
+    {
+        ActionStart(onRevealComplete);
+
+        _state = State.Flipping;
+        _stateTimer = 1f;
+
+        _canMakeAction = true;
+        _canAttack = true;
+    }
+
     
     public void AddToBoard()
     {
@@ -105,7 +174,7 @@ public abstract class Card : MonoBehaviour
         LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.25f: transform.position.y -0.25f, 0.25f).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
             () =>
             {
-                GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), cardData.attackPoints);
+                GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
     }
 
@@ -117,7 +186,7 @@ public abstract class Card : MonoBehaviour
 
     protected void ActionComplete()
     {
-        Debug.Log((ImOwner() ? "Player " : "Enemy ") + "complete: " + cardData.cardName);
+        Debug.Log((ImOwner() ? "Player " : "Enemy ") + "complete: " + _cardData.cardName);
         _isActive = false;
         _onRevealComplete();
     }

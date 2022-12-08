@@ -106,7 +106,7 @@ public class Card : MonoBehaviour
             {
                 case State.Flipping:
                     _state = State.SpecialEffect;
-                    _stateTimer = _cardData.hasSpecialEffect ? 2f : 0f;
+                    _stateTimer = _cardData.hasSpecialEffect ? 1.5f : 0f;
                     break;
                 case State.SpecialEffect:
                     _state = State.Attacking;
@@ -142,7 +142,7 @@ public class Card : MonoBehaviour
         ActionStart(onRevealComplete);
 
         _state = State.Flipping;
-        _stateTimer = 1f;
+        _stateTimer = 0.5f;
 
         _canDoSpecialEffect = true;
         _canAttack = true;
@@ -152,11 +152,10 @@ public class Card : MonoBehaviour
     {
         if (_owner.GetCoins() < _cardData.cost) return;
         
-        transform.position += _owner.ImOwner() ? Vector3.up * 2.5f : Vector3.up * -2.5f;
         _isInBoard = true;
-        
         _owner.RemoveFromHand(this);
-        Board.Instance.AddToBoardHand(this, _owner);
+        Board.Instance.AddToHand(this);
+        
         // Change player currency
         _owner.SpendCoins(_cardData.cost);
     }
@@ -165,15 +164,16 @@ public class Card : MonoBehaviour
     {
         LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
     }
+
+    public bool ImOwner() => _owner.ImOwner();
     
     // Private Methods **********
     private void AddToHand()
     {
-        transform.position += Vector3.down * 2.5f;
         _isInBoard = false;
-        
         _owner.AddToHand(this);
-        Board.Instance.RemoveFromBoardHand(this);
+        Board.Instance.RemoveFromHand(this);
+        
         // Change player currency
         _owner.AddCoins(_cardData.cost);
     }

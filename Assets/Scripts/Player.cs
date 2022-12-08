@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHandeable
 {
     // Public *****
     public event EventHandler<int> OnHealthChange;
@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     
     // Serialized *****
     [SerializeField] private int baseHealth = 300;
-    [SerializeField] private Transform handTransform;
+    [SerializeField] private Transform handAnchor;
     [Header("Card")] 
     [SerializeField] private Card cardPrefab;
     [SerializeField] private List<CardData> deck = new List<CardData>();
@@ -50,24 +50,11 @@ public class Player : MonoBehaviour
         OnHealthChange?.Invoke(this, _health);
     }
 
-    private void ReorderCards()
-    {
-        int handSize = _hand.Count;
-        float cardSize = 1f;
-        int handHalf = handSize / 2;
-        for (int i=0; i<handSize; i++)
-        {
-            float newPosX = handSize % 2 == 0 ? i - handHalf + (cardSize/2) : i - handHalf;
-            Vector3 position = handTransform.position;
-            _hand[i].transform.position = new Vector3(position.x + newPosX, position.y, position.z);
-        }
-    }
-    
     private void GameManager_OnTurnChange(object sender, int newTurn)
     {
         AddCoins(newTurn);
     }
-    
+
     // Public Methods *****
     public void DrawCard()
     {
@@ -75,11 +62,10 @@ public class Player : MonoBehaviour
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
         
-        Card newCard = Instantiate(cardPrefab, handTransform);
+        Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard);
         AddToHand(newCard);
     }
-
     public void AddRandomToBoard()
     {
         if (_hand.Count <= 0) return;
@@ -90,12 +76,27 @@ public class Player : MonoBehaviour
     public void AddToHand(Card card)
     {
         _hand.Add(card);
+        card.transform.SetParent(handAnchor, false);
+        
         ReorderCards();
     }
     public void RemoveFromHand(Card card)
     {
         _hand.Remove(card);
         ReorderCards();
+    }
+    public void ReorderCards()
+    {
+        int handSize = _hand.Count;
+        if (handSize <= 0) return;
+        
+        float cardSize = 1f;
+        int handHalf = handSize / 2;
+        for (int i=0; i<handSize; i++)
+        {
+            float newPosX = handSize % 2 == 0 ? i - handHalf + (cardSize/2) : i - handHalf;
+            _hand[i].transform.localPosition = new Vector3(newPosX, 0f, 0);
+        }
     }
     public int GetCoins() => _coins;
     public void SpendCoins(int amount)
@@ -111,7 +112,6 @@ public class Player : MonoBehaviour
         OnBalanceChange?.Invoke(this,_coins);
     }
     public bool ImOwner() => this == GameManager.Instance.GetMyPlayer();
-
     // Health
     public void TakeDamage(int damageAmount)
     {
@@ -129,13 +129,11 @@ public class Player : MonoBehaviour
         
         if (_health <= 0) Died();
     }
-    
     public void AddShield(int amount)
     {
         _shield += amount;
         OnShieldChange?.Invoke(this, amount);
     }
-
     public void Died()
     {
         OnDead?.Invoke(this,EventArgs.Empty);
@@ -146,7 +144,6 @@ public class Player : MonoBehaviour
     {
         GameManager.Instance.GetEnemy(this).AddPoison(amount);
     }
-
     public void AddPoison(int amount)
     {
         Debug.Log("Poison not working");

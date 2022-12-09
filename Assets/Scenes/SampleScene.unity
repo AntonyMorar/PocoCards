@@ -2054,9 +2054,13 @@ MonoBehaviour:
   handAnchor: {fileID: 2047505958}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
   deck:
+  - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
+  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: da76f2d9c37cc904c93bc3d24942f087, type: 2}
+  - {fileID: 11400000, guid: aedb43565f56fd24187d5e3634486daa, type: 2}
   - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
   - {fileID: 11400000, guid: 0fa188a7b5104b740a6e31a3618ee043, type: 2}
-  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
 --- !u!1 &1771763050
 GameObject:
   m_ObjectHideFlags: 0
@@ -2140,8 +2144,12 @@ MonoBehaviour:
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
   deck:
   - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
-  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
+  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: da76f2d9c37cc904c93bc3d24942f087, type: 2}
   - {fileID: 11400000, guid: aedb43565f56fd24187d5e3634486daa, type: 2}
+  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
+  - {fileID: 11400000, guid: 0fa188a7b5104b740a6e31a3618ee043, type: 2}
+  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
 --- !u!4 &1878098186
 Transform:
   m_ObjectHideFlags: 0

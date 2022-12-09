@@ -6,29 +6,41 @@ using UnityEngine;
 public class CardData : ScriptableObject
 {
     public string cardName;
+    [Multiline]
+    public string description;
     public Sprite cardIcon;
     public int attackPoints;
     public int cost = 1;
     
-    [Header("Special effects")] 
+    [Header("Special effects *****")] 
     public bool hasSpecialEffect = true;
-    [Tooltip("Add random card from deck to your hand")]
+    
+    [Header("Draw")]
+    [Tooltip("Draws a card from your deck")]
     [Range(0,10)]
-    public int addRandomCardHand;
-    [Tooltip("Add random card from deck to the board")]
+    public int drawToHand;
+    [Tooltip("Draws a card int the board from your deck")]
     [Range(0,10)]
-    public int addRandomCardBoard;
+    public int drawToBoard;
+    
+    [Header("Health")]
+    public int restoreHealth;
     public int addShield;
     [Tooltip("Poisoning to your opponent, affects next turn")]
-    public int addEnemyPoison;
-    [Range(0,10)]
+    public int addPoison;
+    
+    [Header("Balance")]
+    [Range(0,20)]
     public int stealCoin;
     [Tooltip("Reduce the cost of the next card, spell end at the end of the turn")]
-    public int reduceCardCost;
-    public int reduceAllDamage;
+    [Range(0,5)]
+    public int reduceNextCardCost;
+    
+    [Header("Damage")]
+    public int reduceTurnDamage;
 
 
-    [Header("Effects conditions")] 
+    [Header("Conditions *****")] 
     [Tooltip("Condition affect if there this number of enemy cards in the board")]
     public int enemyCardsInBoard;
     [Tooltip("Condition affect if there this number of your cards in the board")]

@@ -7,7 +7,8 @@ using Random = UnityEngine.Random;
 public class Player : MonoBehaviour, IHandeable
 {
     // Public *****
-    public event EventHandler<int> OnHealthChange;
+    public event EventHandler<int> OnHealthChange; // return the actual health
+    public event EventHandler<int> OnRestoreHealth; // Return the restore amount
     public event EventHandler OnDead;
     public event EventHandler<int> OnBalanceChange;
     // Spell events
@@ -149,6 +150,13 @@ public class Player : MonoBehaviour, IHandeable
         if(shieldTemp != _shield) OnShieldChange?.Invoke(this, _shield);
         
         if (_health <= 0) Died();
+    }
+
+    public void RestoreHealth(int amount)
+    {
+        _health += amount;
+        OnRestoreHealth?.Invoke(this,amount);
+        OnHealthChange?.Invoke(this, _health);
     }
     public void AddShield(int amount)
     {

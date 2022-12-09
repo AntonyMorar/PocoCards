@@ -110,7 +110,7 @@ public class Card : MonoBehaviour
                     break;
                 case State.SpecialEffect:
                     _state = State.Attacking;
-                    _stateTimer = 0.5f;
+                    _stateTimer = _cardData.attackPoints <= 0 ? 0 : 0.5f;
                     break;
                 case State.Attacking:
                     _state = State.CoolOff;
@@ -200,21 +200,27 @@ public class Card : MonoBehaviour
     private void SpecialEffect()
     {
         // Add Random card to hand
-        if (_cardData.addRandomCardHand > 0)
+        if (_cardData.drawToHand > 0)
         {
-            for (int i = 0; i < _cardData.addRandomCardHand; i++)
+            for (int i = 0; i < _cardData.drawToHand; i++)
             {
                 _owner.DrawCard();
             }
         }
         
         // Add random card from deck to the board
-        if (_cardData.addRandomCardBoard > 0)
+        if (_cardData.drawToBoard > 0)
         {
-            for (int i = 0; i < _cardData.addRandomCardBoard; i++)
+            for (int i = 0; i < _cardData.drawToBoard; i++)
             {
                 _owner.AddDeckToBoard();
             }
+        }
+        
+        // Restore Health
+        if (_cardData.restoreHealth> 0)
+        {
+            _owner.RestoreHealth(_cardData.restoreHealth);
         }
         
         // Add Shield
@@ -230,21 +236,21 @@ public class Card : MonoBehaviour
         }
         
         // Poison an enemy
-        if (_cardData.addEnemyPoison > 0)
+        if (_cardData.addPoison > 0)
         {
-            _owner.PoisonEnemy(_cardData.addEnemyPoison);
+            _owner.PoisonEnemy(_cardData.addPoison);
         }
         
         // Next card cost less
-        if (_cardData.reduceCardCost > 0)
+        if (_cardData.reduceNextCardCost > 0)
         {
-            _owner.AddPriceReduce(_cardData.reduceCardCost);
+            _owner.AddPriceReduce(_cardData.reduceNextCardCost);
         }
         
-        // Next turn recieve less damage
-        if (_cardData.reduceAllDamage > 0)
+        // Next turn recive less damage
+        if (_cardData.reduceTurnDamage > 0)
         {
-            _owner.AddDamageReduce(_cardData.reduceAllDamage);
+            _owner.AddDamageReduce(_cardData.reduceTurnDamage);
         }
         
     }

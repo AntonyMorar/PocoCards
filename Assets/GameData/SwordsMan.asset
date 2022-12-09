@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a0480f44ca514146a97b1f810a510a3, type: 3}
-  m_Name: Fly
+  m_Name: SwordsMan
   m_EditorClassIdentifier: 
-  cardName: Units
-  cardIcon: {fileID: 21300000, guid: a4c77cea19fd0f84581d6e437a86290c, type: 3}
-  attackPoints: 2
-  cost: 2
-  hasSpecialEffect: 1
-  addRandomCardHand: 0
-  addRandomCardBoard: 0
+  cardName: SwordsMan
+  description: Deals 3 attack damage and no habilities
+  cardIcon: {fileID: 21300000, guid: 575d397bdfa2b9b4d8346d3c14762883, type: 3}
+  attackPoints: 3
+  cost: 1
+  hasSpecialEffect: 0
+  drawToHand: 0
+  drawToBoard: 0
+  restoreHealth: 0
   addShield: 0
-  addEnemyPoison: 0
-  stealCoin: 1
-  reduceCardCost: 0
-  reduceAllDamage: 0
+  addPoison: 0
+  stealCoin: 0
+  reduceNextCardCost: 0
+  reduceTurnDamage: 0
   enemyCardsInBoard: 0
   allyCardsInBoard: 0

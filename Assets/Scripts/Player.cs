@@ -66,11 +66,14 @@ public class Player : MonoBehaviour, IHandeable
         newCard.SetCard(this, randCard);
         AddToHand(newCard);
     }
-    public void AddRandomToBoard()
+    public void AddDeckToBoard()
     {
-        if (_hand.Count <= 0) return;
-        int randomCard = Random.Range(0, _hand.Count);
-        _hand[randomCard].AddToBoard();
+        if (deck.Count <= 0) return;
+        
+        CardData randCard = deck[Random.Range(0, deck.Count)];
+        Card newCard = Instantiate(cardPrefab, handAnchor);
+        newCard.SetCard(this, randCard);
+        newCard.AddToBoard();
     }
     
     public void AddToHand(Card card)
@@ -99,17 +102,20 @@ public class Player : MonoBehaviour, IHandeable
         }
     }
     public int GetCoins() => _coins;
-    public void SpendCoins(int amount)
-    {
-        _coins -= amount;
-        _coins = Mathf.Clamp(_coins, 0, 999);
-        OnBalanceChange?.Invoke(this,_coins);
-    }
     public void AddCoins(int amount)
     {
         _coins += amount;
         _coins = Mathf.Clamp(_coins, 0, 999);
         OnBalanceChange?.Invoke(this,_coins);
+    }
+    public bool SpendCoins(int amount)
+    {
+        if (_coins <= 0) return false;
+        
+        _coins -= amount;
+        _coins = Mathf.Clamp(_coins, 0, 999);
+        OnBalanceChange?.Invoke(this,_coins);
+        return true;
     }
     public bool ImOwner() => this == GameManager.Instance.GetMyPlayer();
     // Health
@@ -147,5 +153,16 @@ public class Player : MonoBehaviour, IHandeable
     public void AddPoison(int amount)
     {
         Debug.Log("Poison not working");
+    }
+
+    public bool StealCoin(int amount)
+    {
+        if (GameManager.Instance.GetEnemy(this).SpendCoins(amount))
+        {
+            AddCoins(amount);
+            return true;
+        }
+        
+        return false;
     }
 }

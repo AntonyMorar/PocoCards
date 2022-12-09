@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fly
   m_EditorClassIdentifier: 
   cardName: Units
-  cardIcon: {fileID: 21300000, guid: d119733824d7f1f4ebd6ee9c18abd89a, type: 3}
+  cardIcon: {fileID: 21300000, guid: a4c77cea19fd0f84581d6e437a86290c, type: 3}
   attackPoints: 2
   cost: 2
   hasSpecialEffect: 1

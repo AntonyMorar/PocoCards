@@ -202,23 +202,33 @@ public class Card : MonoBehaviour
         // Add Random card to hand
         if (_cardData.addRandomCardHand > 0)
         {
-            Debug.Log("Add Random card to hand");
-            _owner.DrawCard();
+            for (int i = 0; i < _cardData.addRandomCardHand; i++)
+            {
+                _owner.DrawCard();
+            }
         }
         
         // Add random card from deck to the board
         if (_cardData.addRandomCardBoard > 0)
         {
-            Debug.Log("NOT WORKING");
+            for (int i = 0; i < _cardData.addRandomCardBoard; i++)
+            {
+                _owner.AddDeckToBoard();
+            }
         }
         
         // Add Shield
         if (_cardData.addShield > 0)
         {
-            Debug.Log("Adding shield");
             _owner.AddShield(_cardData.addShield);
         }
-
+        
+        // Steal coin from opponent
+        if (_cardData.stealCoin > 0)
+        {
+            _owner.StealCoin(_cardData.stealCoin);
+        }
+        
         if (_cardData.addEnemyPoison > 0)
         {
             Debug.Log("addEnemyPoison");

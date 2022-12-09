@@ -1085,7 +1085,7 @@ GameObject:
   m_Component:
   - component: {fileID: 906697968}
   m_Layer: 0
-  m_Name: PlayerSlot
+  m_Name: PlayerAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1098,13 +1098,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 906697967}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1993421210}
-  m_RootOrder: 1
+  m_Father: {fileID: 1771763051}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &930275215
 GameObject:
@@ -2051,7 +2051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseHealth: 30
-  handTransform: {fileID: 2047505958}
+  handAnchor: {fileID: 2047505958}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
   deck:
   - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
@@ -2087,6 +2087,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1993421210}
+  - {fileID: 1978608025}
+  - {fileID: 906697968}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2102,6 +2104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd201cbd15a9d794ba63f744babd0084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handAnchorPlayer: {fileID: 906697968}
+  handAnchorEnemy: {fileID: 1978608025}
 --- !u!1 &1878098184
 GameObject:
   m_ObjectHideFlags: 0
@@ -2132,12 +2136,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseHealth: 30
-  handTransform: {fileID: 830966763}
+  handAnchor: {fileID: 830966763}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
   deck:
-  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
-  - {fileID: 11400000, guid: 0fa188a7b5104b740a6e31a3618ee043, type: 2}
-  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
 --- !u!4 &1878098186
 Transform:
   m_ObjectHideFlags: 0
@@ -2299,7 +2301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1978608025}
   m_Layer: 0
-  m_Name: EnemySlot
+  m_Name: EnemyAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -2312,13 +2314,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978608024}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1993421210}
-  m_RootOrder: 0
+  m_Father: {fileID: 1771763051}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1993421209
 GameObject:
@@ -2350,9 +2352,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 6, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 1978608025}
-  - {fileID: 906697968}
+  m_Children: []
   m_Father: {fileID: 1771763051}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

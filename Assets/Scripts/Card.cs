@@ -150,14 +150,14 @@ public class Card : MonoBehaviour
     
     public void AddToBoard()
     {
-        if (_owner.GetCoins() < _cardData.cost) return;
+        if (_owner.GetCoins() < _cardData.cost - _owner.GetPriceReduce()) return;
         
         _isInBoard = true;
         _owner.RemoveFromHand(this);
         Board.Instance.AddToHand(this);
         
         // Change player currency
-        _owner.SpendCoins(_cardData.cost);
+        _owner.SpendCoins(_cardData.cost - _owner.GetPriceReduce());
     }
 
     public void Remove()
@@ -229,10 +229,22 @@ public class Card : MonoBehaviour
             _owner.StealCoin(_cardData.stealCoin);
         }
         
+        // Poison an enemy
         if (_cardData.addEnemyPoison > 0)
         {
-            Debug.Log("addEnemyPoison");
             _owner.PoisonEnemy(_cardData.addEnemyPoison);
+        }
+        
+        // Next card cost less
+        if (_cardData.reduceCardCost > 0)
+        {
+            _owner.AddPriceReduce(_cardData.reduceCardCost);
+        }
+        
+        // Next turn recieve less damage
+        if (_cardData.reduceAllDamage > 0)
+        {
+            _owner.AddDamageReduce(_cardData.reduceAllDamage);
         }
         
     }
@@ -244,7 +256,6 @@ public class Card : MonoBehaviour
     }
     private void ActionComplete()
     {
-        Debug.Log((_owner.ImOwner() ? "Player " : "Enemy ") + "complete: " + _cardData.cardName);
         _isActive = false;
         _onRevealComplete();
     }

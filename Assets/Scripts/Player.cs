@@ -9,8 +9,12 @@ public class Player : MonoBehaviour, IHandeable
     // Public *****
     public event EventHandler<int> OnHealthChange;
     public event EventHandler OnDead;
-    public event EventHandler<int> OnShieldChange;
     public event EventHandler<int> OnBalanceChange;
+    // Spell events
+    public event EventHandler<int> OnShieldChange;
+    public event EventHandler<int> OnPoisoningChange;
+    public event EventHandler<int> OnPriceReducedChange;
+    public event EventHandler<int> OnDamageReduceChange;
     
     // Serialized *****
     [SerializeField] private int baseHealth = 300;
@@ -23,6 +27,10 @@ public class Player : MonoBehaviour, IHandeable
     private int _health;
     private int _shield;
     private int _coins;
+    // spells
+    private int _poisonedAmount;
+    private int _priceReduced;
+    private int _damageReduced;
     //Hand
     private List<Card> _hand = new List<Card>();
 
@@ -52,7 +60,13 @@ public class Player : MonoBehaviour, IHandeable
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
     {
-        AddCoins(newTurn);
+        // Coins
+        AddCoins(Mathf.Clamp(newTurn, 0, 5));
+        
+        //Spells
+        ApplyPoisonDamage();
+        RemovePriceReduce();
+        RemoveDamageReduce();
     }
 
     // Public Methods *****
@@ -105,7 +119,7 @@ public class Player : MonoBehaviour, IHandeable
     public void AddCoins(int amount)
     {
         _coins += amount;
-        _coins = Mathf.Clamp(_coins, 0, 999);
+        _coins = Mathf.Clamp(_coins, 0, 50);
         OnBalanceChange?.Invoke(this,_coins);
     }
     public bool SpendCoins(int amount)
@@ -122,7 +136,8 @@ public class Player : MonoBehaviour, IHandeable
     public void TakeDamage(int damageAmount)
     {
         int shieldTemp = _shield;
-        int remainDamage = damageAmount - _shield;
+        int remainDamage = damageAmount - _damageReduced;
+        remainDamage -= _shield;
         if (remainDamage <= 0) remainDamage = 0;
 
         _shield -= damageAmount;
@@ -148,21 +163,56 @@ public class Player : MonoBehaviour, IHandeable
     // Spells
     public void PoisonEnemy(int amount)
     {
-        GameManager.Instance.GetEnemy(this).AddPoison(amount);
+        GameManager.Instance.GetEnemy(this).AddPoisonDamage(amount);
     }
-    public void AddPoison(int amount)
+    private void AddPoisonDamage(int amount)
     {
-        Debug.Log("Poison not working");
+        _poisonedAmount += amount;
+        OnPoisoningChange?.Invoke(this, _poisonedAmount);
     }
-
+    private void ApplyPoisonDamage()
+    {
+        if (_poisonedAmount <= 0) return;
+        
+        TakeDamage(1);
+        _poisonedAmount -= 1;
+        _poisonedAmount = Mathf.Clamp(_poisonedAmount, 0, 999);
+        
+        OnPoisoningChange?.Invoke(this, _poisonedAmount);
+    }
     public bool StealCoin(int amount)
     {
-        if (GameManager.Instance.GetEnemy(this).SpendCoins(amount))
-        {
-            AddCoins(amount);
-            return true;
-        }
-        
-        return false;
+        if (!GameManager.Instance.GetEnemy(this).SpendCoins(amount)) return false;
+        AddCoins(amount);
+        return true;
+
     }
+    public void AddPriceReduce(int amount)
+    {
+        _priceReduced += amount;
+        _priceReduced = Mathf.Clamp(_priceReduced, 0, 7);
+        OnPriceReducedChange?.Invoke(this, _priceReduced);
+    }
+    private void RemovePriceReduce()
+    {
+        if (_priceReduced <= 0) return;
+        
+        _priceReduced = 0;
+        OnPriceReducedChange?.Invoke(this, _priceReduced);
+    }
+    public int GetPriceReduce() => _priceReduced;
+    public void AddDamageReduce(int amount)
+    {
+        _damageReduced += amount;
+        _damageReduced = Mathf.Clamp(_damageReduced, 0, 100);
+        OnPriceReducedChange?.Invoke(this, _damageReduced);
+    }
+    private void RemoveDamageReduce()
+    {
+        if (_damageReduced <= 0) return;
+
+        _damageReduced = 0;
+        OnDamageReduceChange?.Invoke(this,_damageReduced);
+    }
+    
 }

@@ -1027,7 +1027,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1739560517}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: AddRandomToBoard
+        m_MethodName: AddDeckToBoard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2140,6 +2140,8 @@ MonoBehaviour:
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
   deck:
   - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
+  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
+  - {fileID: 11400000, guid: aedb43565f56fd24187d5e3634486daa, type: 2}
 --- !u!4 &1878098186
 Transform:
   m_ObjectHideFlags: 0

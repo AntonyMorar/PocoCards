@@ -23,7 +23,7 @@ public class CardData : ScriptableObject
     public int addEnemyPoison;
     [Range(0,10)]
     public int stealCoin;
-    [Tooltip("Reduce card cost next turn")]
+    [Tooltip("Reduce the cost of the next card, spell end at the end of the turn")]
     public int reduceCardCost;
     public int reduceAllDamage;
 

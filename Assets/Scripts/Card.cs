@@ -24,8 +24,6 @@ public class Card : MonoBehaviour
     // Actions & State
     private State _state;
     private float _stateTimer;
-    private bool _canDoSpecialEffect;
-    private bool _canAttack;
 
     private Action _onRevealComplete;
     private enum State
@@ -78,43 +76,30 @@ public class Card : MonoBehaviour
         if (!_isActive) return;
         
         _stateTimer -= Time.deltaTime;
-        switch (_state)
-        {
-            case State.Flipping:
-                break;
-            case State.SpecialEffect:
-                if (_canDoSpecialEffect)
-                {
-                    SpecialEffect();
-                    _canDoSpecialEffect = false;
-                }
-                break;
-            case State.Attacking:
-                if (_canAttack)
-                {
-                    MakeAttack();
-                    _canAttack = false;
-                }
-                break;
-            case State.CoolOff:
-                break;
-        }
-        
+
         if (_stateTimer <= 0)
         {
             switch (_state)
             {
                 case State.Flipping:
                     _state = State.SpecialEffect;
-                    _stateTimer = _cardData.hasSpecialEffect ? 1.5f : 0f;
+                    float specialEffectTime = _cardData.hasSpecialEffect ? 1.5f : 0;
+                    //Start special effect animation
+                    if(_cardData.hasSpecialEffect) SpecialEffectAnimation(specialEffectTime);
+                    // Timer for special effect
+                    _stateTimer = specialEffectTime;
                     break;
                 case State.SpecialEffect:
                     _state = State.Attacking;
-                    _stateTimer = _cardData.attackPoints <= 0 ? 0 : 0.5f;
+                    float attackTime = _cardData.attackPoints > 0 ? 0.5f : 0;
+                    // Start attack
+                    if(_cardData.attackPoints > 0) MakeAttack(attackTime);
+                    _stateTimer = attackTime;
                     break;
                 case State.Attacking:
                     _state = State.CoolOff;
-                    _stateTimer = 0.5f;
+                    float coolOfTime = 0.5f;
+                    _stateTimer = coolOfTime;
                     break;
                 case State.CoolOff:
                     ActionComplete();
@@ -142,30 +127,21 @@ public class Card : MonoBehaviour
         ActionStart(onRevealComplete);
 
         _state = State.Flipping;
-        _stateTimer = 0.5f;
-
-        _canDoSpecialEffect = true;
-        _canAttack = true;
+        _stateTimer = 0.75f;
     }
     
-    public void AddToBoard()
-    {
-        if (_owner.GetCoins() < _cardData.cost - _owner.GetPriceReduce()) return;
-        
-        _isInBoard = true;
-        _owner.RemoveFromHand(this);
-        Board.Instance.AddToHand(this);
-        
-        // Change player currency
-        _owner.SpendCoins(_cardData.cost - _owner.GetPriceReduce());
-    }
-
     public void Remove()
     {
         LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
     }
 
     public bool ImOwner() => _owner.ImOwner();
+
+    public void AddToBoardFromDeck()
+    {
+        _isInBoard = true;
+        Board.Instance.AddToHand(this);
+    }
     
     // Private Methods **********
     private void AddToHand()
@@ -176,6 +152,19 @@ public class Card : MonoBehaviour
         
         // Change player currency
         _owner.AddCoins(_cardData.cost);
+    }
+    
+    // Add to board from hand
+    private void AddToBoard()
+    {
+        if (_owner.GetCoins() < _cardData.cost - _owner.GetPriceReduce()) return;
+        
+        _isInBoard = true;
+        _owner.RemoveFromHand(this);
+        Board.Instance.AddToHand(this);
+        
+        // Change player currency
+        _owner.SpendCoins(_cardData.cost - _owner.GetPriceReduce());
     }
 
     private void GameManager_OnMainStart(object sender, EventArgs e)
@@ -188,15 +177,20 @@ public class Card : MonoBehaviour
         SetLock(true);
     }
 
-    private void MakeAttack()
+    private void MakeAttack(float time)
     {
-        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, 0.25f).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
+        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, time/2).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
             () =>
             {
                 GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
     }
 
+    private void SpecialEffectAnimation(float time)
+    {
+        LeanTween.scale(gameObject, new Vector3(1.33f, 1.33f, 1.33f), time/2).setEase(LeanTweenType.easeOutExpo)
+            .setLoopPingPong(1).setOnComplete(SpecialEffect);
+    }
     private void SpecialEffect()
     {
         // Add Random card to hand

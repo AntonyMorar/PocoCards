@@ -76,7 +76,6 @@ public class Player : MonoBehaviour, IHandeable
         if (deck.Count <= 0 || _hand.Count > 30) return;
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
-        
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard);
         AddToHand(newCard);
@@ -88,7 +87,7 @@ public class Player : MonoBehaviour, IHandeable
         CardData randCard = deck[Random.Range(0, deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard);
-        newCard.AddToBoard();
+        newCard.AddToBoardFromDeck();
     }
     
     public void AddToHand(Card card)
@@ -112,7 +111,7 @@ public class Player : MonoBehaviour, IHandeable
         int handHalf = handSize / 2;
         for (int i=0; i<handSize; i++)
         {
-            float newPosX = handSize % 2 == 0 ? i - handHalf + (cardSize/2) : i - handHalf;
+            float newPosX = handSize % 2 == 0 ? i*cardSize - handHalf + (cardSize/2) : i*cardSize - handHalf;
             _hand[i].transform.localPosition = new Vector3(newPosX, 0f, 0);
         }
     }

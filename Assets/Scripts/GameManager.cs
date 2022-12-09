@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     public Player GetEnemy(Player owner) => owner == player ? enemyPlayer : player;
 
+    // TODO: Put this function in player
     public void TakeDamage(Player target, int damage)
     {
         target.TakeDamage(damage);

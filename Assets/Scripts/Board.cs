@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -18,6 +19,7 @@ public class Board : MonoBehaviour, IHandeable
     private List<Card> _handToPlay = new List<Card>();
     private bool _isBusy;
     private bool _inBattlePhase;
+    private bool _waitingBattlePhaseEnd;
 
     // MonoBehaviour Callbacks *****
     private void Awake()
@@ -33,24 +35,32 @@ public class Board : MonoBehaviour, IHandeable
 
     private void Update()
     {
-        if (!_inBattlePhase || _isBusy) return;
+        if (!_inBattlePhase ||  _waitingBattlePhaseEnd || _isBusy) return;
 
         if (_handToPlay.Count <= 0)
         {
-            _inBattlePhase = false;
-            
-            foreach (Card card in _hand)
-            {
-                card.Remove();
-            }
-            _handToPlay.Clear();
-            _hand.Clear();
-            GameManager.Instance.StartPhase(GameManager.GamePhase.Main);
+            _waitingBattlePhaseEnd = true;
+            StartCoroutine(RemoveCardsCorrutine(1));
             return;
         }
         
         SetBusy();
         _handToPlay[0].TakeAction(ClearBusy);
+    }
+
+    private IEnumerator RemoveCardsCorrutine(int delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        foreach (Card card in _hand)
+        {
+            card.Remove();
+        }
+        
+        _inBattlePhase = false;
+        _handToPlay.Clear();
+        _hand.Clear();
+        GameManager.Instance.StartPhase(GameManager.GamePhase.Main);
     }
 
     // Private Methods *****
@@ -61,6 +71,7 @@ public class Board : MonoBehaviour, IHandeable
             _handToPlay.Add(card);
         }
         _inBattlePhase = true;
+        _waitingBattlePhaseEnd = false;
     }
 
     private void SetBusy()

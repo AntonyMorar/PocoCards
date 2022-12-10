@@ -114,19 +114,19 @@ public class Board : MonoBehaviour, IHandeable
         }
         
         // Card Settings
-        float cardSize = 1f;
+        float cardSize = 1.25f;
         int handHalfPlayer = playerCards.Count / 2;
         int handHalfEnemy = enemyCards.Count / 2;
 
         for (int i=0; i<playerCards.Count; i++)
         {
-            float newPosX = playerCards.Count % 2 == 0 ? i - handHalfPlayer + (cardSize/2) : i - handHalfPlayer;
+            float newPosX = playerCards.Count % 2 == 0 ? i*cardSize - handHalfPlayer + (cardSize/2) : i*cardSize - handHalfPlayer;
             playerCards[i].transform.localPosition = new Vector3(newPosX, 0f, 0f);
         }
         
         for (int i=0; i<enemyCards.Count; i++)
         {
-            float newPosX = enemyCards.Count % 2 == 0 ? i - handHalfEnemy + (cardSize/2) : i - handHalfEnemy;
+            float newPosX = enemyCards.Count % 2 == 0 ? i*cardSize - handHalfEnemy + (cardSize/2) : i*cardSize - handHalfEnemy;
             enemyCards[i].transform.localPosition = new Vector3(newPosX, 0f, 0f);
         }
         

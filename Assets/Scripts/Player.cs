@@ -6,8 +6,14 @@ using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour, IHandeable
 {
+    public class OnHealthChangeEventArgs: EventArgs
+    {
+        public float NewHealth;
+        public float Amountchange;
+        public bool ApplyEffects;
+    }
     // Public *****
-    public event EventHandler<int> OnHealthChange; // return the actual health
+    public event EventHandler<OnHealthChangeEventArgs> OnHealthChange; // return the actual health
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
     public event EventHandler OnDead;
     public event EventHandler<int> OnBalanceChange;
@@ -56,7 +62,7 @@ public class Player : MonoBehaviour, IHandeable
     private void SetInitialValues()
     {
         _health = baseHealth;
-        OnHealthChange?.Invoke(this, _health);
+        OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false});
     }
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
@@ -107,7 +113,7 @@ public class Player : MonoBehaviour, IHandeable
         int handSize = _hand.Count;
         if (handSize <= 0) return;
         
-        float cardSize = 1f;
+        float cardSize = 1.1f;
         int handHalf = handSize / 2;
         for (int i=0; i<handSize; i++)
         {
@@ -145,7 +151,7 @@ public class Player : MonoBehaviour, IHandeable
 
         _health -= remainDamage;
         _health = Mathf.Clamp(_health, 0, baseHealth);
-        OnHealthChange?.Invoke(this, _health);
+        OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = -remainDamage, ApplyEffects = true});
         if(shieldTemp != _shield) OnShieldChange?.Invoke(this, _shield);
         
         if (_health <= 0) Died();
@@ -155,7 +161,7 @@ public class Player : MonoBehaviour, IHandeable
     {
         _health += amount;
         OnRestoreHealth?.Invoke(this,amount);
-        OnHealthChange?.Invoke(this, _health);
+        OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = amount, ApplyEffects = true});
     }
     public void AddShield(int amount)
     {

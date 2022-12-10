@@ -85,7 +85,7 @@ public class Card : MonoBehaviour
                     _state = State.SpecialEffect;
                     float specialEffectTime = _cardData.hasSpecialEffect ? 1.5f : 0;
                     //Start special effect animation
-                    if(_cardData.hasSpecialEffect) SpecialEffectAnimation(specialEffectTime);
+                    if(_cardData.hasSpecialEffect) StartCoroutine(SpecialEffectAnimation(specialEffectTime));
                     // Timer for special effect
                     _stateTimer = specialEffectTime;
                     break;
@@ -186,10 +186,13 @@ public class Card : MonoBehaviour
             });
     }
 
-    private void SpecialEffectAnimation(float time)
+    private IEnumerator SpecialEffectAnimation(float time)
     {
-        LeanTween.scale(gameObject, new Vector3(1.33f, 1.33f, 1.33f), time/2).setEase(LeanTweenType.easeOutExpo)
-            .setLoopPingPong(1).setOnComplete(SpecialEffect);
+        LeanTween.scale(gameObject, new Vector3(1.33f, 1.33f, 1.33f), time / 2).setEase(LeanTweenType.easeOutExpo)
+            .setLoopPingPong(1);
+
+        yield return new WaitForSeconds((time / 2) + time * 0.2f);
+        SpecialEffect();
     }
     private void SpecialEffect()
     {

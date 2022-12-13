@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: SwordsMan
   description: Deals 3 attack damage and no habilities
-  cardIcon: {fileID: 21300000, guid: 575d397bdfa2b9b4d8346d3c14762883, type: 3}
+  cardIcon: {fileID: 21300000, guid: 8692aabdad739684faebe85d7f73e3d6, type: 3}
   attackPoints: 3
   cost: 1
   hasSpecialEffect: 0

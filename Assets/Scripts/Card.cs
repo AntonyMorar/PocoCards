@@ -132,7 +132,8 @@ public class Card : MonoBehaviour
     
     public void Remove()
     {
-        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setDestroyOnComplete(true);
+        LeanTween.moveY(gameObject, transform.position.y + 0.3f, 0.4f);
+        LeanTween.scale(gameObject, Vector3.zero, 0.25f).setDestroyOnComplete(true);
     }
 
     public bool ImOwner() => _owner.ImOwner();
@@ -188,10 +189,8 @@ public class Card : MonoBehaviour
 
     private IEnumerator SpecialEffectAnimation(float time)
     {
-        LeanTween.scale(gameObject, new Vector3(1.33f, 1.33f, 1.33f), time / 2).setEase(LeanTweenType.easeOutExpo)
-            .setLoopPingPong(1);
-
-        yield return new WaitForSeconds((time / 2) + time * 0.2f);
+        LeanTween.scale(gameObject, new Vector3(1.25f, 1.25f, 1.25f), ((time*0.8f) / 2)).setEase(LeanTweenType.easeOutExpo).setLoopPingPong(1);
+        yield return new WaitForSeconds((time / 2) + (time * 0.1f));
         SpecialEffect();
     }
     private void SpecialEffect()

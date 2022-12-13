@@ -7,14 +7,17 @@ using Unity.Mathematics;
 
 public class PlayerUI : MonoBehaviour
 {
-    // Serilized *****
+    // Serialized *****
     [SerializeField] private Player player;
-    [SerializeField] private GameObject healthVfxPrefab;
-    [SerializeField] private TMP_Text floatingHealthPrefab;
-    //[SerializeField] private ParticleSystem 
-    [Header("UI Reference")]
+    [SerializeField] private Canvas mainCanvas;
+    [Header("UI Refernece")]
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private TMP_Text coinsText;
+    [Header("Health")]
+    [SerializeField] private GameObject healthVfxPrefab;
+    [SerializeField] private TMP_Text floatingHealthPrefab;
+    [Header("Poison")]
+    [SerializeField] private GameObject poisonPrefab;
 
     private Camera _cam;
     // MonoBehaviour Callbacks *****
@@ -29,26 +32,34 @@ public class PlayerUI : MonoBehaviour
         
         player.OnHealthChange += Player_OnHealthChange;
         player.OnRestoreHealth += Player_OnRestoreHealth;
+        // Poison
+        player.OnPoisonAdd += Player_OnPoisonAdd;
+        player.OnPoisonRemoved += Player_OnPoisonRemoved;
+        // Balance
         player.OnBalanceChange += Player_OnBalanceChange;
+        player.OnCoinStealed += Player_OnCoinStealed;
     }
 
     private void OnDisable()
     {
         player.OnHealthChange -= Player_OnHealthChange;
         player.OnRestoreHealth -= Player_OnRestoreHealth;
+        // Poison
+        player.OnPoisonAdd -= Player_OnPoisonAdd;
+        player.OnPoisonRemoved -= Player_OnPoisonRemoved;
+        // Balance
         player.OnBalanceChange -= Player_OnBalanceChange;
+        player.OnCoinStealed += Player_OnCoinStealed;
     }
     
     // Private Methods *****
     private void Player_OnHealthChange(object sender, Player.OnHealthChangeEventArgs healthArgs)
     {
-        healthText.text = "Health: " + healthArgs.NewHealth;
-        
+        healthText.text = healthArgs.NewHealth + "/" + player.GetBaseHealth() ;
         if (!healthArgs.ApplyEffects) return;
-        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(_cam, healthText.transform.position);
-        Vector2 worldPos = _cam.ScreenToWorldPoint(screenPosition); 
-        TMP_Text floatingHealth = Instantiate(floatingHealthPrefab, worldPos, quaternion.identity, healthText.transform);
-        floatingHealth.text = healthArgs.Amountchange.ToString();
+        
+        TMP_Text floatingHealth = Instantiate(floatingHealthPrefab, GetSpawnPosition(true), quaternion.identity, mainCanvas.transform);
+        floatingHealth.text = healthArgs.Amountchange > 0 ? "+" + healthArgs.Amountchange : healthArgs.Amountchange.ToString();
     }
 
     private void Player_OnRestoreHealth(object sender, int health)
@@ -60,9 +71,37 @@ public class PlayerUI : MonoBehaviour
         Destroy(healthVfx, 4);
     }
 
+    // Balance
     private void Player_OnBalanceChange(object sender, int coins)
     {
-        coinsText.text = "Coins: " + coins.ToString();
+        coinsText.text = coins.ToString();
+        LeanTween.scale(coinsText.GetComponent<RectTransform>(), new Vector3(1.2f, 1.2f, 1.2f), 0.12f)
+            .setLoopPingPong(1);
     }
     
+    private void Player_OnCoinStealed(object sender, int amount)
+    {
+        TMP_Text floatingCoins = Instantiate(floatingHealthPrefab, GetSpawnPosition(false), quaternion.identity, mainCanvas.transform);
+        floatingCoins.color = new Color(255, 180, 0, 255);
+        floatingCoins.text = "+" + amount + " C";
+    }
+
+    // Poison
+    private void Player_OnPoisonAdd(object sender, int poisonedAmount)
+    {
+        Instantiate(poisonPrefab, GetSpawnPosition(true), quaternion.identity, mainCanvas.transform);
+        healthText.color = new Color(63,112,30, 255);
+    }
+
+    private void Player_OnPoisonRemoved(object sender, EventArgs e)
+    {
+        healthText.color = Color.black;
+    }
+    
+    // Spawn
+    private Vector2 GetSpawnPosition(bool healthTarget)
+    {
+        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(_cam, healthTarget ? healthText.transform.position : coinsText.transform.position);
+        return _cam.ScreenToWorldPoint(screenPosition); 
+    }
 }

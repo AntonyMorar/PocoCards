@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Poisoned Strike
   description: Deals 2 attack damage and add 1 poison to the enemy
-  cardIcon: {fileID: 21300000, guid: a56b84f780e8aef439e9a83d60ca7420, type: 3}
+  cardIcon: {fileID: 21300000, guid: 9cf03d0bd668cd14eaad83f723c83490, type: 3}
   attackPoints: 2
   cost: 2
   hasSpecialEffect: 1

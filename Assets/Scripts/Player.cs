@@ -17,9 +17,12 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
     public event EventHandler OnDead;
     public event EventHandler<int> OnBalanceChange;
+
+    public event EventHandler<int> OnCoinStealed;
     // Spell events
     public event EventHandler<int> OnShieldChange;
-    public event EventHandler<int> OnPoisoningChange;
+    public event EventHandler<int> OnPoisonAdd;
+    public event EventHandler OnPoisonRemoved;
     public event EventHandler<int> OnPriceReducedChange;
     public event EventHandler<int> OnDamageReduceChange;
     
@@ -159,6 +162,8 @@ public class Player : MonoBehaviour, IHandeable
 
     public void RestoreHealth(int amount)
     {
+        if (_health >= baseHealth) return;
+        
         _health += amount;
         OnRestoreHealth?.Invoke(this,amount);
         OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = amount, ApplyEffects = true});
@@ -172,6 +177,8 @@ public class Player : MonoBehaviour, IHandeable
     {
         OnDead?.Invoke(this,EventArgs.Empty);
     }
+
+    public int GetBaseHealth() => baseHealth;
     
     // Spells
     public void PoisonEnemy(int amount)
@@ -181,7 +188,7 @@ public class Player : MonoBehaviour, IHandeable
     private void AddPoisonDamage(int amount)
     {
         _poisonedAmount += amount;
-        OnPoisoningChange?.Invoke(this, _poisonedAmount);
+        OnPoisonAdd?.Invoke(this, _poisonedAmount);
     }
     private void ApplyPoisonDamage()
     {
@@ -191,12 +198,13 @@ public class Player : MonoBehaviour, IHandeable
         _poisonedAmount -= 1;
         _poisonedAmount = Mathf.Clamp(_poisonedAmount, 0, 999);
         
-        OnPoisoningChange?.Invoke(this, _poisonedAmount);
+        if(_poisonedAmount <= 0) OnPoisonRemoved?.Invoke(this, EventArgs.Empty);
     }
     public bool StealCoin(int amount)
     {
         if (!GameManager.Instance.GetEnemy(this).SpendCoins(amount)) return false;
         AddCoins(amount);
+        OnCoinStealed?.Invoke(this,amount);
         return true;
 
     }

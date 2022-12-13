@@ -268,7 +268,6 @@ GameObject:
   m_Component:
   - component: {fileID: 140735381}
   - component: {fileID: 140735380}
-  - component: {fileID: 140735379}
   - component: {fileID: 140735378}
   m_Layer: 0
   m_Name: UI_Camera
@@ -310,14 +309,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!81 &140735379
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140735377}
-  m_Enabled: 1
 --- !u!20 &140735380
 Camera:
   m_ObjectHideFlags: 0
@@ -520,7 +511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -529,8 +520,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281216558
+  m_fontColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -668,7 +659,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.26088318, g: 0.24705882, b: 0.29411766, a: 0}
+  m_BackGroundColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1218,12 +1209,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 906697967}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.27932963, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.18621975, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1771763051}
-  m_RootOrder: 2
+  m_Father: {fileID: 1993421210}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &930275215
 GameObject:
@@ -1382,7 +1373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.3137255}
+  m_Color: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 0.3137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1421,7 +1412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1878098185}
   healthVfxPrefab: {fileID: 4146767942057692260, guid: b1e701fb697cb634eb11ff95b946b6cd, type: 3}
-  healthChangePrefab: {fileID: 1565922262602984098, guid: f059ff52c255c794484ece0e92810a5e, type: 3}
+  floatingHealthPrefab: {fileID: 1565922262602984098, guid: f059ff52c255c794484ece0e92810a5e, type: 3}
   healthText: {fileID: 1908264895}
   coinsText: {fileID: 1480665277}
 --- !u!1 &991691655
@@ -1491,8 +1482,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281216558
+  m_fontColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1724,8 +1715,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281019179
+  m_fontColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2182,55 +2173,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
   - {fileID: 11400000, guid: 0fa188a7b5104b740a6e31a3618ee043, type: 2}
   - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
---- !u!1 &1771763050
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1771763051}
-  - component: {fileID: 1771763052}
-  m_Layer: 0
-  m_Name: Board
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1771763051
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771763050}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1993421210}
-  - {fileID: 1978608025}
-  - {fileID: 906697968}
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1771763052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771763050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd201cbd15a9d794ba63f744babd0084, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handAnchorPlayer: {fileID: 906697968}
-  handAnchorEnemy: {fileID: 1978608025}
 --- !u!1 &1878098184
 GameObject:
   m_ObjectHideFlags: 0
@@ -2348,8 +2290,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281019179
+  m_fontColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2440,11 +2382,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978608024}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.27932963, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.18621975, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1771763051}
+  m_Father: {fileID: 1993421210}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1993421209
@@ -2459,8 +2401,9 @@ GameObject:
   - component: {fileID: 1993421212}
   - component: {fileID: 1993421211}
   - component: {fileID: 1993421213}
+  - component: {fileID: 1993421214}
   m_Layer: 0
-  m_Name: BoardSprite
+  m_Name: Board
   m_TagString: Board
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2475,11 +2418,13 @@ Transform:
   m_GameObject: {fileID: 1993421209}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 6, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1771763051}
-  m_RootOrder: 0
+  m_LocalScale: {x: 10, y: 5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 906697968}
+  - {fileID: 1978608025}
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1993421211
 BoxCollider2D:
@@ -2549,7 +2494,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.12941177, g: 0.1254902, b: 0.18039216, a: 1}
+  m_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2580,6 +2525,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1993421214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993421209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd201cbd15a9d794ba63f744babd0084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handAnchorPlayer: {fileID: 906697968}
+  handAnchorEnemy: {fileID: 1978608025}
 --- !u!1 &2031095763
 GameObject:
   m_ObjectHideFlags: 0

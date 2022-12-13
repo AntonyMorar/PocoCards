@@ -15,6 +15,7 @@ public class Board : MonoBehaviour, IHandeable
     [SerializeField] private Transform handAnchorEnemy;
     
     // Private *****
+    private SpriteRenderer _spriteRenderer;
     private List<Card> _hand = new List<Card>();
     private List<Card> _handToPlay = new List<Card>();
     private bool _isBusy;
@@ -26,6 +27,8 @@ public class Board : MonoBehaviour, IHandeable
     {
         if (Instance != null && Instance != this) Destroy(this);
         else Instance = this;
+
+        ResizeBoardToScreen();
     }
 
     private void Start()
@@ -48,6 +51,24 @@ public class Board : MonoBehaviour, IHandeable
         _handToPlay[0].TakeAction(ClearBusy);
     }
 
+    // Private Methods *****
+    private void ResizeBoardToScreen()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (!_spriteRenderer) return;
+
+        var localScale = transform.localScale;
+        localScale = Vector3.one;
+        
+        float width = _spriteRenderer.sprite.bounds.size.x;
+        float height = _spriteRenderer.sprite.bounds.size.y;
+
+        double worldScreenHeight = Camera.main.orthographicSize * 2.0;
+        double worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+
+        localScale = new Vector3((float)worldScreenWidth / width, (float)(worldScreenHeight / height)* 0.4f, 0);
+        transform.localScale = localScale;
+    }
     private IEnumerator RemoveCardsCorrutine(int delay)
     {
         yield return new WaitForSeconds(delay);
@@ -63,7 +84,6 @@ public class Board : MonoBehaviour, IHandeable
         GameManager.Instance.StartPhase(GameManager.GamePhase.Main);
     }
 
-    // Private Methods *****
     private void GameManager_OnBattleStart(object sender, EventArgs e)
     {
         foreach (Card card in _hand)

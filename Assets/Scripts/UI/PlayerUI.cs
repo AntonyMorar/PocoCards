@@ -10,7 +10,7 @@ public class PlayerUI : MonoBehaviour
     // Serilized *****
     [SerializeField] private Player player;
     [SerializeField] private GameObject healthVfxPrefab;
-    [SerializeField] private TMP_Text healthChangePrefab;
+    [SerializeField] private TMP_Text floatingHealthPrefab;
     //[SerializeField] private ParticleSystem 
     [Header("UI Reference")]
     [SerializeField] private TMP_Text healthText;
@@ -47,7 +47,8 @@ public class PlayerUI : MonoBehaviour
         if (!healthArgs.ApplyEffects) return;
         Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(_cam, healthText.transform.position);
         Vector2 worldPos = _cam.ScreenToWorldPoint(screenPosition); 
-        Instantiate(healthChangePrefab, worldPos, quaternion.identity, healthText.transform);
+        TMP_Text floatingHealth = Instantiate(floatingHealthPrefab, worldPos, quaternion.identity, healthText.transform);
+        floatingHealth.text = healthArgs.Amountchange.ToString();
     }
 
     private void Player_OnRestoreHealth(object sender, int health)

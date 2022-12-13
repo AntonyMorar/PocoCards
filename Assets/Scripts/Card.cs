@@ -20,6 +20,7 @@ public class Card : MonoBehaviour
     private bool _isSelectable = true;
     private bool _isActive; // Making on reveal changes
     private bool _isInBoard;
+    private int _actualCost;
 
     // Actions & State
     private State _state;
@@ -38,11 +39,11 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
-    }
+        }
 
     private void OnDisable()
     {
-        if(_owner) _owner.OnBalanceChange -= Owner_OnBalanceChange;
+        if(_owner)_owner.OnBalanceChange -= Owner_OnBalanceChange;
     }
 
     private void Start()
@@ -51,6 +52,7 @@ public class Card : MonoBehaviour
 
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        Player.OnPriceChange += Player_OnPriceChange;
     }
 
     private void Update()
@@ -85,7 +87,7 @@ public class Card : MonoBehaviour
                     _state = State.SpecialEffect;
                     float specialEffectTime = _cardData.hasSpecialEffect ? 1.5f : 0;
                     //Start special effect animation
-                    if(_cardData.hasSpecialEffect) StartCoroutine(SpecialEffectAnimation(specialEffectTime));
+                    if(_cardData.hasSpecialEffect) StartCoroutine(BattleEffectAnimation(specialEffectTime));
                     // Timer for special effect
                     _stateTimer = specialEffectTime;
                     break;
@@ -113,10 +115,11 @@ public class Card : MonoBehaviour
     {
         _owner = owner;
         _cardData = cardData;
+        _actualCost = _cardData.cost;
 
         artAnchor.sprite = _cardData.cardIcon;
-        attackPointsText.text = cardData.attackPoints.ToString();
-        costText.text = cardData.cost.ToString();
+        attackPointsText.text = _cardData.attackPoints.ToString();
+        costText.text = _actualCost.ToString();
         
         _owner.OnBalanceChange += Owner_OnBalanceChange;
         CheckBalanceAvailability(_owner.GetCoins());
@@ -151,26 +154,35 @@ public class Card : MonoBehaviour
         _owner.AddToHand(this);
         Board.Instance.RemoveFromHand(this);
         
+        _owner.RemovePriceReduce();
+        
         // Change player currency
-        _owner.AddCoins(_cardData.cost);
+        _owner.AddCoins(_actualCost);
     }
     
     // Add to board from hand
     private void AddToBoard()
     {
-        if (_owner.GetCoins() < _cardData.cost - _owner.GetPriceReduce()) return;
+        if (_owner.GetCoins() < _actualCost - _owner.GetPriceReduce()) return;
         
         _isInBoard = true;
         _owner.RemoveFromHand(this);
         Board.Instance.AddToHand(this);
         
         // Change player currency
-        _owner.SpendCoins(_cardData.cost - _owner.GetPriceReduce());
+        _owner.SpendCoins(_actualCost - _owner.GetPriceReduce());
+        
+        // Apply Immediate effects
+        // Next card cost less
+        if (_cardData.reduceNextCardCost > 0)
+        {
+            _owner.AddPriceReduce(_cardData.reduceNextCardCost);
+        }
     }
 
     private void GameManager_OnMainStart(object sender, EventArgs e)
     {
-        SetLock(false);
+        CheckBalanceAvailability(_owner.GetCoins());
     }
     
     private void GameManager_OnBattleStart(object sender, EventArgs e)
@@ -187,13 +199,13 @@ public class Card : MonoBehaviour
             });
     }
 
-    private IEnumerator SpecialEffectAnimation(float time)
+    private IEnumerator BattleEffectAnimation(float time)
     {
         LeanTween.scale(gameObject, new Vector3(1.25f, 1.25f, 1.25f), ((time*0.8f) / 2)).setEase(LeanTweenType.easeOutExpo).setLoopPingPong(1);
         yield return new WaitForSeconds((time / 2) + (time * 0.1f));
-        SpecialEffect();
+        BattleEffect();
     }
-    private void SpecialEffect()
+    private void BattleEffect()
     {
         // Add Random card to hand
         if (_cardData.drawToHand > 0)
@@ -237,12 +249,6 @@ public class Card : MonoBehaviour
             _owner.PoisonEnemy(_cardData.addPoison);
         }
         
-        // Next card cost less
-        if (_cardData.reduceNextCardCost > 0)
-        {
-            _owner.AddPriceReduce(_cardData.reduceNextCardCost);
-        }
-        
         // Next turn recive less damage
         if (_cardData.reduceTurnDamage > 0)
         {
@@ -269,7 +275,7 @@ public class Card : MonoBehaviour
     private void CheckBalanceAvailability(int newBalance)
     {
         if (_isInBoard) return;
-        SetLock(newBalance < _cardData.cost);
+        SetLock(newBalance < _actualCost);
     }
     private void SetLock(bool setLock)
     {
@@ -278,5 +284,14 @@ public class Card : MonoBehaviour
 
         if (_isInBoard) return;
         blockedCard.SetActive(setLock);
+    }
+    
+    // Immediate effects
+    private void Player_OnPriceChange(object sender, Player.OnPriceChangeEventArgs priceArgs)
+    {
+        if (priceArgs.Owner != _owner) return;
+        
+        _actualCost = _cardData.cost - priceArgs.AmountChange;
+        costText.text = _actualCost.ToString();
     }
 }

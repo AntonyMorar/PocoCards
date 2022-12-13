@@ -12,6 +12,12 @@ public class Player : MonoBehaviour, IHandeable
         public float Amountchange;
         public bool ApplyEffects;
     }
+    
+    public class OnPriceChangeEventArgs: EventArgs
+    {
+        public int AmountChange;
+        public Player Owner;
+    }
     // Public *****
     public event EventHandler<OnHealthChangeEventArgs> OnHealthChange; // return the actual health
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
@@ -23,7 +29,7 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnShieldChange;
     public event EventHandler<int> OnPoisonAdd;
     public event EventHandler OnPoisonRemoved;
-    public event EventHandler<int> OnPriceReducedChange;
+    public static event EventHandler<OnPriceChangeEventArgs> OnPriceChange;
     public event EventHandler<int> OnDamageReduceChange;
     
     // Serialized *****
@@ -75,7 +81,6 @@ public class Player : MonoBehaviour, IHandeable
         
         //Spells
         ApplyPoisonDamage();
-        RemovePriceReduce();
         RemoveDamageReduce();
     }
 
@@ -142,10 +147,10 @@ public class Player : MonoBehaviour, IHandeable
     }
     public bool ImOwner() => this == GameManager.Instance.GetMyPlayer();
     // Health
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(int damageAmount, bool ignoreProtection = false)
     {
         int shieldTemp = _shield;
-        int remainDamage = damageAmount - _damageReduced;
+        int remainDamage = damageAmount - (ignoreProtection ? 0 :_damageReduced);
         remainDamage -= _shield;
         if (remainDamage <= 0) remainDamage = 0;
 
@@ -194,7 +199,7 @@ public class Player : MonoBehaviour, IHandeable
     {
         if (_poisonedAmount <= 0) return;
         
-        TakeDamage(1);
+        TakeDamage(1, true);
         _poisonedAmount -= 1;
         _poisonedAmount = Mathf.Clamp(_poisonedAmount, 0, 999);
         
@@ -212,21 +217,29 @@ public class Player : MonoBehaviour, IHandeable
     {
         _priceReduced += amount;
         _priceReduced = Mathf.Clamp(_priceReduced, 0, 7);
-        OnPriceReducedChange?.Invoke(this, _priceReduced);
+        OnPriceChange?.Invoke(this, new OnPriceChangeEventArgs
+        {
+            AmountChange = _priceReduced,
+            Owner = this
+        });
     }
-    private void RemovePriceReduce()
+    public void RemovePriceReduce()
     {
         if (_priceReduced <= 0) return;
         
         _priceReduced = 0;
-        OnPriceReducedChange?.Invoke(this, _priceReduced);
+        OnPriceChange?.Invoke(this, new OnPriceChangeEventArgs
+        {
+            AmountChange = _priceReduced,
+            Owner = this
+        });
     }
     public int GetPriceReduce() => _priceReduced;
     public void AddDamageReduce(int amount)
     {
         _damageReduced += amount;
         _damageReduced = Mathf.Clamp(_damageReduced, 0, 100);
-        OnPriceReducedChange?.Invoke(this, _damageReduced);
+        OnDamageReduceChange?.Invoke(this, _damageReduced);
     }
     private void RemoveDamageReduce()
     {

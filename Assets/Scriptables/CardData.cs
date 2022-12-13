@@ -12,7 +12,7 @@ public class CardData : ScriptableObject
     public int attackPoints;
     public int cost = 1;
     
-    [Header("Special effects *****")] 
+    [Header("Battle effects *****")] 
     public bool hasSpecialEffect = true;
     
     [Header("Draw")]
@@ -32,13 +32,14 @@ public class CardData : ScriptableObject
     [Header("Balance")]
     [Range(0,20)]
     public int stealCoin;
+
+    [Header("Damage")]
+    public int reduceTurnDamage;
+    
+    [Header("Inmediate effects *****")] 
     [Tooltip("Reduce the cost of the next card, spell end at the end of the turn")]
     [Range(0,5)]
     public int reduceNextCardCost;
-    
-    [Header("Damage")]
-    public int reduceTurnDamage;
-
 
     [Header("Conditions *****")] 
     [Tooltip("Condition affect if there this number of enemy cards in the board")]

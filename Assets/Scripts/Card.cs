@@ -144,7 +144,7 @@ public class Card : MonoBehaviour
     public void AddToBoardFromDeck()
     {
         _isInBoard = true;
-        Board.Instance.AddToHand(this);
+        Board.Instance.AddToHand(this, true);
     }
     
     // Private Methods **********

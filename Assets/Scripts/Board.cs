@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class Board : MonoBehaviour, IHandeable
+public class Board : MonoBehaviour
 {
     // Public *****
     public static Board Instance { get; private set; }
@@ -43,7 +43,7 @@ public class Board : MonoBehaviour, IHandeable
         if (_handToPlay.Count <= 0)
         {
             _waitingBattlePhaseEnd = true;
-            StartCoroutine(RemoveCardsCorrutine(1));
+            StartCoroutine(RemoveCardsCorrutine(0.5f));
             return;
         }
         
@@ -69,12 +69,13 @@ public class Board : MonoBehaviour, IHandeable
         localScale = new Vector3((float)worldScreenWidth / width, (float)(worldScreenHeight / height)* 0.4f, 0);
         transform.localScale = localScale;
     }
-    private IEnumerator RemoveCardsCorrutine(int delay)
+    private IEnumerator RemoveCardsCorrutine(float delay)
     {
         yield return new WaitForSeconds(delay);
         
         foreach (Card card in _hand)
         {
+            yield return new WaitForSeconds(0.15f);
             card.Remove();
         }
         
@@ -108,22 +109,25 @@ public class Board : MonoBehaviour, IHandeable
     }
 
     // Public Methods *****
-    public void AddToHand(Card card)
+    public void AddToHand(Card card, bool isNew = false)
     {
-        _hand.Add(card);
-        card.transform.SetParent(card.ImOwner() ? handAnchorPlayer : handAnchorEnemy, false);
+        ReorderActualCards(card.ImOwner() ? 1: 0, card.ImOwner() ? 0: 1);
+        card.transform.SetParent(card.ImOwner() ? handAnchorPlayer : handAnchorEnemy);
         
-        ReorderCards();
+        if (isNew) card.transform.position = new Vector3(0, card.ImOwner() ? -6 : 6, 0);
+        LeanTween.moveLocal(card.gameObject, GetCardPositionInHand(_hand.Count,1), 0.15f);
+
+        _hand.Add(card);
     }
+    
     public void RemoveFromHand(Card card)
     {
         _hand.Remove(card);
-        ReorderCards();
+        ReorderActualCards(0,0);
     }
-    public void ReorderCards()
+
+    public void ReorderActualCards(int newPlayerCardsToAdd, int newEnemyCardsToAdd)
     {
-        if(_hand.Count <= 0) return;
-            
         List<Card> playerCards = new List<Card>();
         List<Card> enemyCards = new List<Card>();
         
@@ -133,24 +137,29 @@ public class Board : MonoBehaviour, IHandeable
             else enemyCards.Add(card);
         }
         
-        // Card Settings
-        float cardSize = 1.25f;
-        int handHalfPlayer = playerCards.Count / 2;
-        int handHalfEnemy = enemyCards.Count / 2;
-
         for (int i=0; i<playerCards.Count; i++)
         {
-            float newPosX = playerCards.Count % 2 == 0 ? i*cardSize - handHalfPlayer + (cardSize/2) : i*cardSize - handHalfPlayer;
-            playerCards[i].transform.localPosition = new Vector3(newPosX, 0f, 0f);
+            LeanTween.moveLocal(playerCards[i].gameObject, GetCardPositionInHand(i, newPlayerCardsToAdd), 0.15f);
         }
         
         for (int i=0; i<enemyCards.Count; i++)
         {
-            float newPosX = enemyCards.Count % 2 == 0 ? i*cardSize - handHalfEnemy + (cardSize/2) : i*cardSize - handHalfEnemy;
-            enemyCards[i].transform.localPosition = new Vector3(newPosX, 0f, 0f);
+            LeanTween.moveLocal(enemyCards[i].gameObject, GetCardPositionInHand(i, newEnemyCardsToAdd), 0.15f);
         }
         
         playerCards.Clear();
         enemyCards.Clear();
+    }
+    
+    private Vector3 GetCardPositionInHand(int index, int newCardsToAdd)
+    {
+        int handSize = _hand.Count + newCardsToAdd;
+        if (handSize <= 0) return Vector3.zero;
+        
+        float cardSize = 1.1f;
+        int handHalf = handSize / 2;
+        
+        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
+        return new Vector3(newPosX, 0f, 0);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -87,12 +88,12 @@ public class Player : MonoBehaviour, IHandeable
     // Public Methods *****
     public void DrawCard()
     {
-        if (deck.Count <= 0 || _hand.Count > 30) return;
+        if (deck.Count <= 0 || _hand.Count > 10) return;
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard);
-        AddToHand(newCard);
+        AddToHand(newCard, true);
     }
     public void AddDeckToBoard()
     {
@@ -104,30 +105,39 @@ public class Player : MonoBehaviour, IHandeable
         newCard.AddToBoardFromDeck();
     }
     
-    public void AddToHand(Card card)
+    public void AddToHand(Card card, bool isNew = false)
     {
+        ReorderActualCards(1);
+        card.transform.SetParent(handAnchor);
+
+        if (isNew) card.transform.position = new Vector3(0, ImOwner() ? -6 : 6, 0);
+
+        LeanTween.moveLocal(card.gameObject, GetCardPositionInHand(_hand.Count,1), 0.15f);
         _hand.Add(card);
-        card.transform.SetParent(handAnchor, false);
-        
-        ReorderCards();
     }
     public void RemoveFromHand(Card card)
     {
         _hand.Remove(card);
-        ReorderCards();
+        ReorderActualCards(0);
     }
-    public void ReorderCards()
+    public void ReorderActualCards(int newCardsToAdd)
     {
-        int handSize = _hand.Count;
-        if (handSize <= 0) return;
+        for (int i=0; i<_hand.Count; i++)
+        {
+            LeanTween.moveLocal(_hand[i].gameObject, GetCardPositionInHand(i, newCardsToAdd), 0.15f);
+        }
+    }
+
+    private Vector3 GetCardPositionInHand(int index, int newCardsToAdd)
+    {
+        int handSize = _hand.Count + newCardsToAdd;
+        if (handSize <= 0) return Vector3.zero;
         
         float cardSize = 1.1f;
         int handHalf = handSize / 2;
-        for (int i=0; i<handSize; i++)
-        {
-            float newPosX = handSize % 2 == 0 ? i*cardSize - handHalf + (cardSize/2) : i*cardSize - handHalf;
-            _hand[i].transform.localPosition = new Vector3(newPosX, 0f, 0);
-        }
+        
+        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
+        return new Vector3(newPosX, 0f, 0);
     }
     public int GetCoins() => _coins;
     public void AddCoins(int amount)

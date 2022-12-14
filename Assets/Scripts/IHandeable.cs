@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IHandeable
 {
-    void AddToHand(Card card);
+    void AddToHand(Card card, bool isNew = false);
     void RemoveFromHand(Card card);
-    void ReorderCards();
+    void ReorderActualCards(int newCardsToAdd);
 }

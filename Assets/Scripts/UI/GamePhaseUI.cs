@@ -19,7 +19,7 @@ public class GamePhaseUI : MonoBehaviour
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
-        gamePhaseButton.onClick.AddListener(() => GameManager.Instance.StartPhase(GameManager.GamePhase.Battle));
+        gamePhaseButton.onClick.AddListener(() => GameManager.Instance.TryStartBattle());
     }
 
     // Private Methods *****

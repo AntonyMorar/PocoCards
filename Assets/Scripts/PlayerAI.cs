@@ -10,6 +10,7 @@ public class PlayerAI : MonoBehaviour
     // Private
     private Player _player;
     private bool _isSelectingCards;
+    private IEnumerator _selectingCardsCorrutine;
     
     // MonoBehaviour Callbacks *****
     private void Awake()
@@ -20,32 +21,34 @@ public class PlayerAI : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
     }
     
     // Private Methods *****
     private void GameManager_OnMainStart(object sender,EventArgs e)
     {
         _isSelectingCards = true;
-        StartCoroutine(SelectCardsToPlay());
-        SelectCardsToPlay();
+
+        _selectingCardsCorrutine = SelectCardsToPlay();
+        StartCoroutine(_selectingCardsCorrutine);
     }
-    private void GameManager_OnBattleStart(object sender,EventArgs e)
+    private void GameManager_OnGameOver(object sender,EventArgs e)
     {
-        
+        _isSelectingCards = false;
+        StopCoroutine(_selectingCardsCorrutine);
     }
 
     private IEnumerator SelectCardsToPlay()
     {
         Debug.Log("Pensando que poner...");
         
-        float timeThinking = Random.Range(0, GameManager.Instance.GetMainPhaseTime() * 0.5f);
+        float timeThinking = Random.Range(GameManager.Instance.GetMainPhaseTime() * 0.1f, GameManager.Instance.GetMainPhaseTime() * 0.8f);
         List<Card> cardsCanBuy = GetCardsCanBuy();
 
         Debug.Log("Puedo poner " + cardsCanBuy.Count + " cartas, lo hare en " + timeThinking + " segundos");
@@ -59,6 +62,7 @@ public class PlayerAI : MonoBehaviour
         }
 
         _isSelectingCards = false;
+        if(GameManager.Instance.GetGamePhase() == GameManager.GamePhase.Waiting) GameManager.Instance.SetPhase(GameManager.GamePhase.Battle);
     }
     
     
@@ -80,4 +84,6 @@ public class PlayerAI : MonoBehaviour
 
         return cardsCanBuy;
     }
+
+    public bool IsSelectingCards() => _isSelectingCards;
 }

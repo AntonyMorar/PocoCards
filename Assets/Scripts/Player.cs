@@ -191,6 +191,7 @@ public class Player : MonoBehaviour, IHandeable
     public void Died()
     {
         OnDead?.Invoke(this,EventArgs.Empty);
+        GameManager.Instance.SetPhase(GameManager.GamePhase.GameOver);
     }
 
     public int GetBaseHealth() => baseHealth;

@@ -82,7 +82,7 @@ public class Board : MonoBehaviour
         _inBattlePhase = false;
         _handToPlay.Clear();
         _hand.Clear();
-        GameManager.Instance.StartPhase(GameManager.GamePhase.Main);
+        GameManager.Instance.SetPhase(GameManager.GamePhase.Main);
     }
 
     private void GameManager_OnBattleStart(object sender, EventArgs e)

@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour
         Idle,
         PreMain,
         Main,
+        Waiting, // Player click battle waiting for enemy
         Battle,
         GameOver
     }
-    public event EventHandler OnMainStart;
     public event EventHandler OnPreMainStart;
+    public event EventHandler OnMainStart;
+    public event EventHandler OnWaitingStart;
     public event EventHandler OnBattleStart;
     public event EventHandler OnGameOver;
     public event EventHandler<int> OnTurnChange;
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if ( _gamePhase is GamePhase.PreMain or GamePhase.Battle) return;
+        if ( _gamePhase is GamePhase.PreMain or GamePhase.Battle or GamePhase.GameOver) return;
         
         _phaseTimer -= Time.deltaTime;
 
@@ -54,11 +56,12 @@ public class GameManager : MonoBehaviour
             switch (_gamePhase)
             {
                 case GamePhase.Idle:
-                    StartPhase(GamePhase.PreMain);
+                    SetPhase(GamePhase.PreMain);
                     StartCoroutine(SetInitialCards());
                     break;
                 case GamePhase.Main:
-                    StartPhase(GamePhase.Battle);
+                case GamePhase.Waiting:
+                    SetPhase(GamePhase.Battle);
                     break;
             }
         }
@@ -73,11 +76,11 @@ public class GameManager : MonoBehaviour
             enemyPlayer.DrawCard();
             yield return new WaitForSeconds(0.33f);
         }
-        StartPhase(GamePhase.Main);
+        SetPhase(GamePhase.Main);
     }
 
     // Public Methods *****
-    public void StartPhase(GamePhase gamePhase)
+    public void SetPhase(GamePhase gamePhase)
     {
         if (_gamePhase == gamePhase) return;
         
@@ -98,6 +101,9 @@ public class GameManager : MonoBehaviour
                 }
                 OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
+                break;
+            case GamePhase.Waiting:
+                OnWaitingStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.Battle:
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
@@ -120,6 +126,18 @@ public class GameManager : MonoBehaviour
     {
         target.TakeDamage(damage);
     }
-
     public float GetMainPhaseTime() => mainPhaseTime;
+    public GamePhase GetGamePhase() => _gamePhase;
+
+    public bool TryStartBattle()
+    {
+        if (enemyPlayer.TryGetComponent(out PlayerAI playerAI) && !playerAI.IsSelectingCards())
+        {
+            SetPhase(GamePhase.Battle);
+            return true;
+        }
+        
+        SetPhase(GamePhase.Waiting);
+        return false;
+    }
 }

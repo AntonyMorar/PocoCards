@@ -23,6 +23,7 @@ public class Card : MonoBehaviour
     private bool _isSelectable = true;
     private bool _isActive; // Making on reveal changes
     private bool _isInBoard;
+    private float _flippingTime = 0.2f;
     private bool _isFlipped;
     private bool _isFlipping;
     private int _actualCost;
@@ -34,6 +35,7 @@ public class Card : MonoBehaviour
     private Action _onRevealComplete;
     private enum State
     {
+        Idle,
         Flipping,
         SpecialEffect,
         Attacking,
@@ -44,25 +46,30 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
-        }
+        
+        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
+        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
+    }
 
     private void OnDisable()
     {
         if(_owner)_owner.OnBalanceChange -= Owner_OnBalanceChange;
+        
+        GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
+        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
     }
 
     private void Start()
     {
         _camera = Camera.main;
-
-        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         Player.OnPriceChange += Player_OnPriceChange;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && GameManager.Instance.GetGamePhase() != GameManager.GamePhase.GameOver)
         {
             RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
 
@@ -72,16 +79,6 @@ public class Card : MonoBehaviour
 
                 if (_isInBoard) AddToHand();
                 else AddToBoard();
-            }
-        }
-        
-        if (Input.GetMouseButtonUp(1))
-        {
-            RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
-
-            if (hit.collider != null && hit.collider.transform == transform)
-            {
-               Flip(true);
             }
         }
         UpdateState();
@@ -148,13 +145,13 @@ public class Card : MonoBehaviour
         LeanTween.cancel(gameObject);
         transform.rotation = Quaternion.Euler(Vector3.zero);
 
-        if (animated) LeanTween.rotateY(gameObject, 90, 0.1f).setLoopPingPong(1);
+        if (animated) LeanTween.rotateY(gameObject, 90, _flippingTime/2).setLoopPingPong(1);
         StartCoroutine(FlipCorrutine(animated));
     }
 
     private IEnumerator FlipCorrutine(bool animated)
     {
-        yield return new WaitForSeconds(animated ? 0.1f : 0);
+        yield return new WaitForSeconds(animated ? _flippingTime/2 : 0);
         
         if (_isFlipped)
         {
@@ -179,7 +176,8 @@ public class Card : MonoBehaviour
         ActionStart(onRevealComplete);
 
         _state = State.Flipping;
-        _stateTimer = 0.75f;
+        _stateTimer = _flippingTime + 0.5f;
+        if(!_isFlipped) Flip(true);
     }
     
     public void Remove()
@@ -239,6 +237,12 @@ public class Card : MonoBehaviour
     {
         SetLock(true);
     }
+
+    private void GameManager_OnGameOver(object sender, EventArgs e)
+    {
+        Remove();
+    }
+    
 
     private void MakeAttack(float time)
     {

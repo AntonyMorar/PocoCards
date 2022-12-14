@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public event EventHandler<int> OnTurnChange;
 
     // Serialized *****
+    [SerializeField] private float initialDelay = 1.5f;
     [Header("Players")]
     [SerializeField] private Player player;
     [SerializeField] private Player enemyPlayer;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int initialCards = 3;
     // Private *****
     private GamePhase _gamePhase;
+    private float _gamePhaseTimer;
     private int _turn;
     
     // MonoBehavior Callbacks *****
@@ -35,16 +37,36 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this) Destroy(this);
         else Instance = this;
+
+        _gamePhaseTimer = initialDelay;
     }
-    private void Start()
+    private void Update()
+    {
+        if (_gamePhase != GamePhase.Idle) return;
+        
+        _gamePhaseTimer -= Time.deltaTime;
+
+        if (_gamePhaseTimer <= 0)
+        {
+            switch (_gamePhase)
+            {
+                case GamePhase.Idle:
+                    StartPhase(GamePhase.Main);
+                    StartCoroutine(SetInitialCards());
+                    break;
+            }
+        }
+    }
+
+    // Private Methods *****
+    private IEnumerator SetInitialCards()
     {
         for (int i = 0; i < initialCards; i++)
         {
             player.DrawCard();
             enemyPlayer.DrawCard();
+            yield return new WaitForSeconds(0.33f);
         }
-        
-        StartPhase(GamePhase.Main);
     }
 
     // Public Methods *****
@@ -57,10 +79,13 @@ public class GameManager : MonoBehaviour
         {
             case GamePhase.Main:
                 _turn++;
-                
-                player.DrawCard();
-                enemyPlayer.DrawCard();
-                
+
+                if (_turn > 1)
+                {
+                    player.DrawCard();
+                    enemyPlayer.DrawCard();
+                }
+
                 OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
                 break;

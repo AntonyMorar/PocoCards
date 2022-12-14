@@ -92,7 +92,7 @@ public class Player : MonoBehaviour, IHandeable
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
-        newCard.SetCard(this, randCard);
+        newCard.SetCard(this, randCard, ImOwner());
         AddToHand(newCard, true);
     }
     public void AddDeckToBoard()
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour, IHandeable
         
         CardData randCard = deck[Random.Range(0, deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
-        newCard.SetCard(this, randCard);
+        newCard.SetCard(this, randCard, true);
         newCard.AddToBoardFromDeck();
     }
     

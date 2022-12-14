@@ -8,7 +8,10 @@ public class Card : MonoBehaviour
 {
     // Serialized **********
     [SerializeField] private LayerMask layer;
+    [SerializeField] private Sprite faceSprite;
+    [SerializeField] private Sprite backFaceSprite;
     [Header("References")]
+    [SerializeField] private SpriteRenderer mainSpriteRenderer;
     [SerializeField] private SpriteRenderer artAnchor;
     [SerializeField] private TMP_Text attackPointsText;
     [SerializeField] private TMP_Text costText;
@@ -20,6 +23,8 @@ public class Card : MonoBehaviour
     private bool _isSelectable = true;
     private bool _isActive; // Making on reveal changes
     private bool _isInBoard;
+    private bool _isFlipped;
+    private bool _isFlipping;
     private int _actualCost;
 
     // Actions & State
@@ -69,7 +74,16 @@ public class Card : MonoBehaviour
                 else AddToBoard();
             }
         }
+        
+        if (Input.GetMouseButtonUp(1))
+        {
+            RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
 
+            if (hit.collider != null && hit.collider.transform == transform)
+            {
+               Flip(true);
+            }
+        }
         UpdateState();
     }
 
@@ -111,18 +125,53 @@ public class Card : MonoBehaviour
     }
 
     // Public Methods **********
-    public void SetCard(Player owner, CardData cardData)
+    public void SetCard(Player owner, CardData cardData, bool flipped)
     {
         _owner = owner;
         _cardData = cardData;
         _actualCost = _cardData.cost;
-
-        artAnchor.sprite = _cardData.cardIcon;
-        attackPointsText.text = _cardData.attackPoints.ToString();
-        costText.text = _actualCost.ToString();
         
+        // TODO: Remove repearted code (FlipCorrutone) i dont know how
+        mainSpriteRenderer.sprite = backFaceSprite;
+        artAnchor.sprite = null;
+        attackPointsText.text = "";
+        costText.text = "";
+        
+        if(flipped) Flip(false);
+
         _owner.OnBalanceChange += Owner_OnBalanceChange;
         CheckBalanceAvailability(_owner.GetCoins());
+    }
+
+    public void Flip(bool animated)
+    {
+        LeanTween.cancel(gameObject);
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+
+        if (animated) LeanTween.rotateY(gameObject, 90, 0.1f).setLoopPingPong(1);
+        StartCoroutine(FlipCorrutine(animated));
+    }
+
+    private IEnumerator FlipCorrutine(bool animated)
+    {
+        yield return new WaitForSeconds(animated ? 0.1f : 0);
+        
+        if (_isFlipped)
+        {
+            mainSpriteRenderer.sprite = backFaceSprite;
+            artAnchor.sprite = null;
+            attackPointsText.text = "";
+            costText.text = "";
+        }
+        else
+        {
+            mainSpriteRenderer.sprite = faceSprite;
+            artAnchor.sprite = _cardData.cardIcon;
+            attackPointsText.text = _cardData.attackPoints.ToString();
+            costText.text = _actualCost.ToString();
+        }
+        
+        _isFlipped = !_isFlipped;
     }
     
     public void TakeAction(Action onRevealComplete)
@@ -140,6 +189,7 @@ public class Card : MonoBehaviour
     }
 
     public bool ImOwner() => _owner.ImOwner();
+    public bool IsFlipped() => _isFlipped;
 
     public void AddToBoardFromDeck()
     {

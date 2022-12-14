@@ -11,17 +11,20 @@ public class GameManager : MonoBehaviour
     public enum GamePhase
     {
         Idle,
+        PreMain,
         Main,
         Battle,
         GameOver
     }
     public event EventHandler OnMainStart;
+    public event EventHandler OnPreMainStart;
     public event EventHandler OnBattleStart;
     public event EventHandler OnGameOver;
     public event EventHandler<int> OnTurnChange;
 
     // Serialized *****
     [SerializeField] private float initialDelay = 1.5f;
+    [SerializeField] private float mainPhaseTime = 15f;
     [Header("Players")]
     [SerializeField] private Player player;
     [SerializeField] private Player enemyPlayer;
@@ -29,7 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int initialCards = 3;
     // Private *****
     private GamePhase _gamePhase;
-    private float _gamePhaseTimer;
+    private float _phaseTimer;
     private int _turn;
     
     // MonoBehavior Callbacks *****
@@ -38,21 +41,24 @@ public class GameManager : MonoBehaviour
         if (Instance != null && Instance != this) Destroy(this);
         else Instance = this;
 
-        _gamePhaseTimer = initialDelay;
+        _phaseTimer = initialDelay;
     }
     private void Update()
     {
-        if (_gamePhase != GamePhase.Idle) return;
+        if ( _gamePhase is GamePhase.PreMain or GamePhase.Battle) return;
         
-        _gamePhaseTimer -= Time.deltaTime;
+        _phaseTimer -= Time.deltaTime;
 
-        if (_gamePhaseTimer <= 0)
+        if (_phaseTimer <= 0)
         {
             switch (_gamePhase)
             {
                 case GamePhase.Idle:
-                    StartPhase(GamePhase.Main);
+                    StartPhase(GamePhase.PreMain);
                     StartCoroutine(SetInitialCards());
+                    break;
+                case GamePhase.Main:
+                    StartPhase(GamePhase.Battle);
                     break;
             }
         }
@@ -67,6 +73,7 @@ public class GameManager : MonoBehaviour
             enemyPlayer.DrawCard();
             yield return new WaitForSeconds(0.33f);
         }
+        StartPhase(GamePhase.Main);
     }
 
     // Public Methods *****
@@ -77,20 +84,22 @@ public class GameManager : MonoBehaviour
         _gamePhase = gamePhase;
         switch (gamePhase)
         {
+            case GamePhase.PreMain:
+                OnPreMainStart?.Invoke(this,EventArgs.Empty);
+                break;
             case GamePhase.Main:
                 _turn++;
-
+                _phaseTimer = mainPhaseTime;
+                
                 if (_turn > 1)
                 {
                     player.DrawCard();
                     enemyPlayer.DrawCard();
                 }
-
                 OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.Battle:
-   
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.GameOver:
@@ -111,4 +120,6 @@ public class GameManager : MonoBehaviour
     {
         target.TakeDamage(damage);
     }
+
+    public float GetMainPhaseTime() => mainPhaseTime;
 }

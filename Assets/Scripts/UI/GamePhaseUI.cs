@@ -15,6 +15,7 @@ public class GamePhaseUI : MonoBehaviour
     // MonoBehavior Callbacks *****
     private void Start()
     {
+        GameManager.Instance.OnPreMainStart += GameManager_OnPreMainStart;
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
@@ -27,6 +28,13 @@ public class GamePhaseUI : MonoBehaviour
         gamePhaseText.text = "Main Phase";
         gamePhaseButton.enabled = true;
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Next Turn";
+    }
+    
+    private void GameManager_OnPreMainStart(object sender, EventArgs e)
+    {
+        gamePhaseText.text = "Spreading";
+        gamePhaseButton.enabled = false;
+        gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
     }
     private void GameManager_OnBattleStart(object sender, EventArgs e)
     {

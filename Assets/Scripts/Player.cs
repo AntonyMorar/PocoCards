@@ -245,6 +245,7 @@ public class Player : MonoBehaviour, IHandeable
         });
     }
     public int GetPriceReduce() => _priceReduced;
+    public List<Card> GetHand() => _hand;
     public void AddDamageReduce(int amount)
     {
         _damageReduced += amount;
@@ -258,5 +259,6 @@ public class Player : MonoBehaviour, IHandeable
         _damageReduced = 0;
         OnDamageReduceChange?.Invoke(this,_damageReduced);
     }
-    
+
+
 }

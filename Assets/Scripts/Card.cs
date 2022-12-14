@@ -189,7 +189,7 @@ public class Card : MonoBehaviour
     }
 
     public bool ImOwner() => _owner.ImOwner();
-    public bool IsFlipped() => _isFlipped;
+    public int GetActualCost() => _actualCost;
 
     public void AddToBoardFromDeck()
     {
@@ -211,7 +211,7 @@ public class Card : MonoBehaviour
     }
     
     // Add to board from hand
-    private void AddToBoard()
+    public void AddToBoard()
     {
         if (_owner.GetCoins() < _actualCost - _owner.GetPriceReduce()) return;
         

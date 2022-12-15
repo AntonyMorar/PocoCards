@@ -50,10 +50,8 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
-        
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
     }
 
     private void OnDisable()
@@ -62,7 +60,6 @@ public class Card : MonoBehaviour
         
         GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
     }
 
     private void Start()
@@ -258,12 +255,6 @@ public class Card : MonoBehaviour
     {
         SetLock(true);
     }
-
-    private void GameManager_OnGameOver(object sender, EventArgs e)
-    {
-        Remove();
-    }
-    
 
     private void MakeAttack(float time)
     {

@@ -7,18 +7,19 @@ using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour, IHandeable
 {
-    public class OnHealthChangeEventArgs: EventArgs
+    public class OnHealthChangeEventArgs : EventArgs
     {
         public float NewHealth;
         public float Amountchange;
         public bool ApplyEffects;
     }
-    
-    public class OnPriceChangeEventArgs: EventArgs
+
+    public class OnPriceChangeEventArgs : EventArgs
     {
         public int AmountChange;
         public Player Owner;
     }
+
     // Public *****
     public event EventHandler<OnHealthChangeEventArgs> OnHealthChange; // return the actual health
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
@@ -26,63 +27,98 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnBalanceChange;
 
     public event EventHandler<int> OnCoinStealed;
+
     // Spell events
     public event EventHandler<int> OnShieldChange;
     public event EventHandler<int> OnPoisonAdd;
     public event EventHandler OnPoisonRemoved;
     public static event EventHandler<OnPriceChangeEventArgs> OnPriceChange;
     public event EventHandler<int> OnDamageReduceChange;
-    
+
     // Serialized *****
     [SerializeField] private int baseHealth = 300;
     [SerializeField] private Transform handAnchor;
-    [Header("Card")] 
-    [SerializeField] private Card cardPrefab;
+    [Header("Card")] [SerializeField] private Card cardPrefab;
     [SerializeField] private List<CardData> deck = new List<CardData>();
 
     // Private *****
     private int _health;
     private int _shield;
+
     private int _coins;
+
     // spells
     private int _poisonedAmount;
     private int _priceReduced;
     private int _damageReduced;
+
     //Hand
     private List<Card> _hand = new List<Card>();
 
-    
+
     // MonoBehaviour Callbacks *****
     private void OnEnable()
     {
         GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame += GameManager_OnRestartGame;
     }
-    
+
     private void OnDisable()
     {
         GameManager.Instance.OnTurnChange -= GameManager_OnTurnChange;
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame -= GameManager_OnRestartGame;
     }
 
     private void Start()
     {
         SetInitialValues();
     }
-    
+
     // Private Methods *****
     private void SetInitialValues()
     {
         _health = baseHealth;
-        OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false});
+        _shield = 0;
+        _coins = 0;
+
+        _poisonedAmount = 0;
+        _priceReduced = 0;
+        _damageReduced = 0;
+        RemoveHand();
+        OnHealthChange?.Invoke(this,
+            new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false });
     }
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
     {
         // Coins
         AddCoins(Mathf.Clamp(newTurn, 0, 5));
-        
+
         //Spells
         ApplyPoisonDamage();
         RemoveDamageReduce();
+    }
+
+    private void GameManager_OnGameOver(object sender, EventArgs e)
+    {
+        RemoveHand();
+    }
+    
+    private void GameManager_OnRestartGame(object sender, EventArgs e)
+    {
+        SetInitialValues();
+    }
+    
+    private void RemoveHand()
+    {
+        foreach (Card card in _hand)
+        {
+            card.Remove();
+        }
+
+        _hand.Clear();
     }
 
     // Public Methods *****

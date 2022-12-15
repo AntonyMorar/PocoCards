@@ -31,11 +31,18 @@ public class Board : MonoBehaviour
         ResizeBoardToScreen();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
     }
 
+    private void OnDisable()
+    {
+        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
+    }
+    
     private void Update()
     {
         if (!_inBattlePhase ||  _waitingBattlePhaseEnd || _isBusy) return;
@@ -93,6 +100,15 @@ public class Board : MonoBehaviour
         }
         _inBattlePhase = true;
         _waitingBattlePhaseEnd = false;
+    }
+
+    private void GameManager_OnGameOver(object sender, EventArgs e)
+    {
+        foreach (Card card in _hand)
+        {
+            card.Remove();
+        }
+        _hand.Clear();
     }
 
     private void SetBusy()

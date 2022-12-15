@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
         switch (gamePhase)
         {
             case GamePhase.Idle:
+                _turn = 0;
                 _phaseTimer = initialDelay;
                 break;
             case GamePhase.PreMain:

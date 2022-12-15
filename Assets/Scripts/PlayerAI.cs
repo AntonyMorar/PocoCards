@@ -48,8 +48,7 @@ public class PlayerAI : MonoBehaviour
     {
         float timeThinking = Random.Range(GameManager.Instance.GetMainPhaseTime() * 0.1f, GameManager.Instance.GetMainPhaseTime() * 0.8f);
         List<Card> cardsCanBuy = GetCardsCanBuy();
-
-        Debug.Log("Puedo poner " + cardsCanBuy.Count + " cartas, lo hare en " + timeThinking + " segundos");
+        
         if (cardsCanBuy.Count <= 0) yield return null;
         if (cardsCanBuy.Count == 1) timeThinking = 2f;
         

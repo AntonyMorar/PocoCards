@@ -104,10 +104,6 @@ public class Board : MonoBehaviour
 
     private void GameManager_OnGameOver(object sender, EventArgs e)
     {
-        foreach (Card card in _hand)
-        {
-            card.Remove();
-        }
         _hand.Clear();
     }
 

@@ -14,7 +14,7 @@ public class EndMenuUI : MonoBehaviour
     private void OnEnable()
     {
         transform.localScale = Vector3.zero;
-        LeanTween.scale(gameObject, Vector3.one, 0.75f).setEase(LeanTweenType.easeOutBounce);
+        LeanTween.scale(gameObject, Vector3.one, 0.75f).setEase(LeanTweenType.easeOutBack);
 
         restartButton.onClick.AddListener(() =>
         {
@@ -26,7 +26,10 @@ public class EndMenuUI : MonoBehaviour
     // Private Methods ****
     private void HideMenu()
     {
-        LeanTween.scale(gameObject, Vector3.zero, 0.75f).setEase(LeanTweenType.easeInBounce);
+        LeanTween.scale(gameObject, Vector3.zero, 0.75f).setEase(LeanTweenType.easeInBack).setOnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
     }
 }
 

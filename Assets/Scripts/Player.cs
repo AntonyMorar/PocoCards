@@ -113,11 +113,6 @@ public class Player : MonoBehaviour, IHandeable
     
     private void RemoveHand()
     {
-        foreach (Card card in _hand)
-        {
-            card.Remove();
-        }
-
         _hand.Clear();
     }
 

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0480f44ca514146a97b1f810a510a3, type: 3}
+  m_Name: Frostbite
+  m_EditorClassIdentifier: 
+  cardName: Frostbite
+  description: Deal 2 damage to the player and freeze a random enemy card, preventing
+    it from being used next turn.
+  cardIcon: {fileID: 0}
+  attackPoints: 2
+  cost: 3
+  hasSpecialEffect: 1
+  drawToHand: 0
+  drawToBoard: 0
+  restoreHealth: 0
+  addShield: 0
+  stealCoin: 0
+  reduceTurnDamage: 0
+  addPoison: 0
+  freeze: 1
+  reduceNextCardCost: 0
+  enemyCardsInBoard: 0
+  allyCardsInBoard: 0

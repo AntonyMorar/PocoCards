@@ -26,15 +26,19 @@ public class CardData : ScriptableObject
     [Header("Health")]
     public int restoreHealth;
     public int addShield;
-    [Tooltip("Poisoning to your opponent, affects next turn")]
-    public int addPoison;
-    
+
     [Header("Balance")]
     [Range(0,20)]
     public int stealCoin;
 
     [Header("Damage")]
     public int reduceTurnDamage;
+    
+    [Header("Magic")]
+    [Tooltip("Poisoning to your opponent, affects next turn")]
+    public int addPoison;
+    [Tooltip("Freeze a random enemy card")]
+    public int freeze;
     
     [Header("Inmediate effects *****")] 
     [Tooltip("Reduce the cost of the next card, spell end at the end of the turn")]
@@ -43,7 +47,5 @@ public class CardData : ScriptableObject
 
     [Header("Conditions *****")] 
     [Tooltip("Condition affect if there this number of enemy cards in the board")]
-    public int enemyCardsInBoard;
-    [Tooltip("Condition affect if there this number of your cards in the board")]
-    public int allyCardsInBoard;
+    public bool enemyHasMoreHealth;
 }

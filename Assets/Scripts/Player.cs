@@ -231,6 +231,7 @@ public class Player : MonoBehaviour, IHandeable
     }
 
     public int GetBaseHealth() => baseHealth;
+    public int GetHealth() => _health;
     
     // Spells
     public void PoisonEnemy(int amount)
@@ -296,6 +297,13 @@ public class Player : MonoBehaviour, IHandeable
         _damageReduced = 0;
         OnDamageReduceChange?.Invoke(this,_damageReduced);
     }
-
-
+    public void FreezeEnemyCard(int amount)
+    {
+        GameManager.Instance.GetEnemy(this).FreezeRandomCard();
+    }
+    private void FreezeRandomCard()
+    {
+        int randomCard = Random.Range(0, _hand.Count);
+        _hand[randomCard].Freeze();
+    }
 }

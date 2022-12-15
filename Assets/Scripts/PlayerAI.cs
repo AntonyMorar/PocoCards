@@ -70,6 +70,8 @@ public class PlayerAI : MonoBehaviour
         int coinsHelper = _player.GetCoins();
         foreach (Card card in _player.GetHand())
         {
+            if (card.IsNotSelectableOrFrozen()) continue;
+            
             if (card.GetActualCost() <= coinsHelper)
             {
                 cardsCanBuy.Add(card);

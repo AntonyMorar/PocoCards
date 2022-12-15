@@ -20,6 +20,7 @@ public class Card : MonoBehaviour
     [SerializeField] private TMP_Text costText;
     [SerializeField] private GameObject blockedCard;
     [SerializeField] private GameObject coinImage;
+    [SerializeField] private GameObject frostImage;
     // Private **********
     private CardData _cardData;
     private Camera _camera;
@@ -31,6 +32,9 @@ public class Card : MonoBehaviour
     private bool _isFlipped;
     private bool _isFlipping;
     private int _actualCost;
+    private bool _isFrozen;
+    private int _frozenTurns;
+    private bool _canAttack;
 
     // Actions & State
     private State _state;
@@ -60,6 +64,8 @@ public class Card : MonoBehaviour
         
         GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        
+        OnHideInfo?.Invoke(this, EventArgs.Empty);
     }
 
     private void Start()
@@ -76,7 +82,7 @@ public class Card : MonoBehaviour
 
             if (hit.collider != null && hit.collider.transform == transform)
             {
-                if (!_owner.ImOwner() || !_isSelectable) return;
+                if (!_owner.ImOwner() || !_isSelectable || _isFrozen) return;
 
                 if (_isInBoard) AddToHand();
                 else AddToBoard();
@@ -121,9 +127,9 @@ public class Card : MonoBehaviour
                     break;
                 case State.SpecialEffect:
                     _state = State.Attacking;
-                    float attackTime = _cardData.attackPoints > 0 ? 0.5f : 0;
+                    float attackTime = _canAttack ? 0.5f : 0;
                     // Start attack
-                    if(_cardData.attackPoints > 0) MakeAttack(attackTime);
+                    if(_canAttack) MakeAttack(attackTime);
                     _stateTimer = attackTime;
                     break;
                 case State.Attacking:
@@ -144,6 +150,7 @@ public class Card : MonoBehaviour
         _owner = owner;
         _cardData = cardData;
         _actualCost = _cardData.cost;
+        _canAttack = CanAttack();
         
         // TODO: Remove repearted code (FlipCorrutone) i dont know how
         mainSpriteRenderer.sprite = backFaceSprite;
@@ -207,13 +214,29 @@ public class Card : MonoBehaviour
 
     public bool ImOwner() => _owner.ImOwner();
     public int GetActualCost() => _actualCost;
-
     public void AddToBoardFromDeck()
     {
         _isInBoard = true;
         Board.Instance.AddToHand(this, true);
     }
-    
+
+    public void Freeze()
+    {
+        frostImage.SetActive(true);
+        _frozenTurns = 1;
+        _isFrozen = true;
+    }
+
+    private void Defrost()
+    {
+        frostImage.SetActive(false);
+        _frozenTurns = 0;
+        _isFrozen = false;
+    }
+
+    public Boolean IsNotSelectableOrFrozen() => !_isSelectable || _isFrozen;
+
+    // Add to board from hand
     private void AddToHand()
     {
         _isInBoard = false;
@@ -225,8 +248,6 @@ public class Card : MonoBehaviour
         // Change player currency
         _owner.AddCoins(_actualCost);
     }
-    
-    // Add to board from hand
     public void AddToBoard()
     {
         if (_owner.GetCoins() < _actualCost - _owner.GetPriceReduce()) return;
@@ -249,6 +270,13 @@ public class Card : MonoBehaviour
     private void GameManager_OnMainStart(object sender, EventArgs e)
     {
         CheckBalanceAvailability(_owner.GetCoins());
+
+        if (!_isFrozen) return;
+        if (_frozenTurns <= 0)
+        {
+            Defrost();
+        }
+        _frozenTurns--;
     }
     
     private void GameManager_OnBattleStart(object sender, EventArgs e)
@@ -321,6 +349,31 @@ public class Card : MonoBehaviour
             _owner.AddDamageReduce(_cardData.reduceTurnDamage);
         }
         
+        // Freeze 
+        if (_cardData.freeze > 0)
+        {
+            _owner.FreezeEnemyCard(_cardData.freeze);
+        }
+        
+        // Backstab
+
+    }
+
+    private bool CanAttack()
+    {
+        if (_cardData.enemyHasMoreHealth && _cardData.attackPoints > 0)
+        {
+            if (GameManager.Instance.GetEnemy(_owner).GetHealth() > _owner.GetHealth())
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return _cardData.attackPoints > 0;
+        }
+        
+        return false;
     }
 
     private void ActionStart(Action onRevealComplete)
@@ -349,7 +402,7 @@ public class Card : MonoBehaviour
         _isSelectable = !setLock;
 
         if (_isInBoard) return;
-        blockedCard.SetActive(setLock);
+        if(!_isFrozen) blockedCard.SetActive(setLock);
     }
     
     // Immediate effects

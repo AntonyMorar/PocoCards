@@ -25,12 +25,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3321521759226619125}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.412, y: -0.676, z: 0}
+  m_LocalPosition: {x: 0.423, y: -0.697, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2692857119094141530
 SpriteRenderer:
@@ -49,7 +49,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 2
+  m_RenderingLayerMask: 6
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
@@ -114,7 +114,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3483932292064851237
 SpriteRenderer:
@@ -199,9 +199,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3483932292759453006}
+  - {fileID: 7675641134428210116}
   - {fileID: 3483932292064851236}
   - {fileID: 499770372264870675}
-  - {fileID: 7675641134428210116}
   - {fileID: 5423295168957211460}
   - {fileID: 4449110108854544957}
   m_Father: {fileID: 0}
@@ -229,6 +229,7 @@ MonoBehaviour:
   attackPointsText: {fileID: 5143791118046215520}
   costText: {fileID: 6715619977933829992}
   blockedCard: {fileID: 3525060631274635234}
+  coinImage: {fileID: 3321521759226619125}
 --- !u!61 &3483932292085175138
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -458,7 +459,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.413, y: -0.674}
+  m_AnchoredPosition: {x: 0.432, y: -0.699}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &7400779128601843189
@@ -626,7 +627,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

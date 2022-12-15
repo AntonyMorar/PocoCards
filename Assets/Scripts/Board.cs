@@ -115,7 +115,15 @@ public class Board : MonoBehaviour
         card.transform.SetParent(card.ImOwner() ? handAnchorPlayer : handAnchorEnemy);
         
         if (isNew) card.transform.position = new Vector3(0, card.ImOwner() ? -6 : 6, 0);
-        LeanTween.moveLocal(card.gameObject, GetCardPositionInHand(_hand.Count,1), 0.15f);
+
+        List<Card> playerHand = new List<Card>();
+        List<Card> enemyHand = new List<Card>();
+        foreach (Card handCard in _hand)
+        {
+            if (handCard.ImOwner()) playerHand.Add(handCard);
+            else enemyHand.Add(handCard);
+        }
+        LeanTween.moveLocal(card.gameObject, GetCardPositionInHand(card.ImOwner() ? playerHand : enemyHand, card.ImOwner() ? playerHand.Count : enemyHand.Count,1), 0.15f);
 
         _hand.Add(card);
     }
@@ -139,21 +147,21 @@ public class Board : MonoBehaviour
         
         for (int i=0; i<playerCards.Count; i++)
         {
-            LeanTween.moveLocal(playerCards[i].gameObject, GetCardPositionInHand(i, newPlayerCardsToAdd), 0.15f);
+            LeanTween.moveLocal(playerCards[i].gameObject, GetCardPositionInHand(playerCards, i, newPlayerCardsToAdd), 0.15f);
         }
         
         for (int i=0; i<enemyCards.Count; i++)
         {
-            LeanTween.moveLocal(enemyCards[i].gameObject, GetCardPositionInHand(i, newEnemyCardsToAdd), 0.15f);
+            LeanTween.moveLocal(enemyCards[i].gameObject, GetCardPositionInHand(enemyCards, i, newEnemyCardsToAdd), 0.15f);
         }
         
         playerCards.Clear();
         enemyCards.Clear();
     }
     
-    private Vector3 GetCardPositionInHand(int index, int newCardsToAdd)
+    private Vector3 GetCardPositionInHand( List<Card> hand, int index, int newCardsToAdd)
     {
-        int handSize = _hand.Count + newCardsToAdd;
+        int handSize = hand.Count + newCardsToAdd;
         if (handSize <= 0) return Vector3.zero;
         
         float cardSize = 1.1f;

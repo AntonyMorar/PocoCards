@@ -19,10 +19,10 @@ public class GameManager : MonoBehaviour
     }
     public event EventHandler OnPreMainStart;
     public event EventHandler OnMainStart;
-    public event EventHandler OnWaitingStart;
     public event EventHandler OnBattleStart;
     public event EventHandler OnGameOver;
     public event EventHandler<int> OnTurnChange;
+    public event EventHandler OnRestartGame;
 
     // Serialized *****
     [SerializeField] private float initialDelay = 1.5f;
@@ -87,6 +87,9 @@ public class GameManager : MonoBehaviour
         _gamePhase = gamePhase;
         switch (gamePhase)
         {
+            case GamePhase.Idle:
+                _phaseTimer = initialDelay;
+                break;
             case GamePhase.PreMain:
                 OnPreMainStart?.Invoke(this,EventArgs.Empty);
                 break;
@@ -101,9 +104,6 @@ public class GameManager : MonoBehaviour
                 }
                 OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
-                break;
-            case GamePhase.Waiting:
-                OnWaitingStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.Battle:
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
@@ -139,5 +139,10 @@ public class GameManager : MonoBehaviour
         
         SetPhase(GamePhase.Waiting);
         return false;
+    }
+    public void RestartGame()
+    {
+        SetPhase(GamePhase.Idle);
+        OnRestartGame?.Invoke(this, EventArgs.Empty);
     }
 }

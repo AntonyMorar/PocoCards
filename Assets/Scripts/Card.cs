@@ -6,6 +6,9 @@ using TMPro;
 
 public class Card : MonoBehaviour
 {
+    // Public
+    public static event EventHandler<string> OnShowInfo;
+    public static event EventHandler OnHideInfo;
     // Serialized **********
     [SerializeField] private LayerMask layer;
     [SerializeField] private Sprite faceSprite;
@@ -16,6 +19,7 @@ public class Card : MonoBehaviour
     [SerializeField] private TMP_Text attackPointsText;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private GameObject blockedCard;
+    [SerializeField] private GameObject coinImage;
     // Private **********
     private CardData _cardData;
     private Camera _camera;
@@ -81,6 +85,22 @@ public class Card : MonoBehaviour
                 else AddToBoard();
             }
         }
+        
+        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.I)) && GameManager.Instance.GetGamePhase() != GameManager.GamePhase.GameOver)
+        {
+            RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
+
+            if (hit.collider != null && hit.collider.transform == transform && _isFlipped && _owner.ImOwner())
+            {
+                OnShowInfo?.Invoke(this, _cardData.description);
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.I))
+        {
+            OnHideInfo?.Invoke(this, EventArgs.Empty);
+        }
+        
         UpdateState();
     }
 
@@ -157,6 +177,7 @@ public class Card : MonoBehaviour
         {
             mainSpriteRenderer.sprite = backFaceSprite;
             artAnchor.sprite = null;
+            coinImage.SetActive(false);
             attackPointsText.text = "";
             costText.text = "";
         }
@@ -164,6 +185,7 @@ public class Card : MonoBehaviour
         {
             mainSpriteRenderer.sprite = faceSprite;
             artAnchor.sprite = _cardData.cardIcon;
+            coinImage.SetActive(true);
             attackPointsText.text = _cardData.attackPoints.ToString();
             costText.text = _actualCost.ToString();
         }
@@ -195,7 +217,6 @@ public class Card : MonoBehaviour
         Board.Instance.AddToHand(this, true);
     }
     
-    // Private Methods **********
     private void AddToHand()
     {
         _isInBoard = false;

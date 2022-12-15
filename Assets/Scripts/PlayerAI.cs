@@ -46,8 +46,6 @@ public class PlayerAI : MonoBehaviour
 
     private IEnumerator SelectCardsToPlay()
     {
-        Debug.Log("Pensando que poner...");
-        
         float timeThinking = Random.Range(GameManager.Instance.GetMainPhaseTime() * 0.1f, GameManager.Instance.GetMainPhaseTime() * 0.8f);
         List<Card> cardsCanBuy = GetCardsCanBuy();
 
@@ -71,10 +69,8 @@ public class PlayerAI : MonoBehaviour
     {
         List<Card> cardsCanBuy = new List<Card>();
         int coinsHelper = _player.GetCoins();
-        Debug.Log("Tengo " + _player.GetCoins() + " peso");
         foreach (Card card in _player.GetHand())
         {
-            Debug.Log(  card.GetActualCost() + " <= " +coinsHelper);
             if (card.GetActualCost() <= coinsHelper)
             {
                 cardsCanBuy.Add(card);

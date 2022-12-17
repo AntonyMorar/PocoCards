@@ -11,6 +11,8 @@ public class CardData : ScriptableObject
     public Sprite cardIcon;
     public int attackPoints;
     public int cost = 1;
+    [Tooltip("Card ignore the board order and reveal first")]
+    public bool boardPriority;
     
     [Header("Battle effects *****")] 
     public bool hasSpecialEffect = true;
@@ -39,11 +41,15 @@ public class CardData : ScriptableObject
     public int addPoison;
     [Tooltip("Freeze a random enemy card")]
     public int freeze;
+    public CardData cardTransform;
     
-    [Header("Inmediate effects *****")] 
+    [Header("Immediate effects *****")] 
     [Tooltip("Reduce the cost of the next card, spell end at the end of the turn")]
     [Range(0,5)]
     public int reduceNextCardCost;
+    [Tooltip("Damage attack increase from cards in the board")]
+    [Range(0,5)]
+    public int damageAttackIncrease;
 
     [Header("Conditions *****")] 
     [Tooltip("Condition affect if there this number of enemy cards in the board")]

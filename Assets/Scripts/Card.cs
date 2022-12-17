@@ -31,7 +31,7 @@ public class Card : MonoBehaviour
     private float _flippingTime = 0.2f;
     private bool _isFlipped;
     private bool _isFlipping;
-    private int _actualCost;
+    private int _priceReduction;
     private bool _isFrozen;
     private int _frozenTurns;
     private bool _canAttack;
@@ -57,7 +57,7 @@ public class Card : MonoBehaviour
         GameManager.Instance.OnMainStart += GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame += GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame += GameManager_OnRestartValues;
     }
 
     private void OnDisable()
@@ -67,7 +67,7 @@ public class Card : MonoBehaviour
         GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
         GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
         GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame -= GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame -= GameManager_OnRestartValues;
         
         OnHideInfo?.Invoke(this, EventArgs.Empty);
     }
@@ -75,7 +75,8 @@ public class Card : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        Player.OnPriceChange += Player_OnPriceChange;
+        Player.OnSale += Player_OnSale;
+        Player.OnSaleFinished += Player_OnSaleFinished;
     }
 
     private void Update()
@@ -153,10 +154,9 @@ public class Card : MonoBehaviour
     {
         _owner = owner;
         _cardData = cardData;
-        _actualCost = _cardData.cost;
         _canAttack = CanAttack();
         
-        // TODO: Remove repearted code (FlipCorrutone) i dont know how
+        // TODO: Remove repeated code (FlipCorrutone) i dont know how
         mainSpriteRenderer.sprite = backFaceSprite;
         artAnchor.sprite = null;
         attackPointsText.text = "";
@@ -194,8 +194,8 @@ public class Card : MonoBehaviour
             mainSpriteRenderer.sprite = faceSprite;
             artAnchor.sprite = _cardData.cardIcon;
             coinImage.SetActive(true);
-            attackPointsText.text = _cardData.attackPoints.ToString();
-            costText.text = _actualCost.ToString();
+            attackPointsText.text = (_cardData.attackPoints).ToString();
+            costText.text = (_cardData.cost - _priceReduction).ToString();
         }
         
         _isFlipped = !_isFlipped;
@@ -217,7 +217,9 @@ public class Card : MonoBehaviour
     }
 
     public bool ImOwner() => _owner.ImOwner();
-    public int GetActualCost() => _actualCost;
+
+    public Player GetOwner() => _owner;
+    public int GetActualCost() => _cardData.cost - _priceReduction;
     public void AddToBoardFromDeck()
     {
         _isInBoard = true;
@@ -239,6 +241,12 @@ public class Card : MonoBehaviour
     }
 
     public Boolean IsNotSelectableOrFrozen() => !_isSelectable || _isFrozen;
+    
+    public void ChangeCard( Player owner, CardData newCard)
+    {
+        Debug.Log("changing card " + _cardData.cardName);
+        SetCard(owner, newCard, _isFlipped);
+    }
 
     // Add to board from hand
     private void AddToHand()
@@ -246,22 +254,29 @@ public class Card : MonoBehaviour
         _isInBoard = false;
         _owner.AddToHand(this);
         Board.Instance.RemoveFromHand(this);
-        
-        _owner.RemovePriceReduce();
+
+        if (_cardData.reduceNextCardCost > 0)
+        {
+            _owner.RemovePriceReduce(_cardData.reduceNextCardCost);
+        }
+        if (_priceReduction > 0)
+        {
+            _owner.RemovePriceReduce(_priceReduction);
+        }
         
         // Change player currency
-        _owner.AddCoins(_actualCost);
+        _owner.AddCoins(_cardData.cost - _priceReduction);
     }
     public void AddToBoard()
     {
-        if (_owner.GetCoins() < _actualCost - _owner.GetPriceReduce()) return;
+        if (_owner.GetCoins() < _cardData.cost - _priceReduction) return;
         
         _isInBoard = true;
         _owner.RemoveFromHand(this);
         Board.Instance.AddToHand(this);
         
         // Change player currency
-        _owner.SpendCoins(_actualCost - _owner.GetPriceReduce());
+        _owner.SpendCoins(_cardData.cost - _priceReduction);
         
         // Apply Immediate effects
         // Next card cost less
@@ -273,6 +288,7 @@ public class Card : MonoBehaviour
 
     private void GameManager_OnMainStart(object sender, EventArgs e)
     {
+        _owner.RemovePriceReduce(_priceReduction);
         CheckBalanceAvailability(_owner.GetCoins());
 
         if (!_isFrozen) return;
@@ -287,11 +303,16 @@ public class Card : MonoBehaviour
     {
         SetLock(true);
     }
-    private void GameManager_OnGameOver(object sender, EventArgs e)
+    private void GameManager_OnGameOver(object sender, bool won)
     {
         Remove();
     }
-
+    
+    private void GameManager_OnRestartValues(object sender, EventArgs e)
+    {
+        Remove();
+    }
+    
     private void MakeAttack(float time)
     {
         LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, time/2).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
@@ -362,8 +383,12 @@ public class Card : MonoBehaviour
         {
             _owner.FreezeEnemyCard(_cardData.freeze);
         }
-        
-        // Backstab
+
+        // Change card
+        if (_cardData.cardTransform != null)
+        {
+            _owner.ChangeEnemyCardInBoard(_cardData.cardTransform);
+        }
 
     }
 
@@ -401,8 +426,9 @@ public class Card : MonoBehaviour
     }
     private void CheckBalanceAvailability(int newBalance)
     {
+        Debug.Log(_cardData.name + "Cost: " + (_cardData.cost -_priceReduction) + " PB: " + newBalance);
         if (_isInBoard) return;
-        SetLock(newBalance < _actualCost);
+        SetLock(_cardData.cost - _priceReduction > newBalance);
     }
     private void SetLock(bool setLock)
     {
@@ -414,11 +440,22 @@ public class Card : MonoBehaviour
     }
     
     // Immediate effects
-    private void Player_OnPriceChange(object sender, Player.OnPriceChangeEventArgs priceArgs)
+    private void Player_OnSale(object sender, Player.OnAmountChangeEventArgs priceArgs)
     {
         if (priceArgs.Owner != _owner) return;
-        
-        _actualCost = _cardData.cost - priceArgs.AmountChange;
-        costText.text = _actualCost.ToString();
+
+        _priceReduction = priceArgs.Amount;
+        costText.text = (_cardData.cost - _priceReduction).ToString();
+        CheckBalanceAvailability(_owner.GetCoins());
     }
+    
+    private void Player_OnSaleFinished(object sender, Player owner)
+    {
+        if (owner != _owner || _isInBoard) return;
+
+        _priceReduction = 0;
+        costText.text = (_cardData.cost - _priceReduction).ToString();
+    }
+    
+    
 }

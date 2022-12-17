@@ -14,9 +14,9 @@ public class Player : MonoBehaviour, IHandeable
         public bool ApplyEffects;
     }
 
-    public class OnPriceChangeEventArgs : EventArgs
+    public class OnAmountChangeEventArgs : EventArgs
     {
-        public int AmountChange;
+        public int Amount;
         public Player Owner;
     }
 
@@ -32,7 +32,8 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnShieldChange;
     public event EventHandler<int> OnPoisonAdd;
     public event EventHandler OnPoisonRemoved;
-    public static event EventHandler<OnPriceChangeEventArgs> OnPriceChange;
+    public static event EventHandler<OnAmountChangeEventArgs> OnSale;
+    public static event EventHandler<Player> OnSaleFinished;
     public event EventHandler<int> OnDamageReduceChange;
 
     // Serialized *****
@@ -44,7 +45,6 @@ public class Player : MonoBehaviour, IHandeable
     // Private *****
     private int _health;
     private int _shield;
-
     private int _coins;
 
     // spells
@@ -94,14 +94,16 @@ public class Player : MonoBehaviour, IHandeable
     private void GameManager_OnTurnChange(object sender, int newTurn)
     {
         // Coins
-        AddCoins(Mathf.Clamp(newTurn, 0, 5));
+        //AddCoins(Mathf.Clamp(newTurn, 0, 5));
+        _coins = Mathf.Clamp(newTurn, 0, 6);
+        OnBalanceChange?.Invoke(this,_coins);
 
         //Spells
         ApplyPoisonDamage();
         RemoveDamageReduce();
     }
 
-    private void GameManager_OnGameOver(object sender, EventArgs e)
+    private void GameManager_OnGameOver(object sender, bool won)
     {
         RemoveHand();
     }
@@ -260,24 +262,20 @@ public class Player : MonoBehaviour, IHandeable
     {
         _priceReduced += amount;
         _priceReduced = Mathf.Clamp(_priceReduced, 0, 7);
-        OnPriceChange?.Invoke(this, new OnPriceChangeEventArgs
+        OnSale?.Invoke(this, new OnAmountChangeEventArgs
         {
-            AmountChange = _priceReduced,
+            Amount = _priceReduced,
             Owner = this
         });
     }
-    public void RemovePriceReduce()
+    
+    public void RemovePriceReduce(int amount)
     {
         if (_priceReduced <= 0) return;
         
-        _priceReduced = 0;
-        OnPriceChange?.Invoke(this, new OnPriceChangeEventArgs
-        {
-            AmountChange = _priceReduced,
-            Owner = this
-        });
+        _priceReduced -= amount;
+        OnSaleFinished?.Invoke(this,this);
     }
-    public int GetPriceReduce() => _priceReduced;
     public List<Card> GetHand() => _hand;
     public void AddDamageReduce(int amount)
     {
@@ -300,5 +298,9 @@ public class Player : MonoBehaviour, IHandeable
     {
         int randomCard = Random.Range(0, _hand.Count);
         _hand[randomCard].Freeze();
+    }
+    public void ChangeEnemyCardInBoard(CardData newCard)
+    {
+        Board.Instance.ChangeRandomCard(GameManager.Instance.GetEnemy(this), newCard);
     }
 }

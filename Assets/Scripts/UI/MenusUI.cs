@@ -6,9 +6,9 @@ using UnityEngine;
 public class MenusUI : MonoBehaviour
 {
     // Serializable
-    [SerializeField] private GameObject endMenu;
+    [SerializeField] private EndMenuUI endMenu;
 
-    // Monobehaviour Callbacks
+    // MonoBehaviour Callbacks
     private void OnEnable()
     {
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
@@ -20,8 +20,9 @@ public class MenusUI : MonoBehaviour
     }
     
     // Private Methods
-    private void GameManager_OnGameOver(object sender, EventArgs e)
+    private void GameManager_OnGameOver(object sender, bool won)
     {
-        endMenu.SetActive(true);
+        endMenu.gameObject.SetActive(true);
+        endMenu.Set(won);
     }
 }

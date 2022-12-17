@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EndMenuUI : MonoBehaviour
 {
     // Serialized *****
+    [SerializeField] private TMP_Text title;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button exitButton;
 
@@ -30,6 +32,19 @@ public class EndMenuUI : MonoBehaviour
         {
             gameObject.SetActive(false);
         });
+    }
+    
+    // Public Methods
+    public void Set(bool won)
+    {
+        if (won)
+        {
+            title.text ="You Win!";
+        }
+        else
+        {
+            title.text = "You´re Dead";
+        }
     }
 }
 

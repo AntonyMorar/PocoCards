@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a0480f44ca514146a97b1f810a510a3, type: 3}
   m_Name: Backstab
   m_EditorClassIdentifier: 
-  cardName: 
-  description: 
-  cardIcon: {fileID: 0}
-  attackPoints: 0
+  cardName: Backstab
+  description: Deals 4 attack damage, but only if the enemy player has more health
+    than you.
+  cardIcon: {fileID: 21300000, guid: 612f3484e7d494448bd5ec74120837d9, type: 3}
+  attackPoints: 3
   cost: 1
   hasSpecialEffect: 1
   drawToHand: 0
@@ -26,6 +27,6 @@ MonoBehaviour:
   reduceTurnDamage: 0
   addPoison: 0
   freeze: 0
+  cardTransform: {fileID: 0}
   reduceNextCardCost: 0
-  enemyCardsInBoard: 0
-  allyCardsInBoard: 0
+  enemyHasMoreHealth: 1

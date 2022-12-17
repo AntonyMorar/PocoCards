@@ -20,7 +20,8 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnPreMainStart;
     public event EventHandler OnMainStart;
     public event EventHandler OnBattleStart;
-    public event EventHandler OnGameOver;
+    public event EventHandler OnWaitingStart; 
+    public event EventHandler<bool> OnGameOver;
     public event EventHandler<int> OnTurnChange;
     public event EventHandler OnRestartGame;
 
@@ -106,11 +107,14 @@ public class GameManager : MonoBehaviour
                 OnTurnChange?.Invoke(this, _turn);
                 OnMainStart?.Invoke(this,EventArgs.Empty);
                 break;
+            case GamePhase.Waiting:
+                OnWaitingStart?.Invoke(this,EventArgs.Empty);
+                break;
             case GamePhase.Battle:
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.GameOver:
-                OnGameOver?.Invoke(this,EventArgs.Empty);
+                OnGameOver?.Invoke(this,player.GetHealth() > 0);
                 break;
         }
     }

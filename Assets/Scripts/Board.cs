@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Board : MonoBehaviour
 {
@@ -35,12 +36,14 @@ public class Board : MonoBehaviour
     {
         GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame += GameManager_RestartGame;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
         GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        GameManager.Instance.OnRestartGame -= GameManager_RestartGame;
     }
     
     private void Update()
@@ -64,16 +67,15 @@ public class Board : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (!_spriteRenderer) return;
 
-        var localScale = transform.localScale;
-        localScale = Vector3.one;
-        
         float width = _spriteRenderer.sprite.bounds.size.x;
         float height = _spriteRenderer.sprite.bounds.size.y;
 
+        if (Camera.main == null) return;
+        
         double worldScreenHeight = Camera.main.orthographicSize * 2.0;
         double worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
 
-        localScale = new Vector3((float)worldScreenWidth / width, (float)(worldScreenHeight / height)* 0.4f, 0);
+        var localScale = new Vector3((float)worldScreenWidth / width, (float)(worldScreenHeight / height)* 0.4f, 0);
         transform.localScale = localScale;
     }
     private IEnumerator RemoveCardsCorrutine(float delay)
@@ -94,6 +96,14 @@ public class Board : MonoBehaviour
 
     private void GameManager_OnBattleStart(object sender, EventArgs e)
     {
+        _handToPlay.Clear();
+        
+        if (_hand.Count <= 0)
+        {
+            GameManager.Instance.SetPhase(GameManager.GamePhase.Main);
+            return;
+        }
+        
         foreach (Card card in _hand)
         {
             _handToPlay.Add(card);
@@ -102,11 +112,25 @@ public class Board : MonoBehaviour
         _waitingBattlePhaseEnd = false;
     }
 
-    private void GameManager_OnGameOver(object sender, EventArgs e)
+    private void GameManager_OnGameOver(object sender, bool won)
     {
-        _hand.Clear();
+        RestartValues();
     }
 
+    private void GameManager_RestartGame(object sender, EventArgs e)
+    {
+        RestartValues();
+    }
+
+    private void RestartValues()
+    {
+        _isBusy = false;
+        _inBattlePhase = false;
+        _waitingBattlePhaseEnd = false;
+        
+        _hand.Clear();
+        _handToPlay.Clear();
+    }
     private void SetBusy()
     {
         _isBusy = true;
@@ -118,6 +142,34 @@ public class Board : MonoBehaviour
         _handToPlay.RemoveAt(0);
         _isBusy = false;
         OnBusyChange?.Invoke(this,_isBusy);
+    }
+    
+    private Vector3 GetCardPositionInHand( List<Card> hand, int index, int newCardsToAdd)
+    {
+        int handSize = hand.Count + newCardsToAdd;
+        if (handSize <= 0) return Vector3.zero;
+        
+        float cardSize = 1.1f;
+        int handHalf = handSize / 2;
+        
+        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
+        return new Vector3(newPosX, 0f, 0);
+    }
+
+    private List<Card> GetPlayerCards(Player target)
+    {
+        List<Card> playerCards = new List<Card>();
+
+        foreach (Card card in _hand)
+        {
+            Debug.Log(card.GetOwner());
+            if (card.GetOwner() == target)
+            {
+                playerCards.Add(card);
+            }
+        }
+
+        return playerCards;
     }
 
     // Public Methods *****
@@ -146,7 +198,7 @@ public class Board : MonoBehaviour
         ReorderActualCards(0,0);
     }
 
-    public void ReorderActualCards(int newPlayerCardsToAdd, int newEnemyCardsToAdd)
+    private void ReorderActualCards(int newPlayerCardsToAdd, int newEnemyCardsToAdd)
     {
         List<Card> playerCards = new List<Card>();
         List<Card> enemyCards = new List<Card>();
@@ -170,16 +222,13 @@ public class Board : MonoBehaviour
         playerCards.Clear();
         enemyCards.Clear();
     }
-    
-    private Vector3 GetCardPositionInHand( List<Card> hand, int index, int newCardsToAdd)
+
+    public void ChangeRandomCard(Player target, CardData cardData)
     {
-        int handSize = hand.Count + newCardsToAdd;
-        if (handSize <= 0) return Vector3.zero;
+        List<Card> playerCards = GetPlayerCards(target);
+        if (playerCards.Count <= 0) return;
         
-        float cardSize = 1.1f;
-        int handHalf = handSize / 2;
-        
-        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
-        return new Vector3(newPosX, 0f, 0);
+        int randomCard = Random.Range(0, playerCards.Count);
+        playerCards[randomCard].ChangeCard(target, cardData);
     }
 }

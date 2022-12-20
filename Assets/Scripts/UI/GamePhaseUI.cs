@@ -15,11 +15,11 @@ public class GamePhaseUI : MonoBehaviour
     // MonoBehavior Callbacks *****
     private void Start()
     {
-        GameManager.Instance.OnPreMainStart += GameManager_OnPreMainStart;
-        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
-        gamePhaseButton.onClick.AddListener(() => GameManager.Instance.TryStartBattle());
+        MatchManager.Instance.OnPreMainStart += GameManager_OnPreMainStart;
+        MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
+        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+        gamePhaseButton.onClick.AddListener(() => MatchManager.Instance.TryStartBattle());
     }
 
     // Private Methods *****

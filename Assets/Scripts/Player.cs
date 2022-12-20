@@ -40,7 +40,7 @@ public class Player : MonoBehaviour, IHandeable
     [SerializeField] private int baseHealth = 300;
     [SerializeField] private Transform handAnchor;
     [Header("Card")] [SerializeField] private Card cardPrefab;
-    [SerializeField] private List<CardData> deck = new List<CardData>();
+    [SerializeField] private DeckData deckData;
 
     // Private *****
     private int _health;
@@ -59,16 +59,16 @@ public class Player : MonoBehaviour, IHandeable
     // MonoBehaviour Callbacks *****
     private void OnEnable()
     {
-        GameManager.Instance.OnTurnChange += GameManager_OnTurnChange;
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame += GameManager_OnRestartGame;
+        MatchManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+        MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame += GameManager_OnRestartGame;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnTurnChange -= GameManager_OnTurnChange;
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame -= GameManager_OnRestartGame;
+        MatchManager.Instance.OnTurnChange -= GameManager_OnTurnChange;
+        MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame -= GameManager_OnRestartGame;
     }
 
     private void Start()
@@ -121,18 +121,18 @@ public class Player : MonoBehaviour, IHandeable
     // Public Methods *****
     public void DrawCard()
     {
-        if (deck.Count <= 0 || _hand.Count > 10) return;
+        if (deckData.deck.Count <= 0 || _hand.Count > 10) return;
         
-        CardData randCard = deck[Random.Range(0, deck.Count)];
+        CardData randCard = deckData.deck[Random.Range(0, deckData.deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, ImOwner());
         AddToHand(newCard, true);
     }
     public void AddDeckToBoard()
     {
-        if (deck.Count <= 0) return;
+        if (deckData.deck.Count <= 0) return;
         
-        CardData randCard = deck[Random.Range(0, deck.Count)];
+        CardData randCard = deckData.deck[Random.Range(0, deckData.deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, true);
         newCard.AddToBoardFromDeck();
@@ -188,7 +188,7 @@ public class Player : MonoBehaviour, IHandeable
         OnBalanceChange?.Invoke(this,_coins);
         return true;
     }
-    public bool ImOwner() => this == GameManager.Instance.GetMyPlayer();
+    public bool ImOwner() => this == MatchManager.Instance.GetMyPlayer();
     // Health
     public void TakeDamage(int damageAmount, bool ignoreProtection = false)
     {
@@ -224,7 +224,7 @@ public class Player : MonoBehaviour, IHandeable
     public void Died()
     {
         OnDead?.Invoke(this,EventArgs.Empty);
-        GameManager.Instance.SetPhase(GameManager.GamePhase.GameOver);
+        MatchManager.Instance.SetPhase(MatchManager.GamePhase.GameOver);
     }
 
     public int GetBaseHealth() => baseHealth;
@@ -233,7 +233,7 @@ public class Player : MonoBehaviour, IHandeable
     // Spells
     public void PoisonEnemy(int amount)
     {
-        GameManager.Instance.GetEnemy(this).AddPoisonDamage(amount);
+        MatchManager.Instance.GetEnemy(this).AddPoisonDamage(amount);
     }
     private void AddPoisonDamage(int amount)
     {
@@ -252,7 +252,7 @@ public class Player : MonoBehaviour, IHandeable
     }
     public bool StealCoin(int amount)
     {
-        if (!GameManager.Instance.GetEnemy(this).SpendCoins(amount)) return false;
+        if (!MatchManager.Instance.GetEnemy(this).SpendCoins(amount)) return false;
         AddCoins(amount);
         OnCoinStealed?.Invoke(this,amount);
         return true;
@@ -292,7 +292,7 @@ public class Player : MonoBehaviour, IHandeable
     }
     public void FreezeEnemyCard(int amount)
     {
-        GameManager.Instance.GetEnemy(this).FreezeRandomCard();
+        MatchManager.Instance.GetEnemy(this).FreezeRandomCard();
     }
     private void FreezeRandomCard()
     {
@@ -301,6 +301,6 @@ public class Player : MonoBehaviour, IHandeable
     }
     public void ChangeEnemyCardInBoard(CardData newCard)
     {
-        Board.Instance.ChangeRandomCard(GameManager.Instance.GetEnemy(this), newCard);
+        Board.Instance.ChangeRandomCard(MatchManager.Instance.GetEnemy(this), newCard);
     }
 }

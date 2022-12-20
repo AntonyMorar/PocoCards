@@ -2331,21 +2331,7 @@ MonoBehaviour:
   baseHealth: 15
   handAnchor: {fileID: 2047505958}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
-  deck:
-  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
-  - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
-  - {fileID: 11400000, guid: 7db3fff89b1212a499a0c02322607ad0, type: 2}
-  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
-  - {fileID: 11400000, guid: 50478dad7713fe642ab55c271329393a, type: 2}
-  - {fileID: 11400000, guid: da76f2d9c37cc904c93bc3d24942f087, type: 2}
-  - {fileID: 11400000, guid: b545f13d4d83a58439e72d50a3c11197, type: 2}
-  - {fileID: 11400000, guid: f463b8a6475cc7843b493732f0326f70, type: 2}
-  - {fileID: 11400000, guid: 6c988b824ec22e2488ff3d8d0da253ae, type: 2}
-  - {fileID: 11400000, guid: 1512c442707d84340bf5fc4526a08880, type: 2}
-  - {fileID: 11400000, guid: aedb43565f56fd24187d5e3634486daa, type: 2}
-  - {fileID: 11400000, guid: e09be5f71304ce842882b049c88d1cbf, type: 2}
-  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
-  - {fileID: 11400000, guid: 0fa188a7b5104b740a6e31a3618ee043, type: 2}
+  deckData: {fileID: 11400000, guid: 76d7e044adcdb8f4081488156e2aec69, type: 2}
 --- !u!114 &1739560518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,10 +2513,7 @@ MonoBehaviour:
   baseHealth: 15
   handAnchor: {fileID: 830966763}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
-  deck:
-  - {fileID: 11400000, guid: b545f13d4d83a58439e72d50a3c11197, type: 2}
-  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}
-  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
+  deckData: {fileID: 11400000, guid: c3e0bea69e9e9a044a5d3dee8401896f, type: 2}
 --- !u!4 &1878098186
 Transform:
   m_ObjectHideFlags: 0

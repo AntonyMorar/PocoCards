@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuUI : MonoBehaviour
+public class TitleMenuUI : MonoBehaviour
 {
     // Serialized
     [SerializeField] private Button playButton;
@@ -26,7 +26,7 @@ public class MainMenuUI : MonoBehaviour
     // Private Methods
     private void PlayGame()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
     
     private void ExitGame()

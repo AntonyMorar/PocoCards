@@ -20,7 +20,7 @@ public class EndMenuUI : MonoBehaviour
 
         restartButton.onClick.AddListener(() =>
         {
-            GameManager.Instance.RestartGame();
+            MatchManager.Instance.RestartGame();
             HideMenu();
         });
     }

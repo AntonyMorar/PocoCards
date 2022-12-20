@@ -34,16 +34,16 @@ public class Board : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame += GameManager_RestartGame;
+        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame += GameManager_RestartGame;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame -= GameManager_RestartGame;
+        MatchManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame -= GameManager_RestartGame;
     }
     
     private void Update()
@@ -91,7 +91,7 @@ public class Board : MonoBehaviour
         _inBattlePhase = false;
         _handToPlay.Clear();
         _hand.Clear();
-        GameManager.Instance.SetPhase(GameManager.GamePhase.Main);
+        MatchManager.Instance.SetPhase(MatchManager.GamePhase.Main);
     }
 
     private void GameManager_OnBattleStart(object sender, EventArgs e)
@@ -100,7 +100,7 @@ public class Board : MonoBehaviour
         
         if (_hand.Count <= 0)
         {
-            GameManager.Instance.SetPhase(GameManager.GamePhase.Main);
+            MatchManager.Instance.SetPhase(MatchManager.GamePhase.Main);
             return;
         }
         

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenusUI : MonoBehaviour
+public class MatchMenuUI : MonoBehaviour
 {
     // Serializable
     [SerializeField] private EndMenuUI endMenu;
@@ -11,12 +11,12 @@ public class MenusUI : MonoBehaviour
     // MonoBehaviour Callbacks
     private void OnEnable()
     {
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
+        MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
     }
     
     // Private Methods

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b0a58df1ec0324eaf078cdce54363a, type: 3}
+  m_Name: Enemy2
+  m_EditorClassIdentifier: 
+  deck:
+  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: 50478dad7713fe642ab55c271329393a, type: 2}
+  - {fileID: 11400000, guid: da76f2d9c37cc904c93bc3d24942f087, type: 2}
+  - {fileID: 11400000, guid: 1512c442707d84340bf5fc4526a08880, type: 2}
+  - {fileID: 11400000, guid: e09be5f71304ce842882b049c88d1cbf, type: 2}
+  - {fileID: 11400000, guid: 1a5f10ce4d8a1d842b7c3828b849014c, type: 2}

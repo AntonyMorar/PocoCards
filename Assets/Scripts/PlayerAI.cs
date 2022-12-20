@@ -25,18 +25,18 @@ public class PlayerAI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
-        GameManager.Instance.OnWaitingStart += GameManager_OnWaitingStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
+        MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
+        MatchManager.Instance.OnWaitingStart += GameManager_OnWaitingStart;
+        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
-        GameManager.Instance.OnWaitingStart -= GameManager_OnWaitingStart;
-        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        MatchManager.Instance.OnMainStart -= GameManager_OnMainStart;
+        MatchManager.Instance.OnWaitingStart -= GameManager_OnWaitingStart;
+        MatchManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
     }
 
     private void Update()
@@ -53,8 +53,8 @@ public class PlayerAI : MonoBehaviour
         
         _isSelectingCards = true;
         
-        if(_cardsCanBuy.Count == 1) _selectingTime = Random.Range(GameManager.Instance.GetMainPhaseTime() * 0.05f, GameManager.Instance.GetMainPhaseTime() * 0.4f);
-        else _selectingTime = Random.Range(GameManager.Instance.GetMainPhaseTime() * 0.15f, GameManager.Instance.GetMainPhaseTime() * 0.8f);
+        if(_cardsCanBuy.Count == 1) _selectingTime = Random.Range(MatchManager.Instance.GetMainPhaseTime() * 0.05f, MatchManager.Instance.GetMainPhaseTime() * 0.4f);
+        else _selectingTime = Random.Range(MatchManager.Instance.GetMainPhaseTime() * 0.15f, MatchManager.Instance.GetMainPhaseTime() * 0.8f);
         _actualSelectingTime = _selectingTime;
         
         _stepTime = _selectingTime / _cardsCanBuy.Count;
@@ -65,7 +65,7 @@ public class PlayerAI : MonoBehaviour
     {
         if (!_isSelectingCards)
         {
-            GameManager.Instance.SetPhase(GameManager.GamePhase.Battle);
+            MatchManager.Instance.SetPhase(MatchManager.GamePhase.Battle);
         }
         else
         {
@@ -89,7 +89,7 @@ public class PlayerAI : MonoBehaviour
     private void RestartValues()
     {
         _isSelectingCards = false;
-        _selectingTime = GameManager.Instance.GetMainPhaseTime();
+        _selectingTime = MatchManager.Instance.GetMainPhaseTime();
         _actualSelectingTime = _selectingTime;
         _stepTime = _selectingTime;
         _cardsCanBuy.Clear();
@@ -112,8 +112,8 @@ public class PlayerAI : MonoBehaviour
             _cardsCanBuy.Clear();
             _isSelectingCards = false;
 
-            if (GameManager.Instance.GetGamePhase() == GameManager.GamePhase.Waiting)
-                GameManager.Instance.SetPhase(GameManager.GamePhase.Battle);
+            if (MatchManager.Instance.GetGamePhase() == MatchManager.GamePhase.Waiting)
+                MatchManager.Instance.SetPhase(MatchManager.GamePhase.Battle);
         }
     }
     

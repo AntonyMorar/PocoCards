@@ -54,20 +54,20 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
-        GameManager.Instance.OnMainStart += GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame += GameManager_OnRestartValues;
+        MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
+        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame += GameManager_OnRestartValues;
     }
 
     private void OnDisable()
     {
         if(_owner)_owner.OnBalanceChange -= Owner_OnBalanceChange;
         
-        GameManager.Instance.OnMainStart -= GameManager_OnMainStart;
-        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        GameManager.Instance.OnRestartGame -= GameManager_OnRestartValues;
+        MatchManager.Instance.OnMainStart -= GameManager_OnMainStart;
+        MatchManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        MatchManager.Instance.OnRestartGame -= GameManager_OnRestartValues;
         
         OnHideInfo?.Invoke(this, EventArgs.Empty);
     }
@@ -81,7 +81,7 @@ public class Card : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0) && GameManager.Instance.GetGamePhase() != GameManager.GamePhase.GameOver)
+        if (Input.GetMouseButtonUp(0) && MatchManager.Instance.GetGamePhase() != MatchManager.GamePhase.GameOver)
         {
             RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
 
@@ -94,7 +94,7 @@ public class Card : MonoBehaviour
             }
         }
         
-        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.I)) && GameManager.Instance.GetGamePhase() != GameManager.GamePhase.GameOver)
+        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.I)) && MatchManager.Instance.GetGamePhase() != MatchManager.GamePhase.GameOver)
         {
             RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
 
@@ -315,10 +315,10 @@ public class Card : MonoBehaviour
     
     private void MakeAttack(float time)
     {
-        LeanTween.moveY(gameObject,  GameManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, time/2).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
+        LeanTween.moveY(gameObject,  MatchManager.Instance.GetMyPlayer() == _owner ? transform.position.y + 0.3f: transform.position.y -0.3f, time/2).setEase(LeanTweenType.easeInBack).setLoopPingPong(1).setOnComplete(
             () =>
             {
-                GameManager.Instance.TakeDamage(GameManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
+                MatchManager.Instance.TakeDamage(MatchManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
     }
 
@@ -396,7 +396,7 @@ public class Card : MonoBehaviour
     {
         if (_cardData.enemyHasMoreHealth && _cardData.attackPoints > 0)
         {
-            if (GameManager.Instance.GetEnemy(_owner).GetHealth() > _owner.GetHealth())
+            if (MatchManager.Instance.GetEnemy(_owner).GetHealth() > _owner.GetHealth())
             {
                 return true;
             }
@@ -426,7 +426,6 @@ public class Card : MonoBehaviour
     }
     private void CheckBalanceAvailability(int newBalance)
     {
-        Debug.Log(_cardData.name + "Cost: " + (_cardData.cost -_priceReduction) + " PB: " + newBalance);
         if (_isInBoard) return;
         SetLock(_cardData.cost - _priceReduction > newBalance);
     }

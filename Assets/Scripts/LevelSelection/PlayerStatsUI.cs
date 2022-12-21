@@ -11,7 +11,8 @@ public class PlayerStatsUI : MonoBehaviour
     [SerializeField] private TMP_Text healthText;
     private void Start()
     {
-        levelText.text = "Level " + SaveData.current.profile.level;
-        healthText.text = SaveData.current.profile.maxHealth + "/" + SaveData.current.profile.maxHealth;
+        
+        levelText.text = "Level " + GameManager.Instance.GetPlayerProfile().level;
+        healthText.text = GameManager.Instance.GetPlayerProfile().maxHealth + "/" + GameManager.Instance.GetPlayerProfile().maxHealth;
     }
 }

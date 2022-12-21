@@ -40,9 +40,9 @@ public class Player : MonoBehaviour, IHandeable
     [SerializeField] private int baseHealth = 300;
     [SerializeField] private Transform handAnchor;
     [Header("Card")] [SerializeField] private Card cardPrefab;
-    [SerializeField] private DeckData deckData;
 
     // Private *****
+    private List<CardData> _deck = new List<CardData>();
     private int _health;
     private int _shield;
     private int _coins;
@@ -87,6 +87,12 @@ public class Player : MonoBehaviour, IHandeable
         _priceReduced = 0;
         _damageReduced = 0;
         RemoveHand();
+
+        foreach (CardData cardData in GameManager.Instance.GetPlayerDeck().GetCards())
+        {
+            _deck.Add(cardData);
+        }
+
         OnHealthChange?.Invoke(this,
             new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false });
     }
@@ -121,18 +127,18 @@ public class Player : MonoBehaviour, IHandeable
     // Public Methods *****
     public void DrawCard()
     {
-        if (deckData.deck.Count <= 0 || _hand.Count > 10) return;
+        if (_deck.Count <= 0 || _hand.Count > 10) return;
         
-        CardData randCard = deckData.deck[Random.Range(0, deckData.deck.Count)];
+        CardData randCard = _deck[Random.Range(0, _deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, ImOwner());
         AddToHand(newCard, true);
     }
     public void AddDeckToBoard()
     {
-        if (deckData.deck.Count <= 0) return;
+        if (_deck.Count <= 0) return;
         
-        CardData randCard = deckData.deck[Random.Range(0, deckData.deck.Count)];
+        CardData randCard = _deck[Random.Range(0, _deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, true);
         newCard.AddToBoardFromDeck();

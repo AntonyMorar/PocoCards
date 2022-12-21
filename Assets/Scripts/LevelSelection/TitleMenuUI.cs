@@ -29,28 +29,28 @@ public class TitleMenuUI : MonoBehaviour
 
     private void Start()
     {
-        if (SerializationManager.Load() == null)
-        {
-            newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
-            continueGameButton.gameObject.SetActive(false);
-        }
-        else
+        if (GameManager.Instance.DataLoaded)
         {
             newGameButton.GetComponentInChildren<TMP_Text>().text = "Start New Game";
             continueGameButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
+            continueGameButton.gameObject.SetActive(false);
         }
     }
 
     // Private Methods
     private void StartNewGame()
     {
-        SerializationManager.Save(new SaveData());
+        GameManager.Instance.Save();
         SceneManager.LoadScene(1);
     }
 
     private void ContinueGame()
     {
-        SerializationManager.Load();
+        GameManager.Instance.Load();
         SceneManager.LoadScene(1);
     }
     

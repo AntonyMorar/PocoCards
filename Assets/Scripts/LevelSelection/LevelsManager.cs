@@ -9,7 +9,7 @@ public class LevelsManager : MonoBehaviour
     public static LevelsManager Instance { get; private set; }
     
     // Private *****
-    private int _nextSceneToLoad;
+
 
     // MonoBehavior Callbacks *****
     private void Awake()
@@ -20,29 +20,22 @@ public class LevelsManager : MonoBehaviour
 
     private void Start()
     {
-        _nextSceneToLoad = SceneManager.GetActiveScene().buildIndex + 1;
+        
     }
     
     // Public Methods *****
-    public void MoveToNextLevel()
+    public void MoveToLevel()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 4)
-        {
-            
-            return;
-        }
-        
-        SceneManager.LoadScene(_nextSceneToLoad);
+        SceneManager.LoadScene(3);
+    }
 
-        if (_nextSceneToLoad > PlayerPrefs.GetInt("levelAt"))
-        {
-            PlayerPrefs.SetInt("levelAt", _nextSceneToLoad);
-        }
+    public void MoveToDeck()
+    {
+        SceneManager.LoadScene(2);
     }
 
     public void MoveToTitle()
     {
         SceneManager.LoadScene(0);
-        _nextSceneToLoad = 1;
     }
 }

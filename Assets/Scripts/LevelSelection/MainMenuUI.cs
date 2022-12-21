@@ -39,6 +39,8 @@ public class MainMenuUI : MonoBehaviour
 
         _mainButtonText.text = mainMenuList[_currentButtonIndex];
         if (_currentButtonIndex == 0) backButton.gameObject.SetActive(false);
+
+        SetMainButton(_currentButtonIndex);
     }
 
     // Private Methods *****
@@ -87,8 +89,16 @@ public class MainMenuUI : MonoBehaviour
         switch (index)
         {
             case 0:
+                mainButton.onClick.AddListener(() =>
+                {
+                    LevelsManager.Instance.MoveToLevel();
+                });
                 break;
             case 1:
+                mainButton.onClick.AddListener(() =>
+                {
+                    LevelsManager.Instance.MoveToDeck();
+                });
                 break;
             case 2:
                 break;

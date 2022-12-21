@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     // Public *****
     public static GameManager Instance { get; private set; }
+    // Serialized ****
+    [SerializeField] private DeckData playerDeck;
     
     // MonoBehavior Callbacks *****
     private void Awake()
@@ -16,5 +19,11 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        
+    }
+
+    private void Start()
+    {
+
     }
 }

@@ -6,17 +6,26 @@ using UnityEngine.UI;
 
 public class LevelSelectionUI : MonoBehaviour
 {
-    public Button[] levelButtons;
+    // Serialized *****
+    [SerializeField] private Button[] levels;
 
+    // MonoBehaviour Callbacks *****
     private void Start()
     {
-        int levelAt = PlayerPrefs.GetInt("levelAt", 2);
+        UpdateUI();
+    }
 
-        for (int i = 0; i < levelButtons.Length; i++)
+    private void UpdateUI()
+    {
+        for (int i = 0; i < levels.Length; i++)
         {
-            if (i + 2 > levelAt)
+            if (i < SaveData.current.profile.levelCompleted)
             {
-                levelButtons[i].interactable = false;
+                levels[i].interactable = true;
+            }
+            else
+            {
+                levels[i].interactable = false;
             }
         }
     }

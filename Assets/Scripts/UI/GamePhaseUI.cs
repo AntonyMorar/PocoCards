@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class GamePhaseUI : MonoBehaviour
 {
     // Serialized *****
-    [SerializeField] private TMP_Text gamePhaseText;
     [SerializeField] private TMP_Text turnText;
     [SerializeField] private Button gamePhaseButton;
 
@@ -25,20 +24,17 @@ public class GamePhaseUI : MonoBehaviour
     // Private Methods *****
     private void GameManager_OnMainStart(object sender, EventArgs e)
     {
-        gamePhaseText.text = "Main Phase";
         gamePhaseButton.enabled = true;
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Next Turn";
     }
     
     private void GameManager_OnPreMainStart(object sender, EventArgs e)
     {
-        gamePhaseText.text = "Spreading";
         gamePhaseButton.enabled = false;
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
     }
     private void GameManager_OnBattleStart(object sender, EventArgs e)
     {
-        gamePhaseText.text = "In Battle";
         gamePhaseButton.enabled = false;
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
     }
@@ -47,10 +43,4 @@ public class GamePhaseUI : MonoBehaviour
     {
         turnText.text = "Turn: " + newTurn;
     }
-    private void ChangeState()
-    {
-        Debug.Log("CHANGE STATE");
-        
-    }
-
 }

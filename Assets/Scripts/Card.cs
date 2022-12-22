@@ -9,6 +9,7 @@ public class Card : MonoBehaviour
     // Public
     public static event EventHandler<string> OnShowInfo;
     public static event EventHandler OnHideInfo;
+    public static event EventHandler OnMakeHit;
     // Serialized **********
     [SerializeField] private LayerMask layer;
     [SerializeField] private Sprite faceSprite;
@@ -320,6 +321,7 @@ public class Card : MonoBehaviour
             {
                 MatchManager.Instance.TakeDamage(MatchManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
+        OnMakeHit?.Invoke(this, EventArgs.Empty);
     }
 
     private IEnumerator BattleEffectAnimation(float time)

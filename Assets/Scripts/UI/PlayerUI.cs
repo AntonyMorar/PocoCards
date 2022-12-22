@@ -12,6 +12,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Canvas mainCanvas;
     [Header("UI Refernece")]
     [SerializeField] private TMP_Text healthText;
+    [SerializeField] private RectTransform coinsContainer;
     [SerializeField] private TMP_Text coinsText;
     [Header("Health")]
     [SerializeField] private GameObject healthVfxPrefab;
@@ -75,7 +76,7 @@ public class PlayerUI : MonoBehaviour
     private void Player_OnBalanceChange(object sender, int coins)
     {
         coinsText.text = coins.ToString();
-        LeanTween.scale(coinsText.GetComponent<RectTransform>(), new Vector3(1.2f, 1.2f, 1.2f), 0.12f)
+        LeanTween.scale(coinsContainer, new Vector3(1.2f, 1.2f, 1.2f), 0.12f)
             .setLoopPingPong(1);
     }
     

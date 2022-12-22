@@ -19,7 +19,7 @@ public class DeckEditor : MonoBehaviour
 
     private void Start()
     {
-        foreach (CardData cardData in GameManager.Instance.GetPlayerDeck().GetCards())
+        foreach (CardData cardData in GameManager.Instance.GetPlayerProfile().deck)
         {
             Debug.Log(cardData.cardName);
         }

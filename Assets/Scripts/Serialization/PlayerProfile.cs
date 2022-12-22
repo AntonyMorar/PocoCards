@@ -10,7 +10,7 @@ public class PlayerProfile
     public int stones;
     public int maxHealth;
     public int levelCompleted;
-    public Deck deck;
+    public List<CardData> deck;
     public List<CardData> collection;
 
     public PlayerProfile(DeckData deckData)
@@ -20,7 +20,7 @@ public class PlayerProfile
         stones = 0;
         maxHealth = 25;
         levelCompleted = 1;
-        deck = new Deck(deckData);
+        deck = deckData.deck;
         collection = new List<CardData>();
     }
 }

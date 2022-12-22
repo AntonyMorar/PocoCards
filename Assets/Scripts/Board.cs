@@ -149,7 +149,7 @@ public class Board : MonoBehaviour
         int handSize = hand.Count + newCardsToAdd;
         if (handSize <= 0) return Vector3.zero;
         
-        float cardSize = 1.1f;
+        float cardSize = 1.45f;
         int handHalf = handSize / 2;
         
         float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;

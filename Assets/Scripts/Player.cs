@@ -88,7 +88,7 @@ public class Player : MonoBehaviour, IHandeable
         _damageReduced = 0;
         RemoveHand();
 
-        foreach (CardData cardData in GameManager.Instance.GetPlayerDeck().GetCards())
+        foreach (CardData cardData in GameManager.Instance.GetPlayerProfile().deck)
         {
             _deck.Add(cardData);
         }
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour, IHandeable
         int handSize = _hand.Count + newCardsToAdd;
         if (handSize <= 0) return Vector3.zero;
         
-        float cardSize = 1.1f;
+        float cardSize = 1.45f;
         int handHalf = handSize / 2;
         
         float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;

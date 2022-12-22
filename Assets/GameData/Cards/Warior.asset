@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0480f44ca514146a97b1f810a510a3, type: 3}
+  m_Name: Warior
+  m_EditorClassIdentifier: 
+  cardName: Warior
+  description: Deals 3 attack damage and no habilities
+  cardIcon: {fileID: 21300000, guid: d15e2e91bb04d1b4f850a4678515696f, type: 3}
+  attackPoints: 3
+  cost: 1
+  boardPriority: 0
+  hasSpecialEffect: 0
+  drawToHand: 0
+  drawToBoard: 0
+  restoreHealth: 0
+  addShield: 0
+  stealCoin: 0
+  reduceTurnDamage: 0
+  addPoison: 0
+  freeze: 0
+  cardTransform: {fileID: 0}
+  reduceNextCardCost: 0
+  damageAttackIncrease: 0
+  enemyHasMoreHealth: 0

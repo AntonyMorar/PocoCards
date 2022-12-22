@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DeckData defaultDeck;
     // Private ****
     private PlayerProfile _playerProfile;
+
     
     // MonoBehavior Callbacks *****
     private void Awake()
@@ -23,8 +25,11 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        
-        if(!DataLoaded) Load();
+
+        if (!DataLoaded && !Load())
+        {
+            Save();
+        }
     }
     
     // Public Methods *****
@@ -38,7 +43,7 @@ public class GameManager : MonoBehaviour
         DataLoaded = true;
     }
 
-    public void Load()
+    public bool Load()
     {
         Debug.Log("Loading...");
         string filePath = Application.dataPath + "/save.json";
@@ -47,13 +52,13 @@ public class GameManager : MonoBehaviour
             string saveString = File.ReadAllText(filePath);
             _playerProfile = JsonUtility.FromJson<PlayerProfile>(saveString);
             DataLoaded = true;
+            return true;
         }
         else
         {
             Debug.LogErrorFormat("No file found to load in ${0}", filePath);
+            return false;
         }
     }
-
     public PlayerProfile GetPlayerProfile() => _playerProfile;
-    public Deck GetPlayerDeck() => _playerProfile.deck;
 }

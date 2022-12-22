@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7675641134428210116
 Transform:
   m_ObjectHideFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2692857119094141530
 SpriteRenderer:
@@ -114,7 +114,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3483932292064851237
 SpriteRenderer:
@@ -199,9 +199,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3483932292759453006}
+  - {fileID: 499770372264870675}
   - {fileID: 7675641134428210116}
   - {fileID: 3483932292064851236}
-  - {fileID: 499770372264870675}
   - {fileID: 5423295168957211460}
   - {fileID: 4449110108854544957}
   - {fileID: 8524511484665607871}
@@ -223,7 +223,7 @@ MonoBehaviour:
   layer:
     serializedVersion: 2
     m_Bits: 8
-  faceSprite: {fileID: 21300000, guid: 098808ac4c6c3fb4d804426957162f51, type: 3}
+  faceSprite: {fileID: 21300000, guid: 8db00f13a71fc8c47af7ca8d8ee7b542, type: 3}
   backFaceSprite: {fileID: 21300000, guid: a5210fa15bea58f42812ebbaa21e26d0, type: 3}
   mainSpriteRenderer: {fileID: 3483932292759453001}
   artAnchor: {fileID: 3483932292064851237}
@@ -283,9 +283,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3483932292759453007}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
   m_RootOrder: 0
@@ -331,7 +331,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 098808ac4c6c3fb4d804426957162f51, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8db00f13a71fc8c47af7ca8d8ee7b542, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -443,7 +443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5423295168957211460
 RectTransform:
   m_ObjectHideFlags: 0
@@ -708,16 +708,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6958899683269528973}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.013}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3483932292085175148}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.35, y: 0.64}
+  m_AnchoredPosition: {x: -0.5, y: 0.84}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &264118284757193843
@@ -740,7 +740,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2963733095723670570, guid: 71b7bcbe3c8addb4e8a9aea2f31fcde6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -784,8 +784,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 71b7bcbe3c8addb4e8a9aea2f31fcde6, type: 2}
+  m_sharedMaterial: {fileID: 2963733095723670570, guid: 71b7bcbe3c8addb4e8a9aea2f31fcde6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -809,8 +809,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19
-  m_fontSizeBase: 19
+  m_fontSize: 26.02
+  m_fontSizeBase: 26.02
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -21,6 +21,15 @@ public class PlayerProfile
         maxHealth = 25;
         levelCompleted = 1;
         deck = deckData.deck;
+        deck = new List<CardData>();
+        foreach (CardData cardData in deckData.deck)
+        {
+            deck.Add(cardData);
+        }
         collection = new List<CardData>();
+        foreach (CardData cardData in deckData.deck)
+        {
+            collection.Add(cardData);
+        }
     }
 }

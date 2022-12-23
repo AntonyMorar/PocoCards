@@ -36,6 +36,7 @@ public class MatchManager : MonoBehaviour
     private GamePhase _gamePhase;
     private float _phaseTimer;
     private int _turn;
+    private bool _pause;
 
     private DeckData _playerDeck;
 
@@ -47,9 +48,22 @@ public class MatchManager : MonoBehaviour
 
         _phaseTimer = initialDelay;
     }
-    
+
+    private void OnEnable()
+    {
+        InputSystem.OnOpenSettings += InputSystem_OnOpenSettings;
+        InputSystem.OnCloseSettings += InputSystem_OnCloseSettings;
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.OnOpenSettings -= InputSystem_OnOpenSettings;
+        InputSystem.OnCloseSettings -= InputSystem_OnCloseSettings;
+    }
+
     private void Update()
     {
+        if (_pause) return;
         if ( _gamePhase is GamePhase.PreMain or GamePhase.Battle or GamePhase.GameOver) return;
         
         _phaseTimer -= Time.deltaTime;
@@ -82,6 +96,16 @@ public class MatchManager : MonoBehaviour
         SetPhase(GamePhase.Main);
     }
 
+    private void InputSystem_OnOpenSettings(object sender, EventArgs e)
+    {
+        _pause = true;
+    }
+    
+    private void InputSystem_OnCloseSettings(object sender, EventArgs e)
+    {
+        _pause = false;
+    }
+    
     // Public Methods *****
     public void SetPhase(GamePhase gamePhase)
     {

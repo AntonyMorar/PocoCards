@@ -9,13 +9,27 @@ public class GameManager : MonoBehaviour
 {
     // Public *****
     public static GameManager Instance { get; private set; }
+
+    public enum SceneState
+    {
+        Title = 1,
+        MainMenu = 2,
+        DeckEditor = 3,
+        InGame = 4
+    }
+
     public bool DataLoaded { get; private set; }
+
     // Serialized
     [SerializeField] private DeckData defaultDeck;
+
+    [SerializeField] private DeckData availableCards;
+
     // Private ****
+    private SceneState _state = SceneState.Title;
     private PlayerProfile _playerProfile;
 
-    
+
     // MonoBehavior Callbacks *****
     private void Awake()
     {
@@ -31,14 +45,21 @@ public class GameManager : MonoBehaviour
             Save();
         }
     }
-    
+
     // Public Methods *****
+    public void SetState(SceneState state)
+    {
+        _state = state;
+    }
+
+    public SceneState GetState() => _state;
+
     public void Save()
     {
         Debug.Log("Saving...");
         PlayerProfile playerProfile = new PlayerProfile(defaultDeck);
         string json = JsonUtility.ToJson(playerProfile);
-        
+
         File.WriteAllText(Application.dataPath + "/save.json", json);
         DataLoaded = true;
     }
@@ -60,5 +81,6 @@ public class GameManager : MonoBehaviour
             return false;
         }
     }
+
     public PlayerProfile GetPlayerProfile() => _playerProfile;
 }

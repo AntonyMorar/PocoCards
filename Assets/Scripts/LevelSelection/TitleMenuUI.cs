@@ -45,13 +45,13 @@ public class TitleMenuUI : MonoBehaviour
     private void StartNewGame()
     {
         GameManager.Instance.Save();
-        SceneManager.LoadScene(1);
+        LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
 
     private void ContinueGame()
     {
         GameManager.Instance.Load();
-        SceneManager.LoadScene(1);
+        LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
     
     private void ExitGame()

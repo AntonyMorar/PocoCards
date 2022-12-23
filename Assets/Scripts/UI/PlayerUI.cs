@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.Mathematics;
+using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
     // Serialized *****
     [SerializeField] private Player player;
     [SerializeField] private Canvas mainCanvas;
-    [Header("UI Refernece")]
+
+    [Header("UI Refernece")] 
+    [SerializeField] private Image imageHealthBar;
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private RectTransform coinsContainer;
     [SerializeField] private TMP_Text coinsText;
@@ -56,11 +59,15 @@ public class PlayerUI : MonoBehaviour
     // Private Methods *****
     private void Player_OnHealthChange(object sender, Player.OnHealthChangeEventArgs healthArgs)
     {
-        healthText.text = healthArgs.NewHealth + "/" + player.GetBaseHealth() ;
+        healthText.text = healthArgs.NewHealth + "/" + player.GetBaseHealth();
+        imageHealthBar.fillAmount = healthArgs.NewHealth / player.GetBaseHealth();
+        
         if (!healthArgs.ApplyEffects) return;
         
         TMP_Text floatingHealth = Instantiate(floatingHealthPrefab, GetSpawnPosition(true), quaternion.identity, mainCanvas.transform);
         floatingHealth.text = healthArgs.Amountchange > 0 ? "+" + healthArgs.Amountchange : healthArgs.Amountchange.ToString();
+
+        
     }
 
     private void Player_OnRestoreHealth(object sender, int health)

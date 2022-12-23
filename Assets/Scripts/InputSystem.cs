@@ -7,9 +7,11 @@ public class InputSystem : MonoBehaviour
 {
     // Public *****
     public static InputSystem Instance { get; private set; }
-
-    public event EventHandler OnEscapeDown;
     
+    public static EventHandler OnOpenSettings;
+    public static EventHandler OnCloseSettings;
+
+
     // MonoBehavior Callbacks
     private void Awake()
     {
@@ -19,10 +21,15 @@ public class InputSystem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnEscapeDown?.Invoke(this,EventArgs.Empty);
-        }
+        OnScapeDown();
+    }
+
+    private void OnScapeDown()
+    {
+        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+        
+        if(GameManager.Instance.GetState() == GameManager.SceneState.DeckEditor)
+            LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
 
 }

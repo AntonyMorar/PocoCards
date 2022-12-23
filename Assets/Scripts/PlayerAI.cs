@@ -13,6 +13,7 @@ public class PlayerAI : MonoBehaviour
     private float _selectingTime;
     private float _actualSelectingTime;
     private List<Card> _cardsCanBuy = new List<Card>();
+    private bool _pause;
     
     private float _stepTime;
     private int _totalSteps;
@@ -29,6 +30,9 @@ public class PlayerAI : MonoBehaviour
         MatchManager.Instance.OnWaitingStart += GameManager_OnWaitingStart;
         MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
         MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
+        
+        InputSystem.OnOpenSettings += InputSystem_OnOpenSettings;
+        InputSystem.OnCloseSettings += InputSystem_OnCloseSettings;
     }
 
     private void OnDisable()
@@ -37,6 +41,9 @@ public class PlayerAI : MonoBehaviour
         MatchManager.Instance.OnWaitingStart -= GameManager_OnWaitingStart;
         MatchManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
         MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
+        
+        InputSystem.OnOpenSettings -= InputSystem_OnOpenSettings;
+        InputSystem.OnCloseSettings -= InputSystem_OnCloseSettings;
     }
 
     private void Update()
@@ -85,6 +92,16 @@ public class PlayerAI : MonoBehaviour
     {
         RestartValues();
     }
+    
+    private void InputSystem_OnOpenSettings(object sender, EventArgs e)
+    {
+        _pause = true;
+    }
+    
+    private void InputSystem_OnCloseSettings(object sender, EventArgs e)
+    {
+        _pause = false;
+    }
 
     private void RestartValues()
     {
@@ -97,7 +114,7 @@ public class PlayerAI : MonoBehaviour
     
     private void SelectingCardsUpdate()
     {
-        if (!_isSelectingCards) return;
+        if (!_isSelectingCards || _pause) return;
         _actualSelectingTime -= Time.deltaTime;
 
         if (_actualSelectingTime < _stepTime * _totalSteps && _cardsCanBuy.Count > 0)

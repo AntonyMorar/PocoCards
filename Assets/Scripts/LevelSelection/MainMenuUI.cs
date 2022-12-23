@@ -91,21 +91,19 @@ public class MainMenuUI : MonoBehaviour
             case 0:
                 mainButton.onClick.AddListener(() =>
                 {
-                    LevelsManager.Instance.MoveToLevel();
+                    LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
                 });
                 break;
             case 1:
                 mainButton.onClick.AddListener(() =>
                 {
-                    LevelsManager.Instance.MoveToDeck();
+                    LevelsManager.Instance.ChangeScene(GameManager.SceneState.DeckEditor);
                 });
-                break;
-            case 2:
                 break;
             case 3:
                 mainButton.onClick.AddListener(() =>
                 {
-                    LevelsManager.Instance.MoveToTitle();
+                    LevelsManager.Instance.ChangeScene(GameManager.SceneState.Title);
                 });
                 break;
             default:

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Camera))]
 public class Shake : MonoBehaviour
 {
     // Serialized ****
@@ -16,7 +17,7 @@ public class Shake : MonoBehaviour
     // MonoBehavior Callbacks
     private void Awake()
     {
-        _mainCamera = Camera.main;
+        _mainCamera = GetComponent<Camera>();
     }
 
     private void OnEnable()

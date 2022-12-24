@@ -10,7 +10,11 @@ public class MainMenuUI : MonoBehaviour
 {
     // Serialized *****
     [SerializeField] private string[] mainMenuList;
+
     [Header("References")] 
+    [SerializeField] private GameObject levelSelector;
+    [SerializeField] private Button levelSelectorBack;
+    
     [SerializeField] private Button backButton;
     [SerializeField] private Button mainButton;
     [SerializeField] private Button nextButton;
@@ -18,6 +22,7 @@ public class MainMenuUI : MonoBehaviour
     // Private *****
     private TMP_Text _mainButtonText;
     private int _currentButtonIndex;
+    private bool _traveling;
     
     // MonoBehaviour Callbacks
     private void OnEnable()
@@ -34,6 +39,8 @@ public class MainMenuUI : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.SetState(GameManager.SceneState.MainMenu);
+
         _mainButtonText = mainButton.GetComponent<TMP_Text>();
         if (!_mainButtonText) _mainButtonText = mainButton.GetComponentInChildren<TMP_Text>();
 
@@ -89,10 +96,7 @@ public class MainMenuUI : MonoBehaviour
         switch (index)
         {
             case 0:
-                mainButton.onClick.AddListener(() =>
-                {
-                    LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
-                });
+                mainButton.onClick.AddListener(StartTraveling);
                 break;
             case 1:
                 mainButton.onClick.AddListener(() =>
@@ -106,8 +110,31 @@ public class MainMenuUI : MonoBehaviour
                     LevelsManager.Instance.ChangeScene(GameManager.SceneState.Title);
                 });
                 break;
-            default:
-                break;
         }
     }
+
+    private void StartTraveling()
+    {
+        levelSelector.SetActive(true);
+
+        backButton.enabled = false;
+        mainButton.enabled = false;
+        nextButton.enabled = false;
+        
+        levelSelectorBack.onClick.AddListener(StopTraveling);
+        
+        _traveling = true;
+    }
+
+    private void StopTraveling()
+    {
+        levelSelector.SetActive(false);
+        
+        backButton.enabled = true;
+        mainButton.enabled = true;
+        nextButton.enabled = true;
+        
+        _traveling = false;
+    }
+    
 }

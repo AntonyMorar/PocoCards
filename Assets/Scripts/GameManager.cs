@@ -20,12 +20,13 @@ public class GameManager : MonoBehaviour
     // Serialized
     [SerializeField] private DeckData defaultDeck;
     [SerializeField] private DeckData availableCards;
-
+    [Header("Enemies")] [SerializeField] private List<DeckData> enemiesDeck;
     // Private ****
     private const string SAVE_PATH = "/save.json";
     private Camera _camera;
     private SceneState _state = SceneState.Title;
     private PlayerProfile _playerProfile;
+    
 
 
     // MonoBehavior Callbacks *****
@@ -78,6 +79,12 @@ public class GameManager : MonoBehaviour
     public Camera GetCamera() => _camera;
     public PlayerProfile GetPlayerProfile() => _playerProfile;
 
+    public List<CardData> GetEnemyDeck(int enemyID)
+    {
+        if (enemyID > enemiesDeck.Count) return null;
+        return enemiesDeck[enemyID].deck;
+    }
+
     public void SetDecks(List<BaseCard> deck, List<BaseCard> collection)
     {
         _playerProfile.deck.Clear();
@@ -91,5 +98,14 @@ public class GameManager : MonoBehaviour
         {
             _playerProfile.collection.Add(baseCard.GetCardData());
         }
+    }
+
+    /// <summary>
+    /// Use this function when player wins a match
+    /// </summary>
+    public void UnlockLevel()
+    {
+        _playerProfile.levelCompleted++;
+        Save();
     }
 }

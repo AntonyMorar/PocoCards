@@ -8,6 +8,7 @@ public class MatchManager : MonoBehaviour
     public static MatchManager Instance { get; private set; }
     public enum GamePhase
     {
+        Setting,
         Idle,
         PreMain,
         Main,
@@ -34,11 +35,10 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private int initialCards = 3;
     // Private *****
     private GamePhase _gamePhase;
+    private int _matchLevel;
     private float _phaseTimer;
     private int _turn;
     private bool _pause;
-
-    private DeckData _playerDeck;
 
     // MonoBehavior Callbacks *****
     private void Awake()
@@ -47,6 +47,11 @@ public class MatchManager : MonoBehaviour
         else Instance = this;
 
         _phaseTimer = initialDelay;
+    }
+
+    private void Start()
+    {
+        SetMatch();
     }
 
     private void OnEnable()
@@ -64,7 +69,7 @@ public class MatchManager : MonoBehaviour
     private void Update()
     {
         if (_pause) return;
-        if ( _gamePhase is GamePhase.PreMain or GamePhase.Battle or GamePhase.GameOver) return;
+        if ( _gamePhase is GamePhase.Setting or GamePhase.PreMain or GamePhase.Battle or GamePhase.GameOver) return;
         
         _phaseTimer -= Time.deltaTime;
 
@@ -107,6 +112,17 @@ public class MatchManager : MonoBehaviour
     }
     
     // Public Methods *****
+    public void SetMatch()
+    {
+        PlayerProfile playerProfile = GameManager.Instance.GetPlayerProfile();
+
+        _matchLevel = playerProfile.levelCompleted;
+        
+        player.SetDeck(playerProfile.deck);
+        enemyPlayer.SetDeck(GameManager.Instance.GetEnemyDeck(0));
+        
+        SetPhase(GamePhase.Idle);
+    }
     public void SetPhase(GamePhase gamePhase)
     {
         if (_gamePhase == gamePhase) return;
@@ -141,6 +157,7 @@ public class MatchManager : MonoBehaviour
                 break;
             case GamePhase.GameOver:
                 OnGameOver?.Invoke(this,player.GetHealth() > 0);
+                GameManager.Instance.UnlockLevel();
                 break;
         }
     }

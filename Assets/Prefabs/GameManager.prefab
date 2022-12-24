@@ -50,6 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultDeck: {fileID: 11400000, guid: c3e0bea69e9e9a044a5d3dee8401896f, type: 2}
   availableCards: {fileID: 11400000, guid: 20ca0e6fc7b0d8a428f9916858573090, type: 2}
+  enemiesDeck:
+  - {fileID: 11400000, guid: 76d7e044adcdb8f4081488156e2aec69, type: 2}
+  - {fileID: 11400000, guid: 76d7e044adcdb8f4081488156e2aec69, type: 2}
 --- !u!114 &814715105454265119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,8 +65,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02a442e1ee99b24880c237b2a7bc3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadScene: 1
-  startLoadScene: 1
+  loadScene: 0
+  startLoadScene: 2
 --- !u!114 &7065133404237307692
 MonoBehaviour:
   m_ObjectHideFlags: 0

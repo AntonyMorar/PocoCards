@@ -10,7 +10,7 @@ public class LevelSelectionUI : MonoBehaviour
     [SerializeField] private Button[] levels;
 
     // MonoBehaviour Callbacks *****
-    private void Start()
+    private void OnEnable()
     {
         UpdateUI();
     }

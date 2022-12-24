@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MatchMenuUI : MonoBehaviour
 {
     // Serializable
-    [SerializeField] private EndMenuUI endMenu;
+    [SerializeField] private GameOverUI gameOverUI;
+    [SerializeField] private VictoryUI victoryUI;
     [SerializeField] private Button pauseButton;
 
     // MonoBehaviour Callbacks
@@ -26,8 +28,8 @@ public class MatchMenuUI : MonoBehaviour
     // Private Methods
     private void GameManager_OnGameOver(object sender, bool won)
     {
-        endMenu.gameObject.SetActive(true);
-        endMenu.Set(won);
+        if (won) victoryUI.gameObject.SetActive(true); 
+        else gameOverUI.gameObject.SetActive(true);
     }
 
     private void OnOpenSettings()

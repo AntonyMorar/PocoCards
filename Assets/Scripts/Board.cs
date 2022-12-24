@@ -70,9 +70,7 @@ public class Board : MonoBehaviour
         float width = _spriteRenderer.sprite.bounds.size.x;
         float height = _spriteRenderer.sprite.bounds.size.y;
 
-        if (Camera.main == null) return;
-        
-        double worldScreenHeight = Camera.main.orthographicSize * 2.0;
+        double worldScreenHeight = GameManager.Instance.GetCamera().orthographicSize * 2.0;
         double worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
 
         var localScale = new Vector3((float)worldScreenWidth / width, (float)(worldScreenHeight / height)* 0.4f, 0);
@@ -143,17 +141,18 @@ public class Board : MonoBehaviour
         _isBusy = false;
         OnBusyChange?.Invoke(this,_isBusy);
     }
-    
-    private Vector3 GetCardPositionInHand( List<Card> hand, int index, int newCardsToAdd)
+
+    private Vector3 GetCardPositionInHand(List<Card> hand, int index, int newCardsToAdd)
     {
-        int handSize = hand.Count + newCardsToAdd;
-        if (handSize <= 0) return Vector3.zero;
-        
-        float cardSize = 1.45f;
-        int handHalf = handSize / 2;
-        
-        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
-        return new Vector3(newPosX, 0f, 0);
+        float cardWidth = 1;
+        float spacing = 0.1f;
+        float totalWidth = (hand.Count+newCardsToAdd) + (hand.Count+newCardsToAdd) * spacing -spacing;
+        Vector3 pivotOffset = new Vector3(cardWidth/2, 0, 0);
+
+        Vector3 startingPosition = Vector3.zero;
+        startingPosition.x = -totalWidth / 2f;
+
+        return startingPosition + Vector3.right * index * (spacing + cardWidth) + pivotOffset;
     }
 
     private List<Card> GetPlayerCards(Player target)

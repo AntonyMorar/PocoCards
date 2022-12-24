@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: Enemy1
   m_EditorClassIdentifier: 
   deck:
-  - {fileID: 11400000, guid: f5ca865cc3ae3d94992f2d2f4c1f6f2f, type: 2}
-  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}
   - {fileID: 11400000, guid: 99197780288c4e742995b4f7af481cda, type: 2}
-  - {fileID: 11400000, guid: a2540678c17424546ba7893786c5af4b, type: 2}
-  - {fileID: 11400000, guid: 7db3fff89b1212a499a0c02322607ad0, type: 2}
-  - {fileID: 11400000, guid: 02e86c73942746a4d8b89cd704d3052f, type: 2}
+  - {fileID: 11400000, guid: 1512c442707d84340bf5fc4526a08880, type: 2}
+  - {fileID: 11400000, guid: f6496c37c3984584da4741008f7d1440, type: 2}

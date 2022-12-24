@@ -43,6 +43,7 @@ public class Player : MonoBehaviour, IHandeable
 
     // Private *****
     private List<CardData> _deck = new List<CardData>();
+    private List<Card> _hand = new List<Card>();
     private int _health;
     private int _shield;
     private int _coins;
@@ -51,10 +52,6 @@ public class Player : MonoBehaviour, IHandeable
     private int _poisonedAmount;
     private int _priceReduced;
     private int _damageReduced;
-
-    //Hand
-    private List<Card> _hand = new List<Card>();
-
 
     // MonoBehaviour Callbacks *****
     private void OnEnable()
@@ -88,13 +85,17 @@ public class Player : MonoBehaviour, IHandeable
         _damageReduced = 0;
         RemoveHand();
 
-        foreach (CardData cardData in GameManager.Instance.GetPlayerProfile().deck)
+        OnHealthChange?.Invoke(this,
+            new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false });
+    }
+
+    public void SetDeck(List<CardData> deck)
+    {
+        _deck.Clear();
+        foreach (CardData cardData in deck)
         {
             _deck.Add(cardData);
         }
-
-        OnHealthChange?.Invoke(this,
-            new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false });
     }
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
@@ -169,14 +170,15 @@ public class Player : MonoBehaviour, IHandeable
 
     private Vector3 GetCardPositionInHand(int index, int newCardsToAdd)
     {
-        int handSize = _hand.Count + newCardsToAdd;
-        if (handSize <= 0) return Vector3.zero;
-        
-        float cardSize = 1.45f;
-        int handHalf = handSize / 2;
-        
-        float newPosX = handSize % 2 == 0 ? index*cardSize - handHalf + (cardSize/2) : index*cardSize - handHalf;
-        return new Vector3(newPosX, 0f, 0);
+        float cardWidth = 1;
+        float spacing = 0.1f;
+        float totalWidth = (_hand.Count+newCardsToAdd) + (_hand.Count+newCardsToAdd) * spacing -spacing;
+        Vector3 pivotOffset = new Vector3(cardWidth/2, 0, 0);
+
+        Vector3 startingPosition = Vector3.zero;
+        startingPosition.x = -totalWidth / 2f;
+
+        return startingPosition + Vector3.right * index * (spacing + cardWidth) + pivotOffset;
     }
     public int GetCoins() => _coins;
     public void AddCoins(int amount)

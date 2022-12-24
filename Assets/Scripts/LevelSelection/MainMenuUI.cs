@@ -24,7 +24,7 @@ public class MainMenuUI : MonoBehaviour
     private int _currentButtonIndex;
     private bool _traveling;
     
-    // MonoBehaviour Callbacks
+    // MonoBehaviour 
     private void OnEnable()
     {
         backButton.onClick.AddListener(GoBack);
@@ -40,6 +40,8 @@ public class MainMenuUI : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.SetState(GameManager.SceneState.MainMenu);
+        
+        levelSelector.SetActive(false);
 
         _mainButtonText = mainButton.GetComponent<TMP_Text>();
         if (!_mainButtonText) _mainButtonText = mainButton.GetComponentInChildren<TMP_Text>();

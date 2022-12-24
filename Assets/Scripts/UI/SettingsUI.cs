@@ -11,6 +11,8 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] private CanvasGroup settingsBackground;
     [SerializeField] private RectTransform settingsWindow;
     [SerializeField] private Button closeButton;
+
+    private bool _isOpen;
     
     // MonoBhevior Callbacks
     private void OnEnable()
@@ -28,12 +30,16 @@ public class SettingsUI : MonoBehaviour
     // Private Methods ****
     private void InputSystem_OnOpenSettings(object sender, EventArgs e)
     {
+        if(_isOpen) return;
+        
         settings.SetActive(true);
         settingsBackground.alpha = 0;
         settingsWindow.localScale = Vector3.zero;
 
         LeanTween.alphaCanvas(settingsBackground, 1, 0.25f);
         LeanTween.scale(settingsWindow, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+
+        _isOpen = true;
     }
 
     private void CloseSettings()
@@ -44,5 +50,6 @@ public class SettingsUI : MonoBehaviour
             settings.SetActive(false);
             InputSystem.OnCloseSettings?.Invoke(this,EventArgs.Empty);
         });
+        _isOpen = false;
     }
 }

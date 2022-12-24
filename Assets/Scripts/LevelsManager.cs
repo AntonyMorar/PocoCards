@@ -10,7 +10,8 @@ public class LevelsManager : MonoBehaviour
     public static LevelsManager Instance { get; private set; }
 
     // Serialized **** 
-    [SerializeField] private GameManager.SceneState startScene;
+    [SerializeField] private bool loadScene;
+    [SerializeField] private GameManager.SceneState startLoadScene = GameManager.SceneState.Title;
     // Private *****
     private List<GameManager.SceneState> _loadedScenes = new List<GameManager.SceneState>();
     
@@ -21,7 +22,7 @@ public class LevelsManager : MonoBehaviour
         if (Instance != null && Instance != this) Destroy(this);
         else Instance = this;
         
-        LoadScene(startScene);
+        if(loadScene) LoadScene(startLoadScene);
     }
 
     // Private Methods *****

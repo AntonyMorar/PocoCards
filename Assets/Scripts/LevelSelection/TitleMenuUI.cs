@@ -29,14 +29,14 @@ public class TitleMenuUI : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.DataLoaded)
+        if (GameManager.Instance.IsSaved())
         {
             newGameButton.GetComponentInChildren<TMP_Text>().text = "Start New Game";
             continueGameButton.gameObject.SetActive(true);
         }
         else
         {
-            newGameButton.GetComponentInChildren<TMP_Text>().text = "New Game";
+            newGameButton.GetComponentInChildren<TMP_Text>().text = "Start Game";
             continueGameButton.gameObject.SetActive(false);
         }
     }

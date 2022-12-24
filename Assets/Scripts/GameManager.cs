@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,7 +10,6 @@ public class GameManager : MonoBehaviour
 {
     // Public *****
     public static GameManager Instance { get; private set; }
-
     public enum SceneState
     {
         Title = 1,
@@ -17,15 +17,13 @@ public class GameManager : MonoBehaviour
         DeckEditor = 3,
         InGame = 4
     }
-
-    public bool DataLoaded { get; private set; }
-
     // Serialized
     [SerializeField] private DeckData defaultDeck;
-
     [SerializeField] private DeckData availableCards;
 
     // Private ****
+    private const string SAVE_PATH = "/save.json";
+    private Camera _camera;
     private SceneState _state = SceneState.Title;
     private PlayerProfile _playerProfile;
 
@@ -39,10 +37,12 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        
+        _camera = Camera.main;
 
-        if (!DataLoaded && !Load())
+        if (IsSaved())
         {
-            Save();
+            Load();
         }
     }
 
@@ -53,34 +53,43 @@ public class GameManager : MonoBehaviour
     }
 
     public SceneState GetState() => _state;
-
+    
     public void Save()
     {
         Debug.Log("Saving...");
-        PlayerProfile playerProfile = new PlayerProfile(defaultDeck);
-        string json = JsonUtility.ToJson(playerProfile);
-
-        File.WriteAllText(Application.dataPath + "/save.json", json);
-        DataLoaded = true;
+        if(_playerProfile == null) _playerProfile = new PlayerProfile(defaultDeck, availableCards);
+        string json = JsonUtility.ToJson(_playerProfile);
+        File.WriteAllText(Application.dataPath + SAVE_PATH, json);
     }
-
+    
     public bool Load()
     {
         Debug.Log("Loading...");
-        string filePath = Application.dataPath + "/save.json";
+        string filePath = Application.dataPath + SAVE_PATH;
         if (File.Exists(filePath))
         {
             string saveString = File.ReadAllText(filePath);
             _playerProfile = JsonUtility.FromJson<PlayerProfile>(saveString);
-            DataLoaded = true;
             return true;
         }
-        else
+        return false;
+    }
+    public bool IsSaved() => File.Exists(Application.dataPath + SAVE_PATH);
+    public Camera GetCamera() => _camera;
+    public PlayerProfile GetPlayerProfile() => _playerProfile;
+
+    public void SetDecks(List<BaseCard> deck, List<BaseCard> collection)
+    {
+        _playerProfile.deck.Clear();
+        foreach (BaseCard baseCard in deck)
         {
-            Debug.LogErrorFormat("No file found to load in ${0}", filePath);
-            return false;
+            _playerProfile.deck.Add(baseCard.GetCardData());
+        }
+        
+        _playerProfile.collection.Clear();
+        foreach (BaseCard baseCard in collection)
+        {
+            _playerProfile.collection.Add(baseCard.GetCardData());
         }
     }
-
-    public PlayerProfile GetPlayerProfile() => _playerProfile;
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,7 +14,7 @@ public class PlayerProfile
     public List<CardData> deck;
     public List<CardData> collection;
 
-    public PlayerProfile(DeckData deckData)
+    public PlayerProfile(DeckData deckData, DeckData collectionData)
     {
         playerName = "Player 1";
         level = 1;
@@ -27,9 +28,10 @@ public class PlayerProfile
             deck.Add(cardData);
         }
         collection = new List<CardData>();
-        foreach (CardData cardData in deckData.deck)
+        foreach (CardData cardData in collectionData.deck)
         {
-            collection.Add(cardData);
+            if(!deckData.deck.Contains(cardData))
+                collection.Add(cardData);
         }
     }
 }

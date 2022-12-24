@@ -24,7 +24,6 @@ public class Card : MonoBehaviour
     [SerializeField] private GameObject frostImage;
     // Private **********
     private CardData _cardData;
-    private Camera _camera;
     private Player _owner;
     private bool _isSelectable = true;
     private bool _isActive; // Making on reveal changes
@@ -75,7 +74,6 @@ public class Card : MonoBehaviour
 
     private void Start()
     {
-        _camera = Camera.main;
         Player.OnSale += Player_OnSale;
         Player.OnSaleFinished += Player_OnSaleFinished;
     }
@@ -84,11 +82,11 @@ public class Card : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0) && MatchManager.Instance.GetGamePhase() != MatchManager.GamePhase.GameOver)
         {
-            RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(GameManager.Instance.GetCamera().ScreenPointToRay(Input.mousePosition),50,layer);
 
             if (hit.collider != null && hit.collider.transform == transform)
             {
-                if (!_owner.ImOwner() || !_isSelectable || _isFrozen) return;
+                if ((_owner && !_owner.ImOwner()) || !_isSelectable || _isFrozen) return;
 
                 if (_isInBoard) AddToHand();
                 else AddToBoard();
@@ -97,9 +95,9 @@ public class Card : MonoBehaviour
         
         if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.I)) && MatchManager.Instance.GetGamePhase() != MatchManager.GamePhase.GameOver)
         {
-            RaycastHit2D hit = Physics2D.GetRayIntersection(_camera.ScreenPointToRay(Input.mousePosition),50,layer);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(GameManager.Instance.GetCamera().ScreenPointToRay(Input.mousePosition),50,layer);
 
-            if (hit.collider != null && hit.collider.transform == transform && _isFlipped && _owner.ImOwner())
+            if (hit.collider != null && hit.collider.transform == transform && _isFlipped && _owner && _owner.ImOwner())
             {
                 OnShowInfo?.Invoke(this, _cardData.description);
             }
@@ -153,11 +151,11 @@ public class Card : MonoBehaviour
     // Public Methods **********
     public void SetCard(Player owner, CardData cardData, bool flipped)
     {
-        _owner = owner;
+        if(owner) _owner = owner;
         _cardData = cardData;
         _canAttack = CanAttack();
         
-        // TODO: Remove repeated code (FlipCorrutone) i dont know how
+        // TODO: Remove repeated code (FlipCorrutine) i dont know how
         mainSpriteRenderer.sprite = backFaceSprite;
         artAnchor.sprite = null;
         attackPointsText.text = "";
@@ -165,7 +163,7 @@ public class Card : MonoBehaviour
         
         if(flipped) Flip(false);
 
-        _owner.OnBalanceChange += Owner_OnBalanceChange;
+        if(owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
         CheckBalanceAvailability(_owner.GetCoins());
     }
 
@@ -217,7 +215,7 @@ public class Card : MonoBehaviour
         LeanTween.scale(gameObject, Vector3.zero, 0.25f).setDestroyOnComplete(true);
     }
 
-    public bool ImOwner() => _owner.ImOwner();
+    public bool ImOwner() => _owner && _owner.ImOwner();
 
     public Player GetOwner() => _owner;
     public int GetActualCost() => _cardData.cost - _priceReduction;
@@ -245,7 +243,6 @@ public class Card : MonoBehaviour
     
     public void ChangeCard( Player owner, CardData newCard)
     {
-        Debug.Log("changing card " + _cardData.cardName);
         SetCard(owner, newCard, _isFlipped);
     }
 

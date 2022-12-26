@@ -1228,7 +1228,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e66356ec174162c4392277da042ceeee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9aebd705574f9e642aef1e5f59b3e4d8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2023,6 +2023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1878098185}
   mainCanvas: {fileID: 930275218}
+  profilePic: {fileID: 1228302967}
   imageHealthBar: {fileID: 906288658}
   healthText: {fileID: 1908264895}
   coinsContainer: {fileID: 2033158356}
@@ -3702,6 +3703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1739560517}
   mainCanvas: {fileID: 930275218}
+  profilePic: {fileID: 530144014}
   imageHealthBar: {fileID: 133829469}
   healthText: {fileID: 1994148321}
   coinsContainer: {fileID: 2050753040}
@@ -4007,7 +4009,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63812b01ba5dc4c43ba5145d9721ede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHealth: 15
   handAnchor: {fileID: 2047505958}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
 --- !u!114 &1739560518
@@ -4188,7 +4189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63812b01ba5dc4c43ba5145d9721ede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHealth: 15
   handAnchor: {fileID: 830966763}
   cardPrefab: {fileID: 3483932292085175149, guid: 1e8ca7b70e4fc1342a33cda5bee84c5d, type: 3}
 --- !u!4 &1878098186

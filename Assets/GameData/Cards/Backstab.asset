@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Deals 4 attack damage, but only if the enemy player has more health
     than you.
   cardIcon: {fileID: 21300000, guid: 612f3484e7d494448bd5ec74120837d9, type: 3}
-  attackPoints: 3
+  attackPoints: 4
   cost: 1
   hasSpecialEffect: 1
   drawToHand: 0

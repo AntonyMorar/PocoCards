@@ -26,7 +26,7 @@ public class PlayerProfile
     {
         level = 1;
         stones = 0;
-        levelCompleted = 1;
+        levelCompleted = 0;
         baseHealth = playerData.baseHealth;
 
         foreach (CardData cardData in playerData.deckData.deck)  

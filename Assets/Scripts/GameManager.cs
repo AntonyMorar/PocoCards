@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     }
     // Serialized
     [SerializeField] private PlayerData playerData;
-    [SerializeField] private DeckData availableCards;
     [Header("Enemies")] 
     [SerializeField] private List<PlayerData> enemies;
     // Private ****
@@ -58,7 +57,6 @@ public class GameManager : MonoBehaviour
     
     public void Save()
     {
-        Debug.Log("Saving...");
         if(_playerProfile == null) _playerProfile = new PlayerProfile(playerData);
         string json = JsonUtility.ToJson(_playerProfile);
         File.WriteAllText(Application.dataPath + SAVE_PATH, json);
@@ -66,7 +64,6 @@ public class GameManager : MonoBehaviour
     
     public bool Load()
     {
-        Debug.Log("Loading...");
         string filePath = Application.dataPath + SAVE_PATH;
         if (File.Exists(filePath))
         {
@@ -84,8 +81,7 @@ public class GameManager : MonoBehaviour
     public PlayerData GetEnemy()
     {
         if (enemies.Count < _levelSelected ) return null;
-        
-        Debug.Log(_levelSelected);
+ 
         return enemies[_levelSelected];
     }
 

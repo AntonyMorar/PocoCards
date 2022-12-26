@@ -111,11 +111,10 @@ public class MatchManager : MonoBehaviour
     }
     
     // Public Methods *****
-    public void SetMatch()
+    private void SetMatch()
     {
-        PlayerProfile playerProfile = GameManager.Instance.GetPlayerProfile();
-
-        player.SetPlayer(GameManager.Instance.GetPlayerData());
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        player.SetPlayer(playerData);
         enemyPlayer.SetPlayer(GameManager.Instance.GetEnemy());
         
         SetPhase(GamePhase.Idle);

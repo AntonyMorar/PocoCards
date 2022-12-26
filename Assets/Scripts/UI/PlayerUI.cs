@@ -13,6 +13,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Canvas mainCanvas;
 
     [Header("UI Refernece")] 
+    [SerializeField] private Image profilePic;
     [SerializeField] private Image imageHealthBar;
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private RectTransform coinsContainer;
@@ -33,6 +34,7 @@ public class PlayerUI : MonoBehaviour
 
     private void OnEnable()
     {
+        player.OnSetUpComplete += Player_OnSetUpComplete;
         
         player.OnHealthChange += Player_OnHealthChange;
         player.OnRestoreHealth += Player_OnRestoreHealth;
@@ -46,6 +48,8 @@ public class PlayerUI : MonoBehaviour
 
     private void OnDisable()
     {
+        player.OnSetUpComplete += Player_OnSetUpComplete;
+        
         player.OnHealthChange -= Player_OnHealthChange;
         player.OnRestoreHealth -= Player_OnRestoreHealth;
         // Poison
@@ -54,9 +58,15 @@ public class PlayerUI : MonoBehaviour
         // Balance
         player.OnBalanceChange -= Player_OnBalanceChange;
         player.OnCoinStealed += Player_OnCoinStealed;
+        
     }
     
     // Private Methods *****
+    private void Player_OnSetUpComplete(object sender, EventArgs e)
+    {
+        Debug.Log("UI SETUP: " + player.GetProfilePic());
+        profilePic.sprite = player.GetProfilePic();
+    }
     private void Player_OnHealthChange(object sender, Player.OnHealthChangeEventArgs healthArgs)
     {
         healthText.text = healthArgs.NewHealth + "/" + player.GetBaseHealth();
@@ -66,8 +76,6 @@ public class PlayerUI : MonoBehaviour
         
         TMP_Text floatingHealth = Instantiate(floatingHealthPrefab, GetSpawnPosition(true), quaternion.identity, mainCanvas.transform);
         floatingHealth.text = healthArgs.Amountchange > 0 ? "+" + healthArgs.Amountchange : healthArgs.Amountchange.ToString();
-
-        
     }
 
     private void Player_OnRestoreHealth(object sender, int health)

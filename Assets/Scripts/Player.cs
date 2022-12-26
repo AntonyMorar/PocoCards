@@ -21,6 +21,7 @@ public class Player : MonoBehaviour, IHandeable
     }
 
     // Public *****
+    public event EventHandler OnSetUpComplete;
     public event EventHandler<OnHealthChangeEventArgs> OnHealthChange; // return the actual health
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
     public event EventHandler OnDead;
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour, IHandeable
     private int _health;
     private int _shield;
     private int _coins;
+    private Sprite _profilePic;
 
     // spells
     private int _poisonedAmount;
@@ -93,7 +95,11 @@ public class Player : MonoBehaviour, IHandeable
         }
 
         _baseHealth = playerData.baseHealth;
+        _profilePic = playerData.profilePic;
         SetInitialValues();
+        
+        Debug.Log(playerData.playerName + " Setup complete");
+        OnSetUpComplete?.Invoke(this, EventArgs.Empty);
     }
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
@@ -309,4 +315,5 @@ public class Player : MonoBehaviour, IHandeable
     {
         Board.Instance.ChangeRandomCard(MatchManager.Instance.GetEnemy(this), newCard);
     }
+    public Sprite GetProfilePic() => _profilePic;
 }

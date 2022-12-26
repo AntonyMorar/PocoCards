@@ -106,6 +106,12 @@ public class MainMenuUI : MonoBehaviour
                     LevelsManager.Instance.ChangeScene(GameManager.SceneState.DeckEditor);
                 });
                 break;
+            case 2:
+                mainButton.onClick.AddListener(() =>
+                {
+                    InputSystem.OnOpenSettings?.Invoke(this, EventArgs.Empty);
+                });
+                break;
             case 3:
                 mainButton.onClick.AddListener(() =>
                 {

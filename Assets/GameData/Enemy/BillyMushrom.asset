@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3e348200a4d1a4aa8830d11a4f3168, type: 3}
+  m_Name: BillyMushrom
+  m_EditorClassIdentifier: 
+  playerName: Billy the Mushrom
+  profilePic: {fileID: 21300000, guid: fd098fb4cf57bad419701c802e442b7e, type: 3}
+  enemyLevel: 0
+  baseHealth: 25
+  deckData: {fileID: 11400000, guid: 60c8d4ad3654f9f42afac64e2d5eca3d, type: 2}

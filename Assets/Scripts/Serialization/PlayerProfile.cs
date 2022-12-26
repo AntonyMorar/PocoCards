@@ -6,32 +6,38 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerProfile
 {
-    public string playerName;
+    [System.Serializable]
+    public struct PlayerCard
+    {
+        public CardData cardData;
+        public bool inDeck;
+        public bool unlocked;
+    }
+    
     public int level;
     public int stones;
-    public int maxHealth;
     public int levelCompleted;
-    public List<CardData> deck;
-    public List<CardData> collection;
+    public int baseHealth = 25;
 
-    public PlayerProfile(DeckData deckData, DeckData collectionData)
+    public List<PlayerCard> playerDeck = new List<PlayerCard>();
+    //public List<CardData> deckData = new List<CardData>();
+
+    public PlayerProfile(PlayerData playerData)
     {
-        playerName = "Player 1";
         level = 1;
         stones = 0;
-        maxHealth = 25;
         levelCompleted = 1;
-        deck = deckData.deck;
-        deck = new List<CardData>();
-        foreach (CardData cardData in deckData.deck)
+        baseHealth = playerData.baseHealth;
+
+        foreach (CardData cardData in playerData.deckData.deck)  
         {
-            deck.Add(cardData);
-        }
-        collection = new List<CardData>();
-        foreach (CardData cardData in collectionData.deck)
-        {
-            if(!deckData.deck.Contains(cardData))
-                collection.Add(cardData);
+            playerDeck.Add(new PlayerCard()
+            {
+                cardData = cardData,
+                inDeck = true,
+                unlocked = true
+            });
         }
     }
 }
+

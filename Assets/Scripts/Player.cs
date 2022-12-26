@@ -37,13 +37,13 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnDamageReduceChange;
 
     // Serialized *****
-    [SerializeField] private int baseHealth = 300;
     [SerializeField] private Transform handAnchor;
     [Header("Card")] [SerializeField] private Card cardPrefab;
 
     // Private *****
     private List<CardData> _deck = new List<CardData>();
     private List<Card> _hand = new List<Card>();
+    private int _baseHealth = 300;
     private int _health;
     private int _shield;
     private int _coins;
@@ -68,15 +68,10 @@ public class Player : MonoBehaviour, IHandeable
         MatchManager.Instance.OnRestartGame -= GameManager_OnRestartGame;
     }
 
-    private void Start()
-    {
-        SetInitialValues();
-    }
-
     // Private Methods *****
     private void SetInitialValues()
     {
-        _health = baseHealth;
+        _health = _baseHealth;
         _shield = 0;
         _coins = 0;
 
@@ -86,16 +81,19 @@ public class Player : MonoBehaviour, IHandeable
         RemoveHand();
 
         OnHealthChange?.Invoke(this,
-            new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = baseHealth, ApplyEffects = false });
+            new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = _baseHealth, ApplyEffects = false });
     }
 
-    public void SetDeck(List<CardData> deck)
+    public void SetPlayer(PlayerData playerData)
     {
         _deck.Clear();
-        foreach (CardData cardData in deck)
+        foreach (CardData cardData in playerData.deckData.deck)
         {
             _deck.Add(cardData);
         }
+
+        _baseHealth = playerData.baseHealth;
+        SetInitialValues();
     }
 
     private void GameManager_OnTurnChange(object sender, int newTurn)
@@ -209,7 +207,7 @@ public class Player : MonoBehaviour, IHandeable
         _shield = Mathf.Clamp(_shield, 0, 9999);
 
         _health -= remainDamage;
-        _health = Mathf.Clamp(_health, 0, baseHealth);
+        _health = Mathf.Clamp(_health, 0, _baseHealth);
         OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = -remainDamage, ApplyEffects = true});
         if(shieldTemp != _shield) OnShieldChange?.Invoke(this, _shield);
         
@@ -218,7 +216,7 @@ public class Player : MonoBehaviour, IHandeable
 
     public void RestoreHealth(int amount)
     {
-        if (_health >= baseHealth) return;
+        if (_health >= _baseHealth) return;
         
         _health += amount;
         OnRestoreHealth?.Invoke(this,amount);
@@ -235,7 +233,7 @@ public class Player : MonoBehaviour, IHandeable
         MatchManager.Instance.SetPhase(MatchManager.GamePhase.GameOver);
     }
 
-    public int GetBaseHealth() => baseHealth;
+    public int GetBaseHealth() => _baseHealth;
     public int GetHealth() => _health;
     
     // Spells

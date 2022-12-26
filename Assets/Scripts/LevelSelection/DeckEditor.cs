@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,15 +15,16 @@ public class DeckEditor : MonoBehaviour
     {
         GameManager.Instance.SetState(GameManager.SceneState.DeckEditor);
         
-        foreach (CardData cardData in GameManager.Instance.GetPlayerProfile().deck)
+        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().playerDeck)
         {
-            playerDeck.AddCard(cardData);
+            if(playerCard.inDeck)
+                playerDeck.AddCard(playerCard.cardData);
         }
         
-        foreach (CardData cardData in GameManager.Instance.GetPlayerProfile().collection)
+        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().playerDeck)
         {
-            if(!GameManager.Instance.GetPlayerProfile().deck.Contains(cardData))
-                playerCollection.AddCard(cardData);
+            if(!playerCard.inDeck)
+                playerCollection.AddCard(playerCard.cardData);
         }
     }
 
@@ -55,15 +55,11 @@ public class DeckEditor : MonoBehaviour
     {
         playerCollection.AddCard(baseCard.GetCardData());
         playerDeck.RemoveCard(baseCard);
-        
-        GameManager.Instance.SetDecks(playerDeck.GetCards(), playerCollection.GetCards());
     }
 
     private void AddToDeck(BaseCard baseCard)
     {
         playerDeck.AddCard(baseCard.GetCardData());
         playerCollection.RemoveCard(baseCard);
-        
-        GameManager.Instance.SetDecks(playerDeck.GetCards(), playerCollection.GetCards());
     }
 }

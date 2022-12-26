@@ -35,7 +35,6 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private int initialCards = 3;
     // Private *****
     private GamePhase _gamePhase;
-    private int _matchLevel;
     private float _phaseTimer;
     private int _turn;
     private bool _pause;
@@ -116,10 +115,8 @@ public class MatchManager : MonoBehaviour
     {
         PlayerProfile playerProfile = GameManager.Instance.GetPlayerProfile();
 
-        _matchLevel = playerProfile.levelCompleted;
-        
-        player.SetDeck(playerProfile.deck);
-        enemyPlayer.SetDeck(GameManager.Instance.GetEnemyDeck(0));
+        player.SetPlayer(GameManager.Instance.GetPlayerData());
+        enemyPlayer.SetPlayer(GameManager.Instance.GetEnemy());
         
         SetPhase(GamePhase.Idle);
     }

@@ -2462,6 +2462,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 814715105454265119, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
+      propertyPath: loadScene
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 814715105454265119, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
+      propertyPath: startLoadScene
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8355208141963861964, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2505,6 +2513,14 @@ PrefabInstance:
     - target: {fileID: 8355208141963861964, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355208141963861965, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
+      propertyPath: _playerProfile.testDeck.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355208141963861965, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
+      propertyPath: _playerProfile.playerDeck.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8355208141963861966, guid: 66b0b10830ad2cc4bba014c13d2f1107, type: 3}
       propertyPath: m_Name

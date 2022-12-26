@@ -48,11 +48,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7271cac21bc3344a857cd14c3eddfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDeck: {fileID: 11400000, guid: c3e0bea69e9e9a044a5d3dee8401896f, type: 2}
+  playerData: {fileID: 11400000, guid: 1f0206cefd27dc34c97ee722b736a2a6, type: 2}
   availableCards: {fileID: 11400000, guid: 20ca0e6fc7b0d8a428f9916858573090, type: 2}
-  enemiesDeck:
-  - {fileID: 11400000, guid: 76d7e044adcdb8f4081488156e2aec69, type: 2}
-  - {fileID: 11400000, guid: 76d7e044adcdb8f4081488156e2aec69, type: 2}
+  enemies:
+  - {fileID: 11400000, guid: 2c25b2454f704da4fa47ffa35ee51b9c, type: 2}
+  - {fileID: 11400000, guid: c93854464be3d0e4185404e577ae7fd1, type: 2}
 --- !u!114 &814715105454265119
 MonoBehaviour:
   m_ObjectHideFlags: 0

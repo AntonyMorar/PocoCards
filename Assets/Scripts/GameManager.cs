@@ -18,15 +18,16 @@ public class GameManager : MonoBehaviour
         InGame = 4
     }
     // Serialized
-    [SerializeField] private DeckData defaultDeck;
+    [SerializeField] private PlayerData playerData;
     [SerializeField] private DeckData availableCards;
-    [Header("Enemies")] [SerializeField] private List<DeckData> enemiesDeck;
+    [Header("Enemies")] 
+    [SerializeField] private List<PlayerData> enemies;
     // Private ****
     private const string SAVE_PATH = "/save.json";
     private Camera _camera;
     private SceneState _state = SceneState.Title;
     private PlayerProfile _playerProfile;
-    
+    private int _levelSelected = -1;
 
 
     // MonoBehavior Callbacks *****
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
         Debug.Log("Saving...");
-        if(_playerProfile == null) _playerProfile = new PlayerProfile(defaultDeck, availableCards);
+        if(_playerProfile == null) _playerProfile = new PlayerProfile(playerData);
         string json = JsonUtility.ToJson(_playerProfile);
         File.WriteAllText(Application.dataPath + SAVE_PATH, json);
     }
@@ -78,26 +79,14 @@ public class GameManager : MonoBehaviour
     public bool IsSaved() => File.Exists(Application.dataPath + SAVE_PATH);
     public Camera GetCamera() => _camera;
     public PlayerProfile GetPlayerProfile() => _playerProfile;
+    public PlayerData GetPlayerData() => playerData;
 
-    public List<CardData> GetEnemyDeck(int enemyID)
+    public PlayerData GetEnemy()
     {
-        if (enemyID > enemiesDeck.Count) return null;
-        return enemiesDeck[enemyID].deck;
-    }
-
-    public void SetDecks(List<BaseCard> deck, List<BaseCard> collection)
-    {
-        _playerProfile.deck.Clear();
-        foreach (BaseCard baseCard in deck)
-        {
-            _playerProfile.deck.Add(baseCard.GetCardData());
-        }
+        if (enemies.Count < _levelSelected ) return null;
         
-        _playerProfile.collection.Clear();
-        foreach (BaseCard baseCard in collection)
-        {
-            _playerProfile.collection.Add(baseCard.GetCardData());
-        }
+        Debug.Log(_levelSelected);
+        return enemies[_levelSelected];
     }
 
     /// <summary>
@@ -107,5 +96,12 @@ public class GameManager : MonoBehaviour
     {
         _playerProfile.levelCompleted++;
         Save();
+    }
+
+    public void SelectLevel(int level)
+    {
+        if (level > _playerProfile.levelCompleted) return;
+        
+        _levelSelected = level;
     }
 }

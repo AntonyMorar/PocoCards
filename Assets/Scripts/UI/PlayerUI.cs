@@ -18,6 +18,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private RectTransform coinsContainer;
     [SerializeField] private TMP_Text coinsText;
+    [SerializeField] private PlayerEffectUI playerEffect;
     [Header("Health")]
     [SerializeField] private GameObject healthVfxPrefab;
     [SerializeField] private TMP_Text floatingHealthPrefab;
@@ -40,6 +41,7 @@ public class PlayerUI : MonoBehaviour
         player.OnRestoreHealth += Player_OnRestoreHealth;
         // Poison
         player.OnPoisonAdd += Player_OnPoisonAdd;
+        player.OnPoisonDamage += Player_OnPoisonDamage;
         player.OnPoisonRemoved += Player_OnPoisonRemoved;
         // Balance
         player.OnBalanceChange += Player_OnBalanceChange;
@@ -54,6 +56,7 @@ public class PlayerUI : MonoBehaviour
         player.OnRestoreHealth -= Player_OnRestoreHealth;
         // Poison
         player.OnPoisonAdd -= Player_OnPoisonAdd;
+        player.OnPoisonDamage -= Player_OnPoisonDamage;
         player.OnPoisonRemoved -= Player_OnPoisonRemoved;
         // Balance
         player.OnBalanceChange -= Player_OnBalanceChange;
@@ -106,12 +109,18 @@ public class PlayerUI : MonoBehaviour
     private void Player_OnPoisonAdd(object sender, int poisonedAmount)
     {
         Instantiate(poisonPrefab, GetSpawnPosition(true), quaternion.identity, mainCanvas.transform);
-        healthText.color = new Color(63,112,30, 255);
+        playerEffect.gameObject.SetActive(true);
+        playerEffect.Set(PlayerEffectUI.Effect.Poisoned, poisonedAmount);
+    }
+
+    private void Player_OnPoisonDamage(object sender, int poisonedAmount)
+    {
+        playerEffect.UpdateAmount(poisonedAmount);
     }
 
     private void Player_OnPoisonRemoved(object sender, EventArgs e)
     {
-        healthText.color = Color.black;
+        playerEffect.gameObject.SetActive(false);
     }
     
     // Spawn

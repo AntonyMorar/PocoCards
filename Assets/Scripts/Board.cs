@@ -144,9 +144,9 @@ public class Board : MonoBehaviour
 
     private Vector3 GetCardPositionInHand(List<Card> hand, int index, int newCardsToAdd)
     {
-        float cardWidth = 1;
+        float cardWidth = 1.25f;
         float spacing = 0.1f;
-        float totalWidth = (hand.Count+newCardsToAdd) + (hand.Count+newCardsToAdd) * spacing -spacing;
+        float totalWidth = ((hand.Count + newCardsToAdd) * cardWidth) + ((hand.Count + newCardsToAdd) * cardWidth ) * spacing -spacing;
         Vector3 pivotOffset = new Vector3(cardWidth/2, 0, 0);
 
         Vector3 startingPosition = Vector3.zero;

@@ -26,13 +26,14 @@ public class Player : MonoBehaviour, IHandeable
     public event EventHandler<int> OnRestoreHealth; // Return the restore amount
     public event EventHandler OnDead;
     public event EventHandler<int> OnBalanceChange;
-
     public event EventHandler<int> OnCoinStealed;
 
     // Spell events
     public event EventHandler<int> OnShieldChange;
     public event EventHandler<int> OnPoisonAdd;
+    public event EventHandler<int> OnPoisonDamage;
     public event EventHandler OnPoisonRemoved;
+
     public static event EventHandler<OnAmountChangeEventArgs> OnSale;
     public static event EventHandler<Player> OnSaleFinished;
     public event EventHandler<int> OnDamageReduceChange;
@@ -97,8 +98,7 @@ public class Player : MonoBehaviour, IHandeable
         _baseHealth = playerData.baseHealth;
         _profilePic = playerData.profilePic;
         SetInitialValues();
-        
-        Debug.Log(playerData.playerName + " Setup complete");
+
         OnSetUpComplete?.Invoke(this, EventArgs.Empty);
     }
 
@@ -174,9 +174,9 @@ public class Player : MonoBehaviour, IHandeable
 
     private Vector3 GetCardPositionInHand(int index, int newCardsToAdd)
     {
-        float cardWidth = 1;
+        float cardWidth = 1.25f;
         float spacing = 0.1f;
-        float totalWidth = (_hand.Count+newCardsToAdd) + (_hand.Count+newCardsToAdd) * spacing -spacing;
+        float totalWidth = ((_hand.Count + newCardsToAdd) * cardWidth) + ((_hand.Count + newCardsToAdd) * cardWidth ) * spacing -spacing;
         Vector3 pivotOffset = new Vector3(cardWidth/2, 0, 0);
 
         Vector3 startingPosition = Vector3.zero;
@@ -259,6 +259,7 @@ public class Player : MonoBehaviour, IHandeable
         TakeDamage(1, true);
         _poisonedAmount -= 1;
         _poisonedAmount = Mathf.Clamp(_poisonedAmount, 0, 999);
+        OnPoisonDamage?.Invoke(this, _poisonedAmount);
         
         if(_poisonedAmount <= 0) OnPoisonRemoved?.Invoke(this, EventArgs.Empty);
     }
@@ -309,6 +310,7 @@ public class Player : MonoBehaviour, IHandeable
     private void FreezeRandomCard()
     {
         int randomCard = Random.Range(0, _hand.Count);
+        if (_hand.Count <= 0) return;
         _hand[randomCard].Freeze();
     }
     public void ChangeEnemyCardInBoard(CardData newCard)

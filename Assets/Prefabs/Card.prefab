@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7675641134428210116}
   - component: {fileID: 2692857119094141530}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4449110108854544957}
   - component: {fileID: 4064229756861254191}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EffectIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}

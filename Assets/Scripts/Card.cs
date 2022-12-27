@@ -305,7 +305,6 @@ public class Card : MonoBehaviour
     {
         Remove();
     }
-    
     private void GameManager_OnRestartValues(object sender, EventArgs e)
     {
         Remove();
@@ -318,6 +317,8 @@ public class Card : MonoBehaviour
             {
                 MatchManager.Instance.TakeDamage(MatchManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
+        
+        
         OnMakeHit?.Invoke(this, EventArgs.Empty);
     }
 

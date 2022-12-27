@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IHandeable
 
     // Serialized *****
     [SerializeField] private Transform handAnchor;
+    [SerializeField] private Transform hitPrefab;
     [Header("Card")] [SerializeField] private Card cardPrefab;
 
     // Private *****
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour, IHandeable
     private int _health;
     private int _shield;
     private int _coins;
+    private bool _leftSide;
     private Sprite _profilePic;
 
     // spells
@@ -86,7 +88,6 @@ public class Player : MonoBehaviour, IHandeable
         OnHealthChange?.Invoke(this,
             new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = _baseHealth, ApplyEffects = false });
     }
-
     public void SetPlayer(PlayerData playerData)
     {
         _deck.Clear();
@@ -97,6 +98,7 @@ public class Player : MonoBehaviour, IHandeable
 
         _baseHealth = playerData.baseHealth;
         _profilePic = playerData.profilePic;
+        _leftSide = playerData.ally;
         SetInitialValues();
 
         OnSetUpComplete?.Invoke(this, EventArgs.Empty);
@@ -216,6 +218,11 @@ public class Player : MonoBehaviour, IHandeable
         _health = Mathf.Clamp(_health, 0, _baseHealth);
         OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = -remainDamage, ApplyEffects = true});
         if(shieldTemp != _shield) OnShieldChange?.Invoke(this, _shield);
+        
+        float worldScreenHeight = GameManager.Instance.GetCamera().orthographicSize;
+        float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+        Transform hitClone = Instantiate(hitPrefab, new Vector3(_leftSide ? -worldScreenWidth +1f : worldScreenWidth -1f,_leftSide ? -worldScreenHeight + 1 :worldScreenHeight -1f,0), Quaternion.identity);
+        Destroy(hitClone.gameObject, 5f);
         
         if (_health <= 0) Died();
     }

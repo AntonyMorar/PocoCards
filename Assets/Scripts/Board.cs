@@ -161,13 +161,11 @@ public class Board : MonoBehaviour
 
         foreach (Card card in _hand)
         {
-            Debug.Log(card.GetOwner());
             if (card.GetOwner() == target)
             {
                 playerCards.Add(card);
             }
         }
-
         return playerCards;
     }
 

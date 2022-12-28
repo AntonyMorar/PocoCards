@@ -29,7 +29,7 @@ public class LevelSelectionUI : MonoBehaviour
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            if (i < GameManager.Instance.GetPlayerProfile().levelCompleted)
+            if (GameManager.Instance.GetPlayerProfile().levelsAvailable[i])
             {
                 levels[i].interactable = true;
             }

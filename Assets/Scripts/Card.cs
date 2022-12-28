@@ -228,6 +228,9 @@ public class Card : MonoBehaviour
     public void Freeze()
     {
         frostImage.SetActive(true);
+        LeanTween.alpha(frostImage, 0, 0);
+        LeanTween.alpha(frostImage, 1, 0.5f).setEase(LeanTweenType.easeInCubic);
+            
         _frozenTurns = 1;
         _isFrozen = true;
     }
@@ -317,7 +320,6 @@ public class Card : MonoBehaviour
             {
                 MatchManager.Instance.TakeDamage(MatchManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
-        
         
         OnMakeHit?.Invoke(this, EventArgs.Empty);
     }

@@ -8,12 +8,15 @@ public class LevelsManager : MonoBehaviour
 {
     // Public *****
     public static LevelsManager Instance { get; private set; }
+    public event EventHandler OnSceneLoad;
+    public event EventHandler OnSceneLoaded;
 
     // Serialized **** 
     [SerializeField] private bool loadScene;
     [SerializeField] private GameManager.SceneState startLoadScene = GameManager.SceneState.Title;
     // Private *****
     private List<GameManager.SceneState> _loadedScenes = new List<GameManager.SceneState>();
+    private bool _inTransition;
     
 
     // MonoBehavior Callbacks *****
@@ -23,6 +26,14 @@ public class LevelsManager : MonoBehaviour
         else Instance = this;
         
         if(loadScene) LoadScene(startLoadScene);
+    }
+    
+    // Public Methods *****
+    public void ChangeScene(GameManager.SceneState scene)
+    {
+        if (_loadedScenes.Contains(scene) || _inTransition ) return;
+
+        StartCoroutine(ChangeSceneCorrutine(scene));
     }
 
     // Private Methods *****
@@ -37,12 +48,14 @@ public class LevelsManager : MonoBehaviour
         SceneManager.UnloadSceneAsync((int)sceneIndex);
         _loadedScenes.Remove(sceneIndex);
     }
-    
-    // Public Methods *****
-    public void ChangeScene(GameManager.SceneState scene)
-    {
-        if (_loadedScenes.Contains(scene)) return;
 
+    private IEnumerator ChangeSceneCorrutine(GameManager.SceneState scene)
+    {
+        _inTransition = true;
+        
+        OnSceneLoad?.Invoke(this, EventArgs.Empty);
+        yield return new WaitForSeconds(0.666f);
+        
         List<GameManager.SceneState> tempLoadedScenes = new List<GameManager.SceneState>();
         foreach (GameManager.SceneState loadedScene in _loadedScenes)
         {
@@ -56,5 +69,9 @@ public class LevelsManager : MonoBehaviour
         
         LoadScene(scene);
         GameManager.Instance.SetState(scene);
+        
+        OnSceneLoaded?.Invoke(this,EventArgs.Empty);
+        
+        _inTransition = false;
     }
 }

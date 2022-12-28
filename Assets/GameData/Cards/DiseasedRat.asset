@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DiseasedRat
   m_EditorClassIdentifier: 
   cardName: DiseasedRat
-  description: Deals 1 attack damage and adds 2 poison to the enemy player.
+  description: Deals 2 attack damage and adds 2 poison to the enemy player.
   cardIcon: {fileID: 21300000, guid: 6855e2f9915bc9a468abbc5f1f50ef3b, type: 3}
-  attackPoints: 1
+  attackPoints: 2
   cost: 1
   hasSpecialEffect: 1
   drawToHand: 0

@@ -90,14 +90,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void UnlockLevel()
     {
-        _playerProfile.levelCompleted++;
+        if(_playerProfile.levelsAvailable.Count <= _levelSelected + 1) return;
+        
+        _playerProfile.levelsAvailable[_levelSelected + 1] = true;
         Save();
     }
 
     public void SelectLevel(int level)
     {
-        if (level > _playerProfile.levelCompleted) return;
-        
+        if (!_playerProfile.levelsAvailable[level]) return;
         _levelSelected = level;
     }
 }

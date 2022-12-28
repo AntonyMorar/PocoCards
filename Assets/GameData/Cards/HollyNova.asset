@@ -13,19 +13,20 @@ MonoBehaviour:
   m_Name: HollyNova
   m_EditorClassIdentifier: 
   cardName: HollyNova
-  description: Deals 2 attack damage and Reduce 1 attack damage from every enemy
+  description: Deals 3 attack damage and Reduce 1 attack damage from every enemy
     card
   cardIcon: {fileID: 21300000, guid: 74ab83b4921a6a644a3f1fd0310ba0ae, type: 3}
-  attackPoints: 2
+  attackPoints: 3
   cost: 4
   hasSpecialEffect: 1
   drawToHand: 0
   drawToBoard: 0
   restoreHealth: 0
   addShield: 0
-  addPoison: 0
   stealCoin: 0
-  reduceNextCardCost: 0
   reduceTurnDamage: 1
-  enemyCardsInBoard: 0
-  allyCardsInBoard: 0
+  addPoison: 0
+  freeze: 0
+  cardTransform: {fileID: 0}
+  reduceNextCardCost: 0
+  enemyHasMoreHealth: 0

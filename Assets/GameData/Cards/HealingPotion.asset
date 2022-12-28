@@ -20,7 +20,7 @@ MonoBehaviour:
   hasSpecialEffect: 1
   drawToHand: 0
   drawToBoard: 0
-  restoreHealth: 1
+  restoreHealth: 2
   addShield: 0
   stealCoin: 0
   reduceTurnDamage: 0

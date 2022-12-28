@@ -67,7 +67,6 @@ public class PlayerUI : MonoBehaviour
     // Private Methods *****
     private void Player_OnSetUpComplete(object sender, EventArgs e)
     {
-        Debug.Log("UI SETUP: " + player.GetProfilePic());
         profilePic.sprite = player.GetProfilePic();
     }
     private void Player_OnHealthChange(object sender, Player.OnHealthChangeEventArgs healthArgs)

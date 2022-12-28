@@ -16,7 +16,7 @@ public class PlayerProfile
     
     public int level;
     public int stones;
-    public int levelCompleted;
+    public List<bool> levelsAvailable= new List<bool>();
     public int baseHealth = 25;
 
     public List<PlayerCard> playerDeck = new List<PlayerCard>();
@@ -26,8 +26,13 @@ public class PlayerProfile
     {
         level = 1;
         stones = 0;
-        levelCompleted = 0;
+
         baseHealth = playerData.baseHealth;
+        for (int i = 0; i < 3; i++)
+        {
+            levelsAvailable.Add(false);
+            if (i <= 0) levelsAvailable[i] = true;
+        }
 
         foreach (CardData cardData in playerData.deckData.deck)  
         {

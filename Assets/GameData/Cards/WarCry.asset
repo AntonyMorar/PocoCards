@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: War Cry
   description: Increase +1 the attack damage of all your cards by 1 this turn
-  cardIcon: {fileID: 0}
+  cardIcon: {fileID: 21300000, guid: 61ac40b257b3a994f841856ad38b2b6b, type: 3}
   attackPoints: 0
-  cost: 4
-  boardPriority: 0
+  cost: 5
   hasSpecialEffect: 1
   drawToHand: 0
   drawToBoard: 0
@@ -29,5 +28,4 @@ MonoBehaviour:
   freeze: 0
   cardTransform: {fileID: 0}
   reduceNextCardCost: 0
-  damageAttackIncrease: 0
   enemyHasMoreHealth: 0

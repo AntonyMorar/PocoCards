@@ -15,13 +15,13 @@ public class DeckEditor : MonoBehaviour
     {
         GameManager.Instance.SetState(GameManager.SceneState.DeckEditor);
         
-        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().playerDeck)
+        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().allDeck)
         {
             if(playerCard.inDeck)
                 playerDeck.AddCard(playerCard.cardData);
         }
         
-        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().playerDeck)
+        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().allDeck)
         {
             if(!playerCard.inDeck)
                 playerCollection.AddCard(playerCard.cardData);

@@ -7,11 +7,16 @@ using UnityEngine;
 public class PlayerProfile
 {
     [System.Serializable]
-    public struct PlayerCard
+    public class PlayerCard
     {
         public CardData cardData;
         public bool inDeck;
         public bool unlocked;
+
+        public void Unlock()
+        {
+            unlocked = true;
+        }
     }
     
     public int level;
@@ -19,10 +24,9 @@ public class PlayerProfile
     public List<bool> levelsAvailable= new List<bool>();
     public int baseHealth = 25;
 
-    public List<PlayerCard> playerDeck = new List<PlayerCard>();
-    //public List<CardData> deckData = new List<CardData>();
+    public List<PlayerCard> allDeck = new List<PlayerCard>();
 
-    public PlayerProfile(PlayerData playerData)
+    public PlayerProfile(PlayerData playerData, DeckData availableCards)
     {
         level = 1;
         stones = 0;
@@ -34,15 +38,32 @@ public class PlayerProfile
             if (i <= 0) levelsAvailable[i] = true;
         }
 
-        foreach (CardData cardData in playerData.deckData.deck)  
+        foreach (CardData cardData in availableCards.deck)  
         {
-            playerDeck.Add(new PlayerCard()
+            allDeck.Add(new PlayerCard()
             {
                 cardData = cardData,
-                inDeck = true,
-                unlocked = true
+                inDeck = playerData.deckData.deck.Contains(cardData),
+                unlocked = playerData.deckData.deck.Contains(cardData)
             });
         }
+    }
+
+    public CardData GetLockedRandomCard()
+    {
+        List<CardData> lockedCards = new List<CardData>();
+        foreach (PlayerCard playerCard in allDeck)
+        {
+            if (!playerCard.unlocked)
+            {
+                lockedCards.Add(playerCard.cardData);
+            }
+        }
+
+        if (lockedCards.Count <= 0) return null;
+        int randomNumber = Random.Range(0, lockedCards.Count);
+        
+        return lockedCards[randomNumber];
     }
 }
 

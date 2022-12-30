@@ -3067,6 +3067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 1f0206cefd27dc34c97ee722b736a2a6, type: 2}
+  availableCards: {fileID: 11400000, guid: 20ca0e6fc7b0d8a428f9916858573090, type: 2}
   enemies:
   - {fileID: 11400000, guid: 2c25b2454f704da4fa47ffa35ee51b9c, type: 2}
   - {fileID: 11400000, guid: c93854464be3d0e4185404e577ae7fd1, type: 2}
@@ -3130,6 +3131,10 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 0c119da44e0bfb4428b745d3f7b6cc63, type: 3}
   - sound: 13
     audioClip: {fileID: 8300000, guid: db8774d0049bde74a9ef03072792330c, type: 3}
+  - sound: 14
+    audioClip: {fileID: 8300000, guid: 77f9e54d7b00aaa41ac85c76649bedd3, type: 3}
+  - sound: 15
+    audioClip: {fileID: 8300000, guid: 45abf4e8c792b7846a851009a6de5dce, type: 3}
 --- !u!114 &9108765821224874436
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -47,7 +47,7 @@ public class TitleMenuUI : MonoBehaviour
         //Audio
         SoundManager.PlaySound(SoundManager.Sound.UiSelect);
         
-        GameManager.Instance.Save();
+        GameManager.Instance.NewGame();
         LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
 

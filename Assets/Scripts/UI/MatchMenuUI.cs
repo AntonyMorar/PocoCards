@@ -28,7 +28,11 @@ public class MatchMenuUI : MonoBehaviour
     // Private Methods
     private void GameManager_OnGameOver(object sender, bool won)
     {
-        if (won) victoryUI.gameObject.SetActive(true); 
+        if (won)
+        {
+            victoryUI.gameObject.SetActive(true);
+            victoryUI.UnlockCard(GameManager.Instance.UnlockRandomCard());
+        }
         else gameOverUI.gameObject.SetActive(true);
     }
 

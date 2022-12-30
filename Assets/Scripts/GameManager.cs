@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     // Serialized
     [SerializeField] private PlayerData playerData;
+    [SerializeField] private DeckData availableCards;
     [Header("Enemies")] 
     [SerializeField] private List<PlayerData> enemies;
     // Private ****
@@ -69,10 +70,15 @@ public class GameManager : MonoBehaviour
     }
 
     public SceneState GetState() => _state;
-    
+
+    public void NewGame()
+    {
+        _playerProfile = null;
+        Save();
+    }
     public void Save()
     {
-        if(_playerProfile == null) _playerProfile = new PlayerProfile(playerData);
+        if(_playerProfile == null) _playerProfile = new PlayerProfile(playerData, availableCards);
         string json = JsonUtility.ToJson(_playerProfile);
         File.WriteAllText(Application.dataPath + SAVE_PATH, json);
     }
@@ -115,5 +121,20 @@ public class GameManager : MonoBehaviour
     {
         if (!_playerProfile.levelsAvailable[level]) return;
         _levelSelected = level;
+    }
+
+    public CardData UnlockRandomCard()
+    {
+        CardData randomLockedCard = _playerProfile.GetLockedRandomCard();
+
+        foreach (PlayerProfile.PlayerCard playerCard in _playerProfile.allDeck)
+        {
+            if (playerCard.cardData == randomLockedCard)
+            {
+                playerCard.unlocked = true;
+            }
+        }
+
+        return randomLockedCard;
     }
 }

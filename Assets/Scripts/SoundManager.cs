@@ -27,8 +27,13 @@ public class SoundManager : MonoBehaviour
         UiChange,
         UiSelect,
         UiOpenClose,
+        CardFlip,
         
-        CardFlip
+        EffectCoin,
+        EffectPoison,
+        EffectFrozen,
+        EffectHeal,
+        CardEffectMiss
     }
     
     // MonoBehavior Callbackss

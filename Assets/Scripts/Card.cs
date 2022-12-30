@@ -123,7 +123,7 @@ public class Card : MonoBehaviour
             {
                 case State.Flipping:
                     _state = State.SpecialEffect;
-                    float specialEffectTime = _cardData.hasSpecialEffect ? 1.5f : 0;
+                    float specialEffectTime = _cardData.hasSpecialEffect ? 1.25f : 0;
                     //Start special effect animation
                     if(_cardData.hasSpecialEffect) StartCoroutine(BattleEffectAnimation(specialEffectTime));
                     // Timer for special effect
@@ -243,7 +243,11 @@ public class Card : MonoBehaviour
 
     private void Defrost()
     {
-        frostImage.SetActive(false);
+        LeanTween.alpha(frostImage, 0, 0.5f).setEase(LeanTweenType.easeInCubic).setOnComplete(() =>
+        {
+            frostImage.SetActive(false);
+        });
+        
         _frozenTurns = 0;
         _isFrozen = false;
     }
@@ -338,6 +342,9 @@ public class Card : MonoBehaviour
 
     private IEnumerator BattleEffectAnimation(float time)
     {
+        // Audio
+        SoundManager.PlaySound(SoundManager.Sound.CardEffect);
+        
         LeanTween.scale(gameObject, new Vector3(1.25f, 1.25f, 1.25f), ((time*0.8f) / 2)).setEase(LeanTweenType.easeOutExpo).setLoopPingPong(1);
         yield return new WaitForSeconds((time / 2) + (time * 0.1f));
 

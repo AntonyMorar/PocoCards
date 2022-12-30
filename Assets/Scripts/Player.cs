@@ -238,9 +238,18 @@ public class Player : MonoBehaviour, IHandeable
 
     public void RestoreHealth(int amount)
     {
-        if (_health >= _baseHealth) return;
+        if (_health >= _baseHealth)
+        {
+            //Audio
+            SoundManager.PlaySound(SoundManager.Sound.CardEffectMiss);
+            return;
+        }
         
         _health += amount;
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectHeal);
+        
         OnRestoreHealth?.Invoke(this,amount);
         OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = amount, ApplyEffects = true});
     }
@@ -261,6 +270,9 @@ public class Player : MonoBehaviour, IHandeable
     // Spells
     public void PoisonEnemy(int amount)
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectPoison);
+        
         MatchManager.Instance.GetEnemy(this).AddPoisonDamage(amount);
     }
     private void AddPoisonDamage(int amount)
@@ -281,7 +293,15 @@ public class Player : MonoBehaviour, IHandeable
     }
     public bool StealCoin(int amount)
     {
-        if (!MatchManager.Instance.GetEnemy(this).SpendCoins(amount)) return false;
+        if (!MatchManager.Instance.GetEnemy(this).SpendCoins(amount))
+        {
+            SoundManager.PlaySound(SoundManager.Sound.CardEffectMiss);
+            return false;
+        }
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectCoin);
+        
         AddCoins(amount);
         OnCoinStealed?.Invoke(this,amount);
         return true;
@@ -316,6 +336,9 @@ public class Player : MonoBehaviour, IHandeable
     {
         if (_damageReduced <= 0) return;
 
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectFrozen);
+        
         _damageReduced = 0;
         OnDamageReduceChange?.Invoke(this,_damageReduced);
     }
@@ -325,6 +348,9 @@ public class Player : MonoBehaviour, IHandeable
     }
     private void FreezeRandomCard()
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectFrozen);
+        
         int randomCard = Random.Range(0, _hand.Count);
         if (_hand.Count <= 0) return;
         _hand[randomCard].Freeze();

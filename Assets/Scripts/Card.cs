@@ -172,7 +172,13 @@ public class Card : MonoBehaviour
         LeanTween.cancel(gameObject);
         transform.rotation = Quaternion.Euler(Vector3.zero);
 
-        if (animated) LeanTween.rotateY(gameObject, 90, _flippingTime/2).setLoopPingPong(1);
+        if (animated)
+        {
+            LeanTween.rotateY(gameObject, 90, _flippingTime/2).setLoopPingPong(1);
+            //Audio
+            SoundManager.PlaySound(SoundManager.Sound.CardFlip);
+        }
+
         StartCoroutine(FlipCorrutine(animated));
     }
 
@@ -265,6 +271,9 @@ public class Card : MonoBehaviour
             _owner.RemovePriceReduce(_priceReduction);
         }
         
+        //Audio
+        if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);
+
         // Change player currency
         _owner.AddCoins(_cardData.cost - _priceReduction);
     }
@@ -278,6 +287,9 @@ public class Card : MonoBehaviour
         
         // Change player currency
         _owner.SpendCoins(_cardData.cost - _priceReduction);
+        
+        //Audio
+        if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);
         
         // Apply Immediate effects
         // Next card cost less
@@ -320,7 +332,7 @@ public class Card : MonoBehaviour
             {
                 MatchManager.Instance.TakeDamage(MatchManager.Instance.GetEnemy(_owner), _cardData.attackPoints);
             });
-        
+
         OnMakeHit?.Invoke(this, EventArgs.Empty);
     }
 
@@ -328,6 +340,7 @@ public class Card : MonoBehaviour
     {
         LeanTween.scale(gameObject, new Vector3(1.25f, 1.25f, 1.25f), ((time*0.8f) / 2)).setEase(LeanTweenType.easeOutExpo).setLoopPingPong(1);
         yield return new WaitForSeconds((time / 2) + (time * 0.1f));
+
         BattleEffect();
     }
     private void BattleEffect()

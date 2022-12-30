@@ -44,18 +44,27 @@ public class TitleMenuUI : MonoBehaviour
     // Private Methods
     private void StartNewGame()
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         GameManager.Instance.Save();
         LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
 
     private void ContinueGame()
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         GameManager.Instance.Load();
         LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
     }
     
     private void ExitGame()
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         Application.Quit();
     }
 }

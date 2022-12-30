@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 1f0206cefd27dc34c97ee722b736a2a6, type: 2}
-  availableCards: {fileID: 11400000, guid: 20ca0e6fc7b0d8a428f9916858573090, type: 2}
   enemies:
   - {fileID: 11400000, guid: 2c25b2454f704da4fa47ffa35ee51b9c, type: 2}
   - {fileID: 11400000, guid: c93854464be3d0e4185404e577ae7fd1, type: 2}
@@ -65,8 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02a442e1ee99b24880c237b2a7bc3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadScene: 0
-  startLoadScene: 2
+  loadScene: 1
+  startLoadScene: 1
 --- !u!114 &7065133404237307692
 MonoBehaviour:
   m_ObjectHideFlags: 0

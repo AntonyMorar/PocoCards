@@ -91,11 +91,13 @@ public class MatchManager : MonoBehaviour
     // Private Methods *****
     private IEnumerator SetInitialCards()
     {
+        yield return new WaitForSeconds(0.5f);
+        
         for (int i = 0; i < initialCards; i++)
         {
             player.DrawCard();
             enemyPlayer.DrawCard();
-            yield return new WaitForSeconds(0.33f);
+            yield return new WaitForSeconds(0.4f);
         }
         SetPhase(GamePhase.Main);
     }

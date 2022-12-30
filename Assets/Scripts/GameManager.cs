@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
         DeckEditor = 3,
         InGame = 4
     }
+
+    public event EventHandler OnTileMenuStart;
+    public event EventHandler OnBattleStart;
+
     // Serialized
     [SerializeField] private PlayerData playerData;
     [Header("Enemies")] 
@@ -51,6 +55,17 @@ public class GameManager : MonoBehaviour
     public void SetState(SceneState state)
     {
         _state = state;
+
+        switch (state)
+        {
+            case SceneState.Title:
+            case SceneState.MainMenu: 
+                OnTileMenuStart?.Invoke(this, EventArgs.Empty);
+                break;
+            case SceneState.InGame:
+                OnBattleStart?.Invoke(this, EventArgs.Empty);
+                break;
+        }
     }
 
     public SceneState GetState() => _state;

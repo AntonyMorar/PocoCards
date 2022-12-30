@@ -17,12 +17,27 @@ public class LevelSelectionUI : MonoBehaviour
         for (int i = 0; i < levels.Length; i++)
         {
             var i1 = i;
-            levels[i].onClick.AddListener(() =>
-            {
-                GameManager.Instance.SelectLevel(i1);
-                LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
-            });
+            levels[i].onClick.AddListener(() => AddButtonListener(i1));
         }
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            var i1 = i;
+            levels[i].onClick.RemoveListener(() => AddButtonListener(i1));
+        }
+    }
+    
+    // Private Methods ****
+    private void AddButtonListener(int i1)
+    {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+                
+        GameManager.Instance.SelectLevel(i1);
+        LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
     }
 
     private void UpdateUI()

@@ -136,6 +136,9 @@ public class Player : MonoBehaviour, IHandeable
     {
         if (_deck.Count <= 0 || _hand.Count > 10) return;
         
+        //Audio
+        if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);
+        
         CardData randCard = _deck[Random.Range(0, _deck.Count)];
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, ImOwner());
@@ -149,6 +152,9 @@ public class Player : MonoBehaviour, IHandeable
         Card newCard = Instantiate(cardPrefab, handAnchor);
         newCard.SetCard(this, randCard, true);
         newCard.AddToBoardFromDeck();
+        
+        //Audio
+        if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);
     }
     
     public void AddToHand(Card card, bool isNew = false)
@@ -218,6 +224,9 @@ public class Player : MonoBehaviour, IHandeable
         _health = Mathf.Clamp(_health, 0, _baseHealth);
         OnHealthChange?.Invoke(this, new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = -remainDamage, ApplyEffects = true});
         if(shieldTemp != _shield) OnShieldChange?.Invoke(this, _shield);
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.CardAttack);
         
         float worldScreenHeight = GameManager.Instance.GetCamera().orthographicSize;
         float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;

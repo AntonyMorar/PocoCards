@@ -57,6 +57,9 @@ public class MainMenuUI : MonoBehaviour
     {
         if (_currentButtonIndex <= 0)return;
         _currentButtonIndex--;
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiChange);
 
         if (_currentButtonIndex < mainMenuList.Length - 1)
         {
@@ -76,6 +79,9 @@ public class MainMenuUI : MonoBehaviour
     {
         if (_currentButtonIndex >= mainMenuList.Length - 1)return;
         _currentButtonIndex++;
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiChange);
 
         if (_currentButtonIndex >= mainMenuList.Length - 1)
         {
@@ -104,18 +110,24 @@ public class MainMenuUI : MonoBehaviour
                 mainButton.onClick.AddListener(() =>
                 {
                     LevelsManager.Instance.ChangeScene(GameManager.SceneState.DeckEditor);
+                    //Audio
+                    SoundManager.PlaySound(SoundManager.Sound.UiSelect);
                 });
                 break;
             case 2:
                 mainButton.onClick.AddListener(() =>
                 {
                     InputSystem.OnOpenSettings?.Invoke(this, EventArgs.Empty);
+                    //Audio
+                    SoundManager.PlaySound(SoundManager.Sound.UiSelect);
                 });
                 break;
             case 3:
                 mainButton.onClick.AddListener(() =>
                 {
                     LevelsManager.Instance.ChangeScene(GameManager.SceneState.Title);
+                    //Audio
+                    SoundManager.PlaySound(SoundManager.Sound.UiSelect);
                 });
                 break;
         }
@@ -131,6 +143,9 @@ public class MainMenuUI : MonoBehaviour
         
         levelSelectorBack.onClick.AddListener(StopTraveling);
         
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         _traveling = true;
     }
 
@@ -141,6 +156,9 @@ public class MainMenuUI : MonoBehaviour
         backButton.enabled = true;
         mainButton.enabled = true;
         nextButton.enabled = true;
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
         
         _traveling = false;
     }

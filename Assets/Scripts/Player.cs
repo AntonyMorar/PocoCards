@@ -330,6 +330,10 @@ public class Player : MonoBehaviour, IHandeable
     {
         _damageReduced += amount;
         _damageReduced = Mathf.Clamp(_damageReduced, 0, 100);
+        
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.EffectShield);
+        
         OnDamageReduceChange?.Invoke(this, _damageReduced);
     }
     private void RemoveDamageReduce()

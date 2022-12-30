@@ -32,6 +32,8 @@ public class InputSystem : MonoBehaviour
 
         if (GameManager.Instance.GetState() == GameManager.SceneState.DeckEditor)
         {
+            //Audio
+            SoundManager.PlaySound(SoundManager.Sound.UiSelect);
             GameManager.Instance.Save();
             LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
         }

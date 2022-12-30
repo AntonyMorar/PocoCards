@@ -33,7 +33,10 @@ public class SoundManager : MonoBehaviour
         EffectPoison,
         EffectFrozen,
         EffectHeal,
-        CardEffectMiss
+        CardEffectMiss,
+        EffectShield,
+        WinMelody,
+        LoseMelody
     }
     
     // MonoBehavior Callbackss

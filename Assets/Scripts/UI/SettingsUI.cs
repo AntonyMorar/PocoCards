@@ -32,6 +32,9 @@ public class SettingsUI : MonoBehaviour
     {
         if(_isOpen) return;
         
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         settings.SetActive(true);
         settingsBackground.alpha = 0;
         settingsWindow.localScale = Vector3.zero;

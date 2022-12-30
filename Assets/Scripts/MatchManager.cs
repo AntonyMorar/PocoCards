@@ -155,6 +155,7 @@ public class MatchManager : MonoBehaviour
                 break;
             case GamePhase.GameOver:
                 OnGameOver?.Invoke(this,player.GetHealth() > 0);
+                SoundManager.PlaySound(player.GetHealth() > 0 ? SoundManager.Sound.WinMelody : SoundManager.Sound.LoseMelody);
                 GameManager.Instance.UnlockLevel();
                 break;
         }

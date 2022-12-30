@@ -123,7 +123,7 @@ public class Card : MonoBehaviour
             {
                 case State.Flipping:
                     _state = State.SpecialEffect;
-                    float specialEffectTime = _cardData.hasSpecialEffect ? 1.25f : 0;
+                    float specialEffectTime = _cardData.hasSpecialEffect ? 0.8f : 0;
                     //Start special effect animation
                     if(_cardData.hasSpecialEffect) StartCoroutine(BattleEffectAnimation(specialEffectTime));
                     // Timer for special effect

@@ -85,7 +85,6 @@ public class MatchManager : MonoBehaviour
                     SetPhase(GamePhase.PreBattle);
                     break;
                 case GamePhase.PreBattle:
-                    Debug.Log("Start battle in prebattle");
                     SetPhase(GamePhase.Battle);
                     break;
             }
@@ -182,15 +181,11 @@ public class MatchManager : MonoBehaviour
 
     public void TryStartBattle()
     {
-        Debug.Log("TrystartBattle");
         if (enemyPlayer.TryGetComponent(out PlayerAI playerAI) && !playerAI.IsSelectingCards())
         {
-            Debug.Log("match manager calling prebattle");
             SetPhase(GamePhase.PreBattle);
             return;
         }
-        
-        Debug.Log("TO WAITING");
         SetPhase(GamePhase.Waiting);
     }
     public void RestartGame()

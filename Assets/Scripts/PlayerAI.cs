@@ -72,7 +72,7 @@ public class PlayerAI : MonoBehaviour
     {
         if (!_isSelectingCards)
         {
-            MatchManager.Instance.SetPhase(MatchManager.GamePhase.Battle);
+            MatchManager.Instance.SetPhase(MatchManager.GamePhase.PreBattle);
         }
         else
         {

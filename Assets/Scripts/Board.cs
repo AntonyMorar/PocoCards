@@ -178,8 +178,6 @@ public class Board : MonoBehaviour
     // Public Methods *****
     public void AddToHand(Card card, bool isNew = false)
     {
-        Debug.Log("Add to board hand");
-        
         ReorderActualCards(card.ImOwner() ? 1: 0, card.ImOwner() ? 0: 1);
         card.transform.SetParent(card.ImOwner() ? handAnchorPlayer : handAnchorEnemy);
         

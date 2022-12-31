@@ -54,8 +54,10 @@ public class Card : MonoBehaviour
     private void OnEnable()
     {
         if (_owner) _owner.OnBalanceChange += Owner_OnBalanceChange;
+        
         MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
-        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnPreBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnWaitingStart += GameManager_OnBattleStart;
         MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
         MatchManager.Instance.OnRestartGame += GameManager_OnRestartValues;
     }
@@ -65,7 +67,8 @@ public class Card : MonoBehaviour
         if(_owner)_owner.OnBalanceChange -= Owner_OnBalanceChange;
         
         MatchManager.Instance.OnMainStart -= GameManager_OnMainStart;
-        MatchManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        MatchManager.Instance.OnPreBattleStart += GameManager_OnBattleStart;
+        MatchManager.Instance.OnWaitingStart -= GameManager_OnBattleStart;
         MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
         MatchManager.Instance.OnRestartGame -= GameManager_OnRestartValues;
         
@@ -285,7 +288,6 @@ public class Card : MonoBehaviour
     {
         if (_owner.GetCoins() < _cardData.cost - _priceReduction)
         {
-            Debug.LogError("Cant add to board, not enogth money");
             return;
         }
 

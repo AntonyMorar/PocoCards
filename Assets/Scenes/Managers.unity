@@ -3019,7 +3019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02a442e1ee99b24880c237b2a7bc3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadScene: 1
+  loadScene: 0
   startLoadScene: 3
 --- !u!114 &7065133406233599675
 MonoBehaviour:

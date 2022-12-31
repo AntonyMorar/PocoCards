@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class DeckEditor : MonoBehaviour
 {
+    private int MAX_DECK = 6;
     // Serialized *****
     [SerializeField] private Hand playerDeck;
     [SerializeField] private Hand playerCollection;
@@ -14,28 +15,33 @@ public class DeckEditor : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.SetState(GameManager.SceneState.DeckEditor);
-        
+
         foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().allDeck)
         {
-            if(playerCard.inDeck)
-                playerDeck.AddCard(playerCard.cardData);
-        }
-        
-        foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().allDeck)
-        {
-            if(!playerCard.inDeck)
-                playerCollection.AddCard(playerCard.cardData);
+            if(!playerCard.unlocked) continue;
+
+            switch (playerCard.inDeck)
+            {
+                case true:
+                    playerDeck.AddCard(playerCard.cardData);
+                    break;
+                case false:
+                    playerCollection.AddCard(playerCard.cardData);
+                    break;
+            }
         }
     }
 
     private void OnEnable()
     {
         InputSystem.OnCardClick += InputSystem_OnCardClick;
+        InputSystem.OnEscDeck += InputSystem_OnEscDeck;
     }
 
     private void OnDisable()
     {
         InputSystem.OnCardClick += InputSystem_OnCardClick;
+        InputSystem.OnEscDeck -= InputSystem_OnEscDeck;
     }
     
     // Private methods **** 
@@ -51,15 +57,53 @@ public class DeckEditor : MonoBehaviour
         }
     }
 
-    private void AddToCollection(BaseCard baseCard)
-    {
-        playerCollection.AddCard(baseCard.GetCardData());
-        playerDeck.RemoveCard(baseCard);
-    }
-
     private void AddToDeck(BaseCard baseCard)
     {
+        if (playerDeck.GetCards().Count >= MAX_DECK)
+        {
+            SoundManager.PlaySound(SoundManager.Sound.UiError);
+            return;
+        }
+        
+        SoundManager.PlaySound(SoundManager.Sound.UiChange);
         playerDeck.AddCard(baseCard.GetCardData());
         playerCollection.RemoveCard(baseCard);
+        
+        GameManager.Instance.ChangeDeck(baseCard.GetCardData(), true);
     }
+    
+    private void AddToCollection(BaseCard baseCard)
+    {
+        SoundManager.PlaySound(SoundManager.Sound.UiChange);
+        
+        playerCollection.AddCard(baseCard.GetCardData());
+        playerDeck.RemoveCard(baseCard);
+        
+        GameManager.Instance.ChangeDeck(baseCard.GetCardData(), false);
+    }
+    
+    // Use when deck is incomplete
+    private void InputSystem_OnEscDeck(object sender, EventArgs e)
+    {
+        if (playerDeck.GetCards().Count < MAX_DECK)
+        {
+            DeckWarning();
+        }
+        else
+        {
+            GoBack();
+        }
+    }
+    private void GoBack()
+    {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        GameManager.Instance.Save();
+        LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
+    }
+    private void DeckWarning()
+    {
+        Debug.Log("the deck must contain " + MAX_DECK + "Cards");
+    }
+    
 }

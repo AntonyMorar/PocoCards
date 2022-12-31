@@ -88,10 +88,10 @@ public class Player : MonoBehaviour, IHandeable
         OnHealthChange?.Invoke(this,
             new OnHealthChangeEventArgs { NewHealth = _health, Amountchange = _baseHealth, ApplyEffects = false });
     }
-    public void SetPlayer(PlayerData playerData)
+    public void SetPlayer(PlayerData playerData, List<CardData> deck)
     {
         _deck.Clear();
-        foreach (CardData cardData in playerData.deckData.deck)
+        foreach (CardData cardData in deck)
         {
             _deck.Add(cardData);
         }

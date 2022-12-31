@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MatchManager : MonoBehaviour
@@ -112,15 +113,16 @@ public class MatchManager : MonoBehaviour
         _pause = false;
     }
     
-    // Public Methods *****
     private void SetMatch()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        player.SetPlayer(playerData);
-        enemyPlayer.SetPlayer(GameManager.Instance.GetEnemy());
+        player.SetPlayer(GameManager.Instance.GetPlayerData(),GameManager.Instance.GetPlayerDeck());
+        enemyPlayer.SetPlayer(GameManager.Instance.GetEnemy(), GameManager.Instance.GetEnemy().deckData.deck);
         
         SetPhase(GamePhase.Idle);
     }
+    
+    // Public Methods *****
+
     public void SetPhase(GamePhase gamePhase)
     {
         if (_gamePhase == gamePhase) return;

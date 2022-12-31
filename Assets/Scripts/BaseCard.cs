@@ -22,8 +22,9 @@ public class BaseCard : MonoBehaviour
         
         // Visual
         mainSpriteRenderer.sprite = flipped ? faceSprite : backFaceSprite;
-        artAnchor.sprite = null;
-        attackPointsText.text = "";
+        artAnchor.sprite = cardData.cardIcon;
+        attackPointsText.text = cardData.attackPoints.ToString();
+        
     }
 
     public CardData GetCardData() => _cardData;

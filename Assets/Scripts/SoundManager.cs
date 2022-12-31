@@ -36,7 +36,8 @@ public class SoundManager : MonoBehaviour
         CardEffectMiss,
         EffectShield,
         WinMelody,
-        LoseMelody
+        LoseMelody,
+        UiError
     }
     
     // MonoBehavior Callbackss

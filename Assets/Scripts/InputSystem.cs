@@ -7,7 +7,8 @@ public class InputSystem : MonoBehaviour
 {
     // Public *****
     public static InputSystem Instance { get; private set; }
-    
+
+    public static EventHandler OnEscDeck;
     public static EventHandler OnOpenSettings;
     public static EventHandler OnCloseSettings;
     public static EventHandler<BaseCard> OnCardClick;
@@ -32,10 +33,7 @@ public class InputSystem : MonoBehaviour
 
         if (GameManager.Instance.GetState() == GameManager.SceneState.DeckEditor)
         {
-            //Audio
-            SoundManager.PlaySound(SoundManager.Sound.UiSelect);
-            GameManager.Instance.Save();
-            LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
+            OnEscDeck?.Invoke(this, EventArgs.Empty);
         }
         else if(GameManager.Instance.GetState() == GameManager.SceneState.MainMenu || GameManager.Instance.GetState() == GameManager.SceneState.InGame)
         {

@@ -98,7 +98,18 @@ public class GameManager : MonoBehaviour
     public Camera GetCamera() => _camera;
     public PlayerProfile GetPlayerProfile() => _playerProfile;
     public PlayerData GetPlayerData() => playerData;
+    public List<CardData> GetPlayerDeck()
+    {
+        List<CardData> deck = new List<CardData>();
 
+        foreach (PlayerProfile.PlayerCard playerCard in _playerProfile.allDeck)
+        {
+            if (!playerCard.unlocked) continue;
+            if(playerCard.inDeck) deck.Add(playerCard.cardData);
+        }
+
+        return deck;
+    }
     public PlayerData GetEnemy()
     {
         if (enemies.Count < _levelSelected ) return null;
@@ -137,4 +148,16 @@ public class GameManager : MonoBehaviour
 
         return randomLockedCard;
     }
+
+    public void ChangeDeck(CardData cardData, bool addToDeck)
+    {
+        foreach (PlayerProfile.PlayerCard playerCard in _playerProfile.allDeck)
+        {
+            if (playerCard.cardData == cardData)
+            {
+                playerCard.inDeck = addToDeck;
+            }
+        }
+    }
+    
 }

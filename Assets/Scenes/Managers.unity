@@ -3020,7 +3020,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadScene: 1
-  startLoadScene: 1
+  startLoadScene: 3
 --- !u!114 &7065133406233599675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3135,6 +3135,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 77f9e54d7b00aaa41ac85c76649bedd3, type: 3}
   - sound: 15
     audioClip: {fileID: 8300000, guid: 45abf4e8c792b7846a851009a6de5dce, type: 3}
+  - sound: 16
+    audioClip: {fileID: 8300000, guid: 26c20f4fc14242c4c91e503c7fdd70cd, type: 3}
 --- !u!114 &9108765821224874436
 MonoBehaviour:
   m_ObjectHideFlags: 0

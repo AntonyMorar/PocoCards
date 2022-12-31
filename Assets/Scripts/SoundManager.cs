@@ -49,13 +49,13 @@ public class SoundManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.OnTileMenuStart += GameManager_OnTileMenuStart;
-        GameManager.Instance.OnBattleStart += GameManager_OnBattleStart;
+        GameManager.Instance.OnGameStart += GameManager_OnGameStart;
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnTileMenuStart -= GameManager_OnTileMenuStart;
-        GameManager.Instance.OnBattleStart -= GameManager_OnBattleStart;
+        GameManager.Instance.OnGameStart -= GameManager_OnGameStart;
     }
 
     // Public Methods ****
@@ -76,7 +76,7 @@ public class SoundManager : MonoBehaviour
         PlayMusic(Music.Menu);
     }
     
-    private void GameManager_OnBattleStart(object sender, EventArgs e)
+    private void GameManager_OnGameStart(object sender, EventArgs e)
     {
         PlayMusic(Music.Battle);
     }

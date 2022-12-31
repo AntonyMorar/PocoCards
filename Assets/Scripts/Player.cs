@@ -61,14 +61,14 @@ public class Player : MonoBehaviour, IHandeable
     // MonoBehaviour Callbacks *****
     private void OnEnable()
     {
-        MatchManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+        MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
         MatchManager.Instance.OnGameOver += GameManager_OnGameOver;
         MatchManager.Instance.OnRestartGame += GameManager_OnRestartGame;
     }
 
     private void OnDisable()
     {
-        MatchManager.Instance.OnTurnChange -= GameManager_OnTurnChange;
+        MatchManager.Instance.OnMainStart -= GameManager_OnMainStart;
         MatchManager.Instance.OnGameOver -= GameManager_OnGameOver;
         MatchManager.Instance.OnRestartGame -= GameManager_OnRestartGame;
     }
@@ -104,10 +104,9 @@ public class Player : MonoBehaviour, IHandeable
         OnSetUpComplete?.Invoke(this, EventArgs.Empty);
     }
 
-    private void GameManager_OnTurnChange(object sender, int newTurn)
+    private void GameManager_OnMainStart(object sender, int newTurn)
     {
         // Coins
-        //AddCoins(Mathf.Clamp(newTurn, 0, 5));
         _coins = Mathf.Clamp(newTurn, 0, 6);
         OnBalanceChange?.Invoke(this,_coins);
 
@@ -134,7 +133,7 @@ public class Player : MonoBehaviour, IHandeable
     // Public Methods *****
     public void DrawCard()
     {
-        if (_deck.Count <= 0 || _hand.Count > 10) return;
+        if (_deck.Count <= 0 || _hand.Count >= 8) return;
         
         //Audio
         if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);

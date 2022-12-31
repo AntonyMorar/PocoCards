@@ -10,37 +10,39 @@ public class GamePhaseUI : MonoBehaviour
     // Serialized *****
     [SerializeField] private TMP_Text turnText;
     [SerializeField] private Button gamePhaseButton;
+    [SerializeField] private TMP_Text gamePhaseText;
 
     // MonoBehavior Callbacks *****
+    private void Awake()
+    {
+        GamePhaseInteractable(false);
+    }
+
     private void Start()
     {
-        MatchManager.Instance.OnPreMainStart += GameManager_OnPreMainStart;
         MatchManager.Instance.OnMainStart += GameManager_OnMainStart;
-        MatchManager.Instance.OnBattleStart += GameManager_OnBattleStart;
-        MatchManager.Instance.OnTurnChange += GameManager_OnTurnChange;
+        MatchManager.Instance.OnWaitingStart += GameManager_OnPreBattleStart;
+        MatchManager.Instance.OnPreBattleStart += GameManager_OnPreBattleStart;
         gamePhaseButton.onClick.AddListener(() => MatchManager.Instance.TryStartBattle());
     }
 
     // Private Methods *****
-    private void GameManager_OnMainStart(object sender, EventArgs e)
+    private void GameManager_OnMainStart(object sender, int newTurn)
     {
-        gamePhaseButton.enabled = true;
+        GamePhaseInteractable(true);
         gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Next Turn";
+        
+        turnText.text = "Turn: " + newTurn;
     }
-    
-    private void GameManager_OnPreMainStart(object sender, EventArgs e)
+    private void GameManager_OnPreBattleStart(object sender, EventArgs e)
     {
-        gamePhaseButton.enabled = false;
-        gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
-    }
-    private void GameManager_OnBattleStart(object sender, EventArgs e)
-    {
-        gamePhaseButton.enabled = false;
-        gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "Playing";
+        GamePhaseInteractable(false);
+        gamePhaseButton.GetComponentInChildren<TMP_Text>().text = "OnBattle";
     }
 
-    private void GameManager_OnTurnChange(object sender, int newTurn)
+    private void GamePhaseInteractable(bool interactable)
     {
-        turnText.text = "Turn: " + newTurn;
+        gamePhaseText.alpha = interactable ? 1 : 0.5f;
+        gamePhaseButton.interactable = interactable;
     }
 }

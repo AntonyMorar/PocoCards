@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     }
 
     public event EventHandler OnTileMenuStart;
-    public event EventHandler OnBattleStart;
+    public event EventHandler OnGameStart;
 
     // Serialized
     [SerializeField] private PlayerData playerData;
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
                 OnTileMenuStart?.Invoke(this, EventArgs.Empty);
                 break;
             case SceneState.InGame:
-                OnBattleStart?.Invoke(this, EventArgs.Empty);
+                OnGameStart?.Invoke(this, EventArgs.Empty);
                 break;
         }
     }

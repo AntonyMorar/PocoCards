@@ -283,8 +283,12 @@ public class Card : MonoBehaviour
     }
     public void AddToBoard()
     {
-        if (_owner.GetCoins() < _cardData.cost - _priceReduction) return;
-        
+        if (_owner.GetCoins() < _cardData.cost - _priceReduction)
+        {
+            Debug.LogError("Cant add to board, not enogth money");
+            return;
+        }
+
         _isInBoard = true;
         _owner.RemoveFromHand(this);
         Board.Instance.AddToHand(this);
@@ -293,7 +297,7 @@ public class Card : MonoBehaviour
         _owner.SpendCoins(_cardData.cost - _priceReduction);
         
         //Audio
-        if(ImOwner()) SoundManager.PlaySound(SoundManager.Sound.CardSlide);
+        SoundManager.PlaySound(SoundManager.Sound.CardSlide);
         
         // Apply Immediate effects
         // Next card cost less
@@ -303,7 +307,7 @@ public class Card : MonoBehaviour
         }
     }
 
-    private void GameManager_OnMainStart(object sender, EventArgs e)
+    private void GameManager_OnMainStart(object sender, int newTurn)
     {
         _owner.RemovePriceReduce(_priceReduction);
         CheckBalanceAvailability(_owner.GetCoins());

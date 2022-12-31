@@ -98,7 +98,7 @@ public class Board : MonoBehaviour
         
         if (_hand.Count <= 0)
         {
-            MatchManager.Instance.SetPhase(MatchManager.GamePhase.Main);
+            StartCoroutine(SetMainCorrutine());
             return;
         }
         
@@ -108,6 +108,12 @@ public class Board : MonoBehaviour
         }
         _inBattlePhase = true;
         _waitingBattlePhaseEnd = false;
+    }
+
+    private IEnumerator SetMainCorrutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        MatchManager.Instance.SetPhase(MatchManager.GamePhase.Main);
     }
 
     private void GameManager_OnGameOver(object sender, bool won)
@@ -172,6 +178,8 @@ public class Board : MonoBehaviour
     // Public Methods *****
     public void AddToHand(Card card, bool isNew = false)
     {
+        Debug.Log("Add to board hand");
+        
         ReorderActualCards(card.ImOwner() ? 1: 0, card.ImOwner() ? 0: 1);
         card.transform.SetParent(card.ImOwner() ? handAnchorPlayer : handAnchorEnemy);
         

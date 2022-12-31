@@ -52,7 +52,7 @@ public class PlayerAI : MonoBehaviour
     }
 
     // Private Methods *****
-    private void GameManager_OnMainStart(object sender,EventArgs e)
+    private void GameManager_OnMainStart(object sender,int newTurn)
     {
         RestartValues();
         _cardsCanBuy = GetCardsCanBuy();
@@ -102,15 +102,6 @@ public class PlayerAI : MonoBehaviour
     {
         _pause = false;
     }
-
-    private void RestartValues()
-    {
-        _isSelectingCards = false;
-        _selectingTime = MatchManager.Instance.GetMainPhaseTime();
-        _actualSelectingTime = _selectingTime;
-        _stepTime = _selectingTime;
-        _cardsCanBuy.Clear();
-    }
     
     private void SelectingCardsUpdate()
     {
@@ -129,12 +120,22 @@ public class PlayerAI : MonoBehaviour
             _cardsCanBuy.Clear();
             _isSelectingCards = false;
 
-            if (MatchManager.Instance.GetGamePhase() == MatchManager.GamePhase.Waiting)
-                MatchManager.Instance.SetPhase(MatchManager.GamePhase.Battle);
+            if (MatchManager.Instance.GetGamePhase() == MatchManager.GamePhase.Waiting){
+                MatchManager.Instance.SetPhase(MatchManager.GamePhase.PreBattle);
+            }
+                
         }
     }
-    
-    
+
+    private void RestartValues()
+    {
+        _isSelectingCards = false;
+        _selectingTime = MatchManager.Instance.GetMainPhaseTime();
+        _actualSelectingTime = _selectingTime;
+        _stepTime = _selectingTime;
+        _cardsCanBuy.Clear();
+    }
+
     // TODO: Change this function to improve the AI
     public List<Card> GetCardsCanBuy()
     {

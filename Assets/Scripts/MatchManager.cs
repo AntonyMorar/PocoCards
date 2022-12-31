@@ -11,18 +11,18 @@ public class MatchManager : MonoBehaviour
     {
         Setting,
         Idle,
-        PreMain,
+        PreMain, // Delay for first shiffle cards (only once per game)
         Main,
-        Waiting, // Player click battle waiting for enemy
+        Waiting, // Player click "Next turn", waiting for enemy
+        PreBattle,
         Battle,
         GameOver
     }
-    public event EventHandler OnPreMainStart;
-    public event EventHandler OnMainStart;
+    public event EventHandler<int> OnMainStart;
+    public event EventHandler OnPreBattleStart;
     public event EventHandler OnBattleStart;
     public event EventHandler OnWaitingStart; 
     public event EventHandler<bool> OnGameOver;
-    public event EventHandler<int> OnTurnChange;
     public event EventHandler OnRestartGame;
     
 
@@ -69,7 +69,7 @@ public class MatchManager : MonoBehaviour
     private void Update()
     {
         if (_pause) return;
-        if ( _gamePhase is GamePhase.Setting or GamePhase.PreMain or GamePhase.Battle or GamePhase.GameOver) return;
+        if ( _gamePhase is GamePhase.Setting or GamePhase.PreMain or GamePhase.Waiting or GamePhase.Battle or GamePhase.GameOver) return;
         
         _phaseTimer -= Time.deltaTime;
 
@@ -82,7 +82,10 @@ public class MatchManager : MonoBehaviour
                     StartCoroutine(SetInitialCards());
                     break;
                 case GamePhase.Main:
-                case GamePhase.Waiting:
+                    SetPhase(GamePhase.PreBattle);
+                    break;
+                case GamePhase.PreBattle:
+                    Debug.Log("Start battle in prebattle");
                     SetPhase(GamePhase.Battle);
                     break;
             }
@@ -92,7 +95,7 @@ public class MatchManager : MonoBehaviour
     // Private Methods *****
     private IEnumerator SetInitialCards()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.33f);
         
         for (int i = 0; i < initialCards; i++)
         {
@@ -122,20 +125,16 @@ public class MatchManager : MonoBehaviour
     }
     
     // Public Methods *****
-
     public void SetPhase(GamePhase gamePhase)
     {
         if (_gamePhase == gamePhase) return;
-        
+
         _gamePhase = gamePhase;
         switch (gamePhase)
         {
             case GamePhase.Idle:
                 _turn = 0;
                 _phaseTimer = initialDelay;
-                break;
-            case GamePhase.PreMain:
-                OnPreMainStart?.Invoke(this,EventArgs.Empty);
                 break;
             case GamePhase.Main:
                 _turn++;
@@ -146,11 +145,14 @@ public class MatchManager : MonoBehaviour
                     player.DrawCard();
                     enemyPlayer.DrawCard();
                 }
-                OnTurnChange?.Invoke(this, _turn);
-                OnMainStart?.Invoke(this,EventArgs.Empty);
+                OnMainStart?.Invoke(this,_turn);
                 break;
             case GamePhase.Waiting:
                 OnWaitingStart?.Invoke(this,EventArgs.Empty);
+                break;
+            case GamePhase.PreBattle:
+                OnPreBattleStart?.Invoke(this, EventArgs.Empty);
+                _phaseTimer = 0.5f;
                 break;
             case GamePhase.Battle:
                 OnBattleStart?.Invoke(this,EventArgs.Empty);
@@ -178,16 +180,18 @@ public class MatchManager : MonoBehaviour
     public float GetMainPhaseTime() => mainPhaseTime;
     public GamePhase GetGamePhase() => _gamePhase;
 
-    public bool TryStartBattle()
+    public void TryStartBattle()
     {
+        Debug.Log("TrystartBattle");
         if (enemyPlayer.TryGetComponent(out PlayerAI playerAI) && !playerAI.IsSelectingCards())
         {
-            SetPhase(GamePhase.Battle);
-            return true;
+            Debug.Log("match manager calling prebattle");
+            SetPhase(GamePhase.PreBattle);
+            return;
         }
         
+        Debug.Log("TO WAITING");
         SetPhase(GamePhase.Waiting);
-        return false;
     }
     public void RestartGame()
     {

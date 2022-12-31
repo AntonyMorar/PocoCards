@@ -2148,7 +2148,6 @@ GameObject:
   m_Component:
   - component: {fileID: 739665609}
   - component: {fileID: 739665611}
-  - component: {fileID: 739665610}
   - component: {fileID: 739665612}
   m_Layer: 5
   m_Name: PlayerUI
@@ -2183,36 +2182,6 @@ RectTransform:
   m_AnchoredPosition: {x: 25, y: 25}
   m_SizeDelta: {x: 350, y: 160}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &739665610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739665608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.29803923}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &739665611
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4646,6 +4615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnText: {fileID: 335371688}
   gamePhaseButton: {fileID: 2031095765}
+  gamePhaseText: {fileID: 1495931149}
 --- !u!222 &1626756587
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5743,7 +5713,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.7877358, g: 0.89711064, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.4528302, g: 0.43787825, b: 0.43787825, a: 0.34117648}

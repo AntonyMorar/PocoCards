@@ -11,8 +11,7 @@ public class MainMenuUI : MonoBehaviour
     // Serialized *****
     [SerializeField] private string[] mainMenuList;
 
-    [Header("References")] 
-    [SerializeField] private GameObject levelSelector;
+    [Header("References")]
     [SerializeField] private Button levelSelectorBack;
     
     [SerializeField] private Button backButton;
@@ -40,8 +39,6 @@ public class MainMenuUI : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.SetState(GameManager.SceneState.MainMenu);
-        
-        levelSelector.SetActive(false);
 
         _mainButtonText = mainButton.GetComponent<TMP_Text>();
         if (!_mainButtonText) _mainButtonText = mainButton.GetComponentInChildren<TMP_Text>();
@@ -135,7 +132,7 @@ public class MainMenuUI : MonoBehaviour
 
     private void StartTraveling()
     {
-        levelSelector.SetActive(true);
+        // TODO: Connect level selection
 
         backButton.enabled = false;
         mainButton.enabled = false;
@@ -145,13 +142,12 @@ public class MainMenuUI : MonoBehaviour
         
         //Audio
         SoundManager.PlaySound(SoundManager.Sound.UiSelect);
-        
         _traveling = true;
     }
 
     private void StopTraveling()
     {
-        levelSelector.SetActive(false);
+        // TODO: Connect level selection
         
         backButton.enabled = true;
         mainButton.enabled = true;
@@ -159,7 +155,6 @@ public class MainMenuUI : MonoBehaviour
         
         //Audio
         SoundManager.PlaySound(SoundManager.Sound.UiSelect);
-        
         _traveling = false;
     }
     

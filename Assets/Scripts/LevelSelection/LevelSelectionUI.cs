@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: delete and change for "LevelSelection"
 public class LevelSelectionUI : MonoBehaviour
 {
     // Serialized *****

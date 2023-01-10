@@ -1,4 +1,4 @@
-# Poco Cards
+<img src="./Screenshots/MainImage.png">
 Poco cards is a turn base strategy card game made in Unity.
 
 ## Battles 

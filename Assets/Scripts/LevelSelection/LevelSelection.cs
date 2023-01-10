@@ -8,13 +8,13 @@ public class LevelSelection : MonoBehaviour
     // Serialized ****
     [SerializeField] private SelectionPlayer selectionPlayer;
     [SerializeField] private List<LevelNode> levelNodeList;
+    [SerializeField] private float speed = 2f;
 
     // Private ****
     private SelectionPlayer _selectionPlayer;
     private int _selectedLevel;
     // Movement
     private bool _moving;
-    private float _speed = 4f;
     private Vector3 _targetPosition;
 
     // MonoBehavior Callbacks
@@ -28,7 +28,7 @@ public class LevelSelection : MonoBehaviour
     {
         UpdateInput();
         
-        _selectionPlayer.transform.position = Vector3.MoveTowards(_selectionPlayer.transform.position, _targetPosition, _speed * Time.deltaTime);
+        _selectionPlayer.transform.position = Vector3.MoveTowards(_selectionPlayer.transform.position, _targetPosition, speed * Time.deltaTime);
         if (Vector3.Distance(_selectionPlayer.transform.position, _targetPosition) < 0.05f) _moving = false;
     }
 

@@ -11,6 +11,7 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] private CanvasGroup settingsBackground;
     [SerializeField] private RectTransform settingsWindow;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button quitButton;
 
     private bool _isOpen;
     
@@ -19,12 +20,16 @@ public class SettingsUI : MonoBehaviour
     {
         InputSystem.OnOpenSettings += InputSystem_OnOpenSettings;
         closeButton.onClick.AddListener(CloseSettings);
+
+        quitButton.onClick.AddListener(Back);
     }
 
     private void OnDisable()
     {
         InputSystem.OnOpenSettings -= InputSystem_OnOpenSettings;
         closeButton.onClick.RemoveListener(CloseSettings);
+        
+        quitButton.onClick.RemoveListener(Back);
     }
     
     // Private Methods ****
@@ -54,5 +59,14 @@ public class SettingsUI : MonoBehaviour
             InputSystem.OnCloseSettings?.Invoke(this,EventArgs.Empty);
         });
         _isOpen = false;
+    }
+
+    private void Back()
+    {
+        if (GameManager.Instance.GetState() == GameManager.SceneState.InGame)
+        {
+            LevelsManager.Instance.ChangeScene(GameManager.SceneState.MainMenu);
+        }
+        CloseSettings();
     }
 }

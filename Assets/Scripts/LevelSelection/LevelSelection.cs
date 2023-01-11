@@ -44,6 +44,7 @@ public class LevelSelection : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
         {
+            SoundManager.PlaySound(SoundManager.Sound.UiSelect);
             GameManager.Instance.SelectLevel(_selectedLevel);
             LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
         }

@@ -37,7 +37,8 @@ public class SoundManager : MonoBehaviour
         EffectShield,
         WinMelody,
         LoseMelody,
-        UiError
+        UiError,
+        Magic
     }
     
     // MonoBehavior Callbackss

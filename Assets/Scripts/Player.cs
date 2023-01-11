@@ -81,6 +81,7 @@ public class Player : MonoBehaviour, IHandeable
         _coins = 0;
 
         _poisonedAmount = 0;
+        OnPoisonRemoved?.Invoke(this, EventArgs.Empty);
         _priceReduced = 0;
         _damageReduced = 0;
         RemoveHand();
@@ -360,6 +361,9 @@ public class Player : MonoBehaviour, IHandeable
     }
     public void ChangeEnemyCardInBoard(CardData newCard)
     {
+        //Audio
+        SoundManager.PlaySound(SoundManager.Sound.Magic);
+        
         Board.Instance.ChangeRandomCard(MatchManager.Instance.GetEnemy(this), newCard);
     }
     public Sprite GetProfilePic() => _profilePic;

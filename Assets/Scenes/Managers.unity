@@ -3132,8 +3132,9 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: 1f0206cefd27dc34c97ee722b736a2a6, type: 2}
   availableCards: {fileID: 11400000, guid: 20ca0e6fc7b0d8a428f9916858573090, type: 2}
   enemies:
-  - {fileID: 11400000, guid: 2c25b2454f704da4fa47ffa35ee51b9c, type: 2}
+  - {fileID: 11400000, guid: 15a06f81dcf64114c9dff3915ce3051c, type: 2}
   - {fileID: 11400000, guid: c93854464be3d0e4185404e577ae7fd1, type: 2}
+  - {fileID: 11400000, guid: 2c25b2454f704da4fa47ffa35ee51b9c, type: 2}
 --- !u!4 &8355208143691980379
 Transform:
   m_ObjectHideFlags: 0
@@ -3200,6 +3201,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 45abf4e8c792b7846a851009a6de5dce, type: 3}
   - sound: 16
     audioClip: {fileID: 8300000, guid: 26c20f4fc14242c4c91e503c7fdd70cd, type: 3}
+  - sound: 17
+    audioClip: {fileID: 8300000, guid: 515213b6e4205b54589211b2b737d572, type: 3}
 --- !u!114 &9108765821224874436
 MonoBehaviour:
   m_ObjectHideFlags: 0

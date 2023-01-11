@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3e348200a4d1a4aa8830d11a4f3168, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  playerName: Player 1
+  playerName: King
   ally: 1
   profilePic: {fileID: 21300000, guid: 35dba8562c8cf2f488dc1c911e877ef1, type: 3}
-  enemyLevel: 0
   baseHealth: 18
   deckData: {fileID: 11400000, guid: c3e0bea69e9e9a044a5d3dee8401896f, type: 2}

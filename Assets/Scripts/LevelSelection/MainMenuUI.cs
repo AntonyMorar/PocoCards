@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuUI : MonoBehaviour
 {
+    // Public ****
+    public event EventHandler<bool> OnTraveling;
     // Serialized *****
     [SerializeField] private string[] mainMenuList;
 
@@ -26,12 +28,18 @@ public class MainMenuUI : MonoBehaviour
     // MonoBehaviour 
     private void OnEnable()
     {
+        InputSystem.OnQ += InputSystem_OnQ;
+        
         backButton.onClick.AddListener(GoBack);
         nextButton.onClick.AddListener(GoNext);
+        
+        levelSelectorBack.gameObject.SetActive(false);
     }
 
     private void OnDisable()
     {
+        InputSystem.OnQ -= InputSystem_OnQ;
+        
         backButton.onClick.RemoveListener(GoBack);
         nextButton.onClick.RemoveListener(GoNext);
     }
@@ -133,16 +141,19 @@ public class MainMenuUI : MonoBehaviour
     private void StartTraveling()
     {
         // TODO: Connect level selection
-
         backButton.enabled = false;
         mainButton.enabled = false;
         nextButton.enabled = false;
+        
+        levelSelectorBack.gameObject.SetActive(true);
         
         levelSelectorBack.onClick.AddListener(StopTraveling);
         
         //Audio
         SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         _traveling = true;
+        OnTraveling?.Invoke(this,_traveling);
     }
 
     private void StopTraveling()
@@ -153,9 +164,20 @@ public class MainMenuUI : MonoBehaviour
         mainButton.enabled = true;
         nextButton.enabled = true;
         
+        levelSelectorBack.gameObject.SetActive(false);
+        
         //Audio
         SoundManager.PlaySound(SoundManager.Sound.UiSelect);
+        
         _traveling = false;
+        OnTraveling?.Invoke(this,_traveling);
+    }
+
+    private void InputSystem_OnQ(object sender, EventArgs e)
+    {
+        StopTraveling();
     }
     
+    // public Methods ****
+    public bool IsTraveling() => _traveling;
 }

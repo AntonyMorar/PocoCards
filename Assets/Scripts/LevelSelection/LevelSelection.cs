@@ -6,6 +6,7 @@ using UnityEngine;
 public class LevelSelection : MonoBehaviour
 {
     // Serialized ****
+    [SerializeField] private MainMenuUI mainMenuUI;
     [SerializeField] private SelectionPlayer selectionPlayer;
     [SerializeField] private List<LevelNode> levelNodeList;
     [SerializeField] private float speed = 2f;
@@ -18,31 +19,36 @@ public class LevelSelection : MonoBehaviour
     private Vector3 _targetPosition;
 
     // MonoBehavior Callbacks
-    private void Start()
+    private void OnEnable()
     {
-        _selectionPlayer = Instantiate(selectionPlayer, levelNodeList[_selectedLevel].spawnTransform.position, Quaternion.identity, transform);
-        _targetPosition = levelNodeList[_selectedLevel].spawnTransform.position;
+        mainMenuUI.OnTraveling += MainMenuUI_OnTraveling;
+    }
+
+    private void OnDisable()
+    {
+        mainMenuUI.OnTraveling -= MainMenuUI_OnTraveling;
     }
 
     private void Update()
     {
         UpdateInput();
-        
+
+        if (!mainMenuUI.IsTraveling()) return;
         _selectionPlayer.transform.position = Vector3.MoveTowards(_selectionPlayer.transform.position, _targetPosition, speed * Time.deltaTime);
         if (Vector3.Distance(_selectionPlayer.transform.position, _targetPosition) < 0.05f) _moving = false;
     }
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (_moving || !mainMenuUI.IsTraveling()) return;
+        
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
         {
             GameManager.Instance.SelectLevel(_selectedLevel);
             LevelsManager.Instance.ChangeScene(GameManager.SceneState.InGame);
         }
         
         // Move
-        if (_moving) return;
-        
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             TryMove(Direction.Left);
@@ -98,6 +104,19 @@ public class LevelSelection : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void MainMenuUI_OnTraveling(object sender, bool traveling)
+    {
+        if (traveling)
+        {
+            _selectionPlayer = Instantiate(selectionPlayer, levelNodeList[_selectedLevel].spawnTransform.position, Quaternion.identity, transform);
+            _targetPosition = levelNodeList[_selectedLevel].spawnTransform.position;
+        }
+        else
+        {
+            _selectionPlayer.Hide();
+        }
     }
 
     // Public Data ****

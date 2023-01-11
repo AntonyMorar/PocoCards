@@ -10,11 +10,13 @@ public class InputSystem : MonoBehaviour
     public static EventHandler OnEscDeck;
     public static EventHandler OnOpenSettings;
     public static EventHandler OnCloseSettings;
+    public static EventHandler OnQ;
 
     // MonoBehavior Callbacks ****
     void Update()
     {
         ScapeDown();
+        QDown();
     }
 
     // Private Methods*****
@@ -29,6 +31,14 @@ public class InputSystem : MonoBehaviour
         else if(GameManager.Instance.GetState() == GameManager.SceneState.MainMenu || GameManager.Instance.GetState() == GameManager.SceneState.InGame)
         {
             OnOpenSettings?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void QDown()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnQ?.Invoke(this, EventArgs.Empty);
         }
     }
 }

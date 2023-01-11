@@ -16,7 +16,10 @@ public class DeckEditorUI : MonoBehaviour
     [Header("Reference")]
     [SerializeField] private RectTransform playerHandTransform;
     [SerializeField] private RectTransform collectionHandTransform;
-    [Header("Info Reference")]
+
+    [Header("Info Reference")] 
+    [SerializeField] private GameObject cardInfo;
+    [SerializeField] private GameObject noInfo;
     [SerializeField] private TMP_Text infoName;
     [SerializeField] private Image infoImage;
     [SerializeField] private TMP_Text infoDescription;
@@ -40,6 +43,9 @@ public class DeckEditorUI : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.SetState(GameManager.SceneState.DeckEditor);
+
+        cardInfo.SetActive(false);
+        noInfo.SetActive(true);
 
         foreach (PlayerProfile.PlayerCard playerCard in GameManager.Instance.GetPlayerProfile().allDeck)
         {
@@ -66,6 +72,10 @@ public class DeckEditorUI : MonoBehaviour
         //Check if the left Mouse button is clicked
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            // Card info visible
+            cardInfo.SetActive(true);
+            noInfo.SetActive(false);
+            
             //Set up the new Pointer Event
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             List<RaycastResult> results = new List<RaycastResult>();
@@ -82,7 +92,6 @@ public class DeckEditorUI : MonoBehaviour
                     SoundManager.PlaySound(SoundManager.Sound.UiChange);
                     SetSelectedCard(cardUI);
                 }
-                
             }
         }
     }

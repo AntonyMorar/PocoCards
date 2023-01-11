@@ -3083,7 +3083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadScene: 1
-  startLoadScene: 1
+  startLoadScene: 2
 --- !u!114 &7065133406233599675
 MonoBehaviour:
   m_ObjectHideFlags: 0

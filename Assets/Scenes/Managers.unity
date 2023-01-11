@@ -887,7 +887,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25.799988, y: -3.100006}
+  m_AnchoredPosition: {x: 25.799988, y: -3.0999756}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &645575693
@@ -3083,7 +3083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadScene: 1
-  startLoadScene: 2
+  startLoadScene: 1
 --- !u!114 &7065133406233599675
 MonoBehaviour:
   m_ObjectHideFlags: 0

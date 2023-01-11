@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a0480f44ca514146a97b1f810a510a3, type: 3}
   m_Name: MagicHat
   m_EditorClassIdentifier: 
-  cardName: Magic Hat
+  cardName: Transmutation
   description: Transform a random card on the board into a frog. the frog cant attack
     or use abillities (This card has priority on the board)
   cardIcon: {fileID: 21300000, guid: 8a3f5c43e5e5c904c8e0dd261d26f4cc, type: 3}
